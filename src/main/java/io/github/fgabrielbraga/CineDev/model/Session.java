@@ -23,6 +23,8 @@ public class Session {
     private Boolean open;
     @Column(name = "ticket_price", nullable = false)
     private Float ticketPrice;
+    @Column(name = "number_free_seats",nullable = false)
+    private Short numberFreeSeats;
     @ManyToOne
     @JoinColumn(name = "film_id", nullable = false)
     private Film film;
@@ -78,6 +80,14 @@ public class Session {
 
     public void setTicketPrice(Float ticketPrice) {
         this.ticketPrice = ticketPrice;
+    }
+
+    public Short getNumberFreeSeats() {
+        return numberFreeSeats;
+    }
+
+    public void setNumberFreeSeats(Short numberFreeSeats) {
+        this.numberFreeSeats = numberFreeSeats;
     }
 
     public Film getFilm() {

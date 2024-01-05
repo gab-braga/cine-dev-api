@@ -16,6 +16,10 @@ public class Room {
     @Column(name = "number_room", nullable = false, unique = true)
     private Short number;
     @Column(nullable = false)
+    private Short width;
+    @Column(nullable = false)
+    private Short height;
+    @Column(nullable = false)
     private Short capacity;
     @Column(name = "projection_type", nullable = false, length = 50)
     private String projectionType;
@@ -35,6 +39,22 @@ public class Room {
 
     public Short getNumber() {
         return number;
+    }
+
+    public Short getWidth() {
+        return width;
+    }
+
+    public void setWidth(Short width) {
+        this.width = width;
+    }
+
+    public Short getHeight() {
+        return height;
+    }
+
+    public void setHeight(Short height) {
+        this.height = height;
     }
 
     public void setNumber(Short number) {
