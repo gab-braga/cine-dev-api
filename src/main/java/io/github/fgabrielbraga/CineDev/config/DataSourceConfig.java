@@ -11,7 +11,7 @@ public class DataSourceConfig {
 
     @Bean
     public DataSource dataSource() {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.url("jdbc:mysql://127.0.0.1:3306/cinedev_db");
         dataSourceBuilder.username("root");
         dataSourceBuilder.password("root3306");
