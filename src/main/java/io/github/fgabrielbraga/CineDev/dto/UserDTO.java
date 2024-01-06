@@ -1,51 +1,56 @@
-package io.github.fgabrielbraga.CineDev.model;
+package io.github.fgabrielbraga.CineDev.dto;
 
+import io.github.fgabrielbraga.CineDev.model.User;
 import io.github.fgabrielbraga.CineDev.model.enums.Role;
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
-@Table(name = "users")
-public class User {
+public class UserDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false, unique = true, updatable = false)
     private UUID uuid;
-    @Column(nullable = false, length = 120)
     private String name;
-    @Column(nullable = false, unique = true, length = 150)
     private String email;
-    @Column(nullable = false, length = 60)
     private String password;
-    @Column(nullable = false, unique = true, length = 11)
     private String cpf;
-    @Column(name = "phone_number", length = 16)
     private String phoneNumber;
-    @Column(name = "profile_picture", columnDefinition = "MEDIUMTEXT")
     private String profilePicture;
-    @Column(nullable = false)
     private Boolean disabled;
-    @Column(nullable = false)
     private Boolean confirmed;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Role role = Role.CLIENT;
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        this.disabled = false;
-        this.confirmed = false;
-        this.createdAt = LocalDateTime.now();
+    public UserDTO() {
     }
 
-    public User() {
+    public UserDTO(User user) {
+        this.uuid = user.getUuid();
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.cpf = user.getCpf();
+        this.phoneNumber = user.getPhoneNumber();
+        this.profilePicture = user.getProfilePicture();
+        this.disabled = user.getDisabled();
+        this.confirmed = user.getConfirmed();
+        this.role = user.getRole();
+        this.createdAt = user.getCreatedAt();
+    }
+
+    public static User convert(UserDTO userDTO) {
+        User user = new User();
+        user.setUuid(userDTO.getUuid());
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+        user.setCpf(userDTO.getCpf());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setProfilePicture(userDTO.getProfilePicture());
+        user.setDisabled(userDTO.getDisabled());
+        user.setConfirmed(userDTO.getConfirmed());
+        user.setRole(userDTO.getRole());
+        user.setCreatedAt(userDTO.getCreatedAt());
+        return user;
     }
 
     public UUID getUuid() {

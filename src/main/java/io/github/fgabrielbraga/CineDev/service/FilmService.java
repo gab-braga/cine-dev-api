@@ -37,13 +37,13 @@ public class FilmService {
     }
 
     public FilmDTO save(FilmDTO filmDTO) {
-        Film film = FilmDTO.covert(filmDTO);
+        Film film = FilmDTO.convert(filmDTO);
         Film filmSaved = filmRepository.save(film);
         return new FilmDTO(filmSaved);
     }
 
     public FilmDTO delete(FilmDTO filmDTO) {
-        Film film = FilmDTO.covert(filmDTO);
+        Film film = FilmDTO.convert(filmDTO);
         filmRepository.delete(film);
         return filmDTO;
     }

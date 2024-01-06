@@ -28,7 +28,7 @@ public class FilmDTO {
         this.publishedIn = film.getPublishedIn();
     }
 
-    public static Film covert(FilmDTO filmDTO) {
+    public static Film convert(FilmDTO filmDTO) {
         Film film = new Film();
         film.setUuid(filmDTO.getUuid());
         film.setTitle(filmDTO.getTitle());
