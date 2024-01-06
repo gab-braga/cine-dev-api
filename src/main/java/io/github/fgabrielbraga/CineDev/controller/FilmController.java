@@ -20,57 +20,51 @@ public class FilmController {
 
     @GetMapping("/{uuid}")
     public ResponseEntity<FilmDTO> findById(@PathVariable UUID uuid) {
-        Optional<FilmDTO> filmOpt = filmService.findById(uuid);
-        if(filmOpt.isPresent()) {
-            return ResponseEntity.status(HttpStatus.OK).body(filmOpt.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        Optional<FilmDTO> filmOptional = filmService.findById(uuid);
+        return filmOptional
+                .map(filmFound -> ResponseEntity.ok(filmFound))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
     public ResponseEntity<List<FilmDTO>> findAllWithFilter(@RequestParam(required = false) String title) {
-        if(title != null) {
-            List<FilmDTO> films = filmService.findAll();
-            return ResponseEntity.status(HttpStatus.OK).body(films);
-        } else {
-            List<FilmDTO> films =  filmService.findByTitleContaining(title);
-            return ResponseEntity.status(HttpStatus.OK).body(films);
-        }
+        List<FilmDTO> films = (title == null) ? filmService.findAll() : filmService.findByTitleContaining(title);
+        return ResponseEntity.ok(films);
     }
 
     @GetMapping("/genres/{genres}")
     public ResponseEntity<List<FilmDTO>> findByGenresContaining(@PathVariable String genres) {
         List<FilmDTO> films =  filmService.findByGenresContaining(genres);
-        return ResponseEntity.status(HttpStatus.OK).body(films);
+        return ResponseEntity.ok(films);
     }
 
     @PostMapping
-    public ResponseEntity<FilmDTO> save(@RequestBody FilmDTO film) {
+    public ResponseEntity<FilmDTO> create(@RequestBody FilmDTO film) {
         film.setUuid(null);
         FilmDTO filmSaved = filmService.save(film);
         return ResponseEntity.status(HttpStatus.CREATED).body(filmSaved);
     }
 
-    @PutMapping
-    public ResponseEntity<FilmDTO> update(@RequestBody FilmDTO film) {
-        Optional<FilmDTO> filmOpt = filmService.findById(film.getUuid());
-        if(filmOpt.isPresent()) {
-            FilmDTO filmSaved = filmService.save(film);
-            return ResponseEntity.status(HttpStatus.CREATED).body(filmSaved);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    @PutMapping("/{uuid}")
+    public ResponseEntity<FilmDTO> update(@PathVariable UUID uuid, @RequestBody FilmDTO film) {
+        Optional<FilmDTO> filmOptional = filmService.findById(uuid);
+        return filmOptional
+                .map(filmFound -> {
+                    film.setUuid(uuid);
+                    FilmDTO filmUpdated = filmService.save(film);
+                    return ResponseEntity.ok(filmUpdated);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping
-    public ResponseEntity<FilmDTO> delete(@RequestParam UUID uuid) {
-        Optional<FilmDTO> filmOpt = filmService.findById(uuid);
-        if(filmOpt.isPresent()) {
-            FilmDTO filmDeleted = filmService.delete(filmOpt.get());
-            return ResponseEntity.status(HttpStatus.CREATED).body(filmDeleted);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<FilmDTO> delete(@PathVariable UUID uuid) {
+        Optional<FilmDTO> filmOptional = filmService.findById(uuid);
+        return filmOptional
+                .map(filmFound -> {
+                    FilmDTO filmDeleted = filmService.delete(filmFound);
+                    return ResponseEntity.ok(filmDeleted);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
