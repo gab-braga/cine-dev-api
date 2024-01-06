@@ -1,6 +1,7 @@
 package io.github.fgabrielbraga.CineDev.service;
 
-import io.github.fgabrielbraga.CineDev.dto.UserDTO;
+import io.github.fgabrielbraga.CineDev.dto.input.UserInputDTO;
+import io.github.fgabrielbraga.CineDev.dto.output.UserOutputDTO;
 import io.github.fgabrielbraga.CineDev.model.User;
 import io.github.fgabrielbraga.CineDev.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,30 +17,28 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Optional<UserDTO> findById(UUID uuid) {
+    public Optional<UserOutputDTO> findById(UUID uuid) {
         Optional<User> userOpt = userRepository.findById(uuid);
-        return userOpt.map(UserDTO::new);
+        return userOpt.map(UserOutputDTO::ofUser);
     }
 
-    public Optional<UserDTO> findByEmail(String email) {
+    public Optional<UserOutputDTO> findByEmail(String email) {
         Optional<User> userOpt = userRepository.findByEmail(email);
-        return userOpt.map(UserDTO::new);
+        return userOpt.map(UserOutputDTO::ofUser);
     }
 
-    public List<UserDTO> findAll() {
+    public List<UserOutputDTO> findAll() {
         List<User> users = userRepository.findAll();
-        return users.stream().map(UserDTO::new).toList();
+        return users.stream().map(UserOutputDTO::ofUser).toList();
     }
 
-    public UserDTO save(UserDTO userDTO) {
-        User user = UserDTO.convert(userDTO);
+    public UserOutputDTO save(UserInputDTO userDTO) {
+        User user = UserInputDTO.parseUser(userDTO);
         User userSaved = userRepository.save(user);
-        return new UserDTO(userSaved);
+        return UserOutputDTO.ofUser(userSaved);
     }
 
-    public UserDTO delete(UserDTO userDTO) {
-        User user = UserDTO.convert(userDTO);
-        userRepository.delete(user);
-        return userDTO;
+    public void deleteById(UUID uuid) {
+        userRepository.deleteById(uuid);
     }
 }

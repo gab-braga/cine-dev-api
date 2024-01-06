@@ -1,11 +1,12 @@
-package io.github.fgabrielbraga.CineDev.dto;
+package io.github.fgabrielbraga.CineDev.dto.output;
 
 import io.github.fgabrielbraga.CineDev.model.Film;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
-public class FilmDTO {
+public class FilmOutputDTO {
 
     private UUID uuid;
     private String title;
@@ -15,29 +16,21 @@ public class FilmDTO {
     private String coverImage;
     private LocalDate publishedIn;
 
-    public FilmDTO() {
+    public FilmOutputDTO() {
     }
 
-    public FilmDTO(Film film) {
-        this.uuid = film.getUuid();
-        this.title = film.getTitle();
-        this.resume = film.getResume();
-        this.genres = film.getGenres();
-        this.duration = film.getDuration();
-        this.coverImage = film.getCoverImage();
-        this.publishedIn = film.getPublishedIn();
-    }
-
-    public static Film convert(FilmDTO filmDTO) {
-        Film film = new Film();
-        film.setUuid(filmDTO.getUuid());
-        film.setTitle(filmDTO.getTitle());
-        film.setResume(filmDTO.getResume());
-        film.setGenres(filmDTO.getGenres());
-        film.setDuration(filmDTO.getDuration());
-        film.setCoverImage(filmDTO.getCoverImage());
-        film.setPublishedIn(filmDTO.getPublishedIn());
-        return film;
+    public static FilmOutputDTO ofFilm(Film filmObj) {
+        return Optional.ofNullable(filmObj).map(film -> {
+            FilmOutputDTO filmOutputDTO = new FilmOutputDTO();
+            filmOutputDTO.uuid = film.getUuid();
+            filmOutputDTO.title = film.getTitle();
+            filmOutputDTO.resume = film.getResume();
+            filmOutputDTO.genres = film.getGenres();
+            filmOutputDTO.duration = film.getDuration();
+            filmOutputDTO.coverImage = film.getCoverImage();
+            filmOutputDTO.publishedIn = film.getPublishedIn();
+            return filmOutputDTO;
+        }).orElse(null);
     }
 
     public UUID getUuid() {

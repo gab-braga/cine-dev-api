@@ -1,12 +1,13 @@
-package io.github.fgabrielbraga.CineDev.dto;
+package io.github.fgabrielbraga.CineDev.dto.input;
 
 import io.github.fgabrielbraga.CineDev.model.User;
 import io.github.fgabrielbraga.CineDev.enums.Role;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
-public class UserDTO {
+public class UserInputDTO {
 
     private UUID uuid;
     private String name;
@@ -20,37 +21,25 @@ public class UserDTO {
     private Role role = Role.CLIENT;
     private LocalDateTime createdAt;
 
-    public UserDTO() {
+    public UserInputDTO() {
     }
 
-    public UserDTO(User user) {
-        this.uuid = user.getUuid();
-        this.name = user.getName();
-        this.email = user.getEmail();
-        this.password = user.getPassword();
-        this.cpf = user.getCpf();
-        this.phoneNumber = user.getPhoneNumber();
-        this.profilePicture = user.getProfilePicture();
-        this.disabled = user.getDisabled();
-        this.confirmed = user.getConfirmed();
-        this.role = user.getRole();
-        this.createdAt = user.getCreatedAt();
-    }
-
-    public static User convert(UserDTO userDTO) {
-        User user = new User();
-        user.setUuid(userDTO.getUuid());
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-        user.setCpf(userDTO.getCpf());
-        user.setPhoneNumber(userDTO.getPhoneNumber());
-        user.setProfilePicture(userDTO.getProfilePicture());
-        user.setDisabled(userDTO.getDisabled());
-        user.setConfirmed(userDTO.getConfirmed());
-        user.setRole(userDTO.getRole());
-        user.setCreatedAt(userDTO.getCreatedAt());
-        return user;
+    public static User parseUser(UserInputDTO userDTO) {
+        return Optional.ofNullable(userDTO).map(dto -> {
+            User user = new User();
+            user.setUuid(dto.getUuid());
+            user.setName(dto.getName());
+            user.setEmail(dto.getEmail());
+            user.setPassword(dto.getPassword());
+            user.setCpf(dto.getCpf());
+            user.setPhoneNumber(dto.getPhoneNumber());
+            user.setProfilePicture(dto.getProfilePicture());
+            user.setDisabled(dto.getDisabled());
+            user.setConfirmed(dto.getConfirmed());
+            user.setRole(dto.getRole());
+            user.setCreatedAt(dto.getCreatedAt());
+            return user;
+        }).orElse(null);
     }
 
     public UUID getUuid() {
