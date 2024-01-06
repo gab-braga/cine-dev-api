@@ -1,6 +1,6 @@
 package io.github.fgabrielbraga.CineDev.model;
 
-import io.github.fgabrielbraga.CineDev.model.enums.StatusReservation;
+import io.github.fgabrielbraga.CineDev.enums.StatusReservation;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

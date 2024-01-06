@@ -1,6 +1,6 @@
 package io.github.fgabrielbraga.CineDev.model;
 
-import io.github.fgabrielbraga.CineDev.model.enums.StatusTicket;
+import io.github.fgabrielbraga.CineDev.enums.StatusTicket;
 import jakarta.persistence.*;
 
 import java.util.UUID;

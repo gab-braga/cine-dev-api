@@ -1,7 +1,7 @@
 package io.github.fgabrielbraga.CineDev.dto;
 
 import io.github.fgabrielbraga.CineDev.model.User;
-import io.github.fgabrielbraga.CineDev.model.enums.Role;
+import io.github.fgabrielbraga.CineDev.enums.Role;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package io.github.fgabrielbraga.CineDev.model.enums;
+package io.github.fgabrielbraga.CineDev.enums;
 
 public enum StatusReservation {
     PENDING("Pending"),
