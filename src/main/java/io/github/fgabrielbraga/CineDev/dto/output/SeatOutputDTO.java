@@ -18,13 +18,13 @@ public class SeatOutputDTO {
 
     public static SeatOutputDTO ofSeat(Seat seatObj) {
         return Optional.ofNullable(seatObj).map(seat -> {
-            SeatOutputDTO seatInputDTO = new SeatOutputDTO();
-            seatInputDTO.uuid = seat.getUuid();
-            seatInputDTO.number = seat.getNumber();
-            seatInputDTO.positionInX = seat.getPositionInX();
-            seatInputDTO.positionInY = seat.getPositionInY();
-            seatInputDTO.uuidRoom = seat.getRoom().getUuid();
-            return seatInputDTO;
+            SeatOutputDTO seatOutputDTO = new SeatOutputDTO();
+            seatOutputDTO.uuid = seat.getUuid();
+            seatOutputDTO.number = seat.getNumber();
+            seatOutputDTO.positionInX = seat.getPositionInX();
+            seatOutputDTO.positionInY = seat.getPositionInY();
+            seatOutputDTO.uuidRoom = seat.getRoom().getUuid();
+            return seatOutputDTO;
         }).orElse(null);
     }
 

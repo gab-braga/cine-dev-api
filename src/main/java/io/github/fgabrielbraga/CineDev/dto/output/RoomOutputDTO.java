@@ -19,14 +19,14 @@ public class RoomOutputDTO {
 
     public static RoomOutputDTO ofRoom(Room roomObj) {
         return Optional.ofNullable(roomObj).map(room -> {
-            RoomOutputDTO roomInputDTO = new RoomOutputDTO();
-            roomInputDTO.uuid = room.getUuid();
-            roomInputDTO.number = room.getNumber();
-            roomInputDTO.width = room.getWidth();
-            roomInputDTO.height = room.getHeight();
-            roomInputDTO.capacity = room.getCapacity();
-            roomInputDTO.projectionType = room.getProjectionType();
-            return roomInputDTO;
+            RoomOutputDTO roomOutputDTO = new RoomOutputDTO();
+            roomOutputDTO.uuid = room.getUuid();
+            roomOutputDTO.number = room.getNumber();
+            roomOutputDTO.width = room.getWidth();
+            roomOutputDTO.height = room.getHeight();
+            roomOutputDTO.capacity = room.getCapacity();
+            roomOutputDTO.projectionType = room.getProjectionType();
+            return roomOutputDTO;
         }).orElse(null);
     }
 
