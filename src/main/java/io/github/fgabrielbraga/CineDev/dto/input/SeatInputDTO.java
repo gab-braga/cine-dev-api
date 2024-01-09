@@ -2,6 +2,7 @@ package io.github.fgabrielbraga.CineDev.dto.input;
 
 import io.github.fgabrielbraga.CineDev.model.Seat;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,6 +26,12 @@ public class SeatInputDTO {
             seat.setPositionInY(dto.getPositionInY());
             seat.setRoom(RoomInputDTO.parseRoom(dto.getRoom()));
             return seat;
+        }).orElse(null);
+    }
+
+    public static List<Seat> toSeatList(List<SeatInputDTO> seats) {
+        return Optional.ofNullable(seats).map(list -> {
+            return list.stream().map(seat -> parseSeat(seat)).toList();
         }).orElse(null);
     }
 

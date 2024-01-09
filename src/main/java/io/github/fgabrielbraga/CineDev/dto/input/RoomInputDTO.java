@@ -28,7 +28,7 @@ public class RoomInputDTO {
             room.setHeight(dto.getHeight());
             room.setCapacity(dto.getCapacity());
             room.setProjectionType(dto.getProjectionType());
-            room.setSeats(dto.getSeats().stream().map(SeatInputDTO::parseSeat).toList());
+            room.setSeats(SeatInputDTO.toSeatList(dto.getSeats()));
             return room;
         }).orElse(null);
     }
