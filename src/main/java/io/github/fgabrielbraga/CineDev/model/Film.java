@@ -3,6 +3,7 @@ package io.github.fgabrielbraga.CineDev.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -83,5 +84,30 @@ public class Film {
 
     public void setPublishedIn(LocalDate publishedIn) {
         this.publishedIn = publishedIn;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Film film = (Film) o;
+        return Objects.equals(getUuid(), film.getUuid()) &&
+                Objects.equals(getTitle(), film.getTitle()) &&
+                Objects.equals(getResume(), film.getResume()) &&
+                Objects.equals(getGenres(), film.getGenres()) &&
+                Objects.equals(getDuration(), film.getDuration()) &&
+                Objects.equals(getCoverImage(), film.getCoverImage()) &&
+                Objects.equals(getPublishedIn(), film.getPublishedIn());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUuid(),
+                getTitle(),
+                getResume(),
+                getGenres(),
+                getDuration(),
+                getCoverImage(),
+                getPublishedIn());
     }
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -134,5 +135,38 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(getUuid(), user.getUuid()) &&
+                Objects.equals(getName(), user.getName()) &&
+                Objects.equals(getEmail(), user.getEmail()) &&
+                Objects.equals(getPassword(), user.getPassword()) &&
+                Objects.equals(getCpf(), user.getCpf()) &&
+                Objects.equals(getPhoneNumber(), user.getPhoneNumber()) &&
+                Objects.equals(getProfilePicture(), user.getProfilePicture()) &&
+                Objects.equals(getDisabled(), user.getDisabled()) &&
+                Objects.equals(getConfirmed(), user.getConfirmed()) &&
+                getRole() == user.getRole() &&
+                Objects.equals(getCreatedAt(), user.getCreatedAt());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUuid(),
+                getName(),
+                getEmail(),
+                getPassword(),
+                getCpf(),
+                getPhoneNumber(),
+                getProfilePicture(),
+                getDisabled(),
+                getConfirmed(),
+                getRole(),
+                getCreatedAt());
     }
 }

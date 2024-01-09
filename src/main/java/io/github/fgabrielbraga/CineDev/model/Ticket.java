@@ -3,6 +3,7 @@ package io.github.fgabrielbraga.CineDev.model;
 import io.github.fgabrielbraga.CineDev.enums.StatusTicket;
 import jakarta.persistence.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -72,6 +73,27 @@ public class Ticket {
 
     public void setReservation(Reservation reservation) {
         this.reservation = reservation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ticket ticket = (Ticket) o;
+        return Objects.equals(getUuid(), ticket.getUuid()) &&
+                getStatus() == ticket.getStatus() &&
+                Objects.equals(getSeat(), ticket.getSeat()) &&
+                Objects.equals(getSession(), ticket.getSession()) &&
+                Objects.equals(getReservation(), ticket.getReservation());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUuid(),
+                getStatus(),
+                getSeat(),
+                getSession(),
+                getReservation());
     }
 }
 

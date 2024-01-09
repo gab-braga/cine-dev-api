@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -84,6 +85,29 @@ public class Reservation {
 
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reservation that = (Reservation) o;
+        return Objects.equals(getUuid(), that.getUuid()) &&
+                Objects.equals(getReservedAt(), that.getReservedAt()) &&
+                getStatus() == that.getStatus() &&
+                Objects.equals(getUser(), that.getUser()) &&
+                Objects.equals(getSession(), that.getSession()) &&
+                Objects.equals(getTickets(), that.getTickets());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUuid(),
+                getReservedAt(),
+                getStatus(),
+                getUser(),
+                getSession(),
+                getTickets());
     }
 }
 

@@ -3,6 +3,7 @@ package io.github.fgabrielbraga.CineDev.model;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -83,5 +84,30 @@ public class Room {
 
     public void setSeats(List<Seat> seats) {
         this.seats = seats;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return Objects.equals(getUuid(), room.getUuid()) &&
+                Objects.equals(getNumber(), room.getNumber()) &&
+                Objects.equals(getWidth(), room.getWidth()) &&
+                Objects.equals(getHeight(), room.getHeight()) &&
+                Objects.equals(getCapacity(), room.getCapacity()) &&
+                Objects.equals(getProjectionType(), room.getProjectionType()) &&
+                Objects.equals(getSeats(), room.getSeats());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUuid(),
+                getNumber(),
+                getWidth(),
+                getHeight(),
+                getCapacity(),
+                getProjectionType(),
+                getSeats());
     }
 }
