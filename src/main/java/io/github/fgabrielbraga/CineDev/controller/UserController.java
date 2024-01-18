@@ -51,19 +51,31 @@ public class UserController {
         return userOptional
                 .map(userFound -> {
                     user.setUuid(uuid);
-                    UserOutputDTO userUpdated = userService.save(user);
+                    UserOutputDTO userUpdated = userService.update(user);
                     return ResponseEntity.ok(userUpdated);
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{uuid}")
-    public ResponseEntity<?> delete(@PathVariable UUID uuid) {
+    @PostMapping("/{uuid}/disable")
+    public ResponseEntity<?> disable(@PathVariable UUID uuid) {
         Optional<UserOutputDTO> userOptional = userService.findById(uuid);
         return userOptional
                 .map(userFound -> {
-                    userService.deleteById(uuid);
+                    userService.disable(uuid);
+                    return ResponseEntity.ok().build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{uuid}/enable")
+    public ResponseEntity<?> enable(@PathVariable UUID uuid) {
+        Optional<UserOutputDTO> userOptional = userService.findById(uuid);
+        return userOptional
+                .map(userFound -> {
+                    userService.enable(uuid);
                     return ResponseEntity.ok().build();
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());

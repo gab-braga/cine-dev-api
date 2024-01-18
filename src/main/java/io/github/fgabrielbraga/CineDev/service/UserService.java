@@ -44,7 +44,28 @@ public class UserService {
         return UserOutputDTO.ofUser(userSaved);
     }
 
+    public UserOutputDTO update(UserInputDTO userDTO) {
+        Optional<User> userOpt = userRepository.findById(userDTO.getUuid());
+        return userOpt.map(userFound -> {
+            userFound.setName(userDTO.getName());
+            userFound.setCpf(userDTO.getCpf());
+            userFound.setRole(userDTO.getRole());
+            userFound.setEmail(userDTO.getEmail());
+            userFound.setPhoneNumber(userDTO.getPhoneNumber());
+            User userSaved = userRepository.save(userFound);
+            return UserOutputDTO.ofUser(userSaved);
+        }).orElseThrow();
+    }
+
     public void deleteById(UUID uuid) {
         userRepository.deleteById(uuid);
+    }
+
+    public void disable(UUID uuid) {
+        userRepository.disableUserById(uuid);
+    }
+
+    public void enable(UUID uuid) {
+        userRepository.enableUserById(uuid);
     }
 }
