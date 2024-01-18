@@ -45,15 +45,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String extractJwtFromHeader(HttpServletRequest request) {
-        String header = request.getHeader(AUTH_HEADER_NAME);
-        return header.substring(TOKEN_PREFIX.length());
-    }
-
     private boolean validateJwtFromHeader(HttpServletRequest request) {
         String header = request.getHeader(AUTH_HEADER_NAME);
         return Optional.ofNullable(header).map(authHeader ->
                 authHeader.startsWith(TOKEN_PREFIX)
         ).orElse(false);
+    }
+
+    private String extractJwtFromHeader(HttpServletRequest request) {
+        String header = request.getHeader(AUTH_HEADER_NAME);
+        return header.substring(TOKEN_PREFIX.length());
     }
 }

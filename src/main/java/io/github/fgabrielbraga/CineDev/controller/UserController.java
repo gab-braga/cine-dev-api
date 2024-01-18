@@ -6,6 +6,7 @@ import io.github.fgabrielbraga.CineDev.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{uuid}")
     public ResponseEntity<UserOutputDTO> findById(@PathVariable UUID uuid) {
         Optional<UserOutputDTO> userOptional = userService.findById(uuid);
@@ -27,12 +29,14 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserOutputDTO>> findAll() {
         List<UserOutputDTO> users = userService.findAll();
         return ResponseEntity.ok(users);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<UserOutputDTO> create(@RequestBody UserInputDTO user) {
         user.setUuid(null);
@@ -40,6 +44,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userSaved);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{uuid}")
     public ResponseEntity<UserOutputDTO> update(@PathVariable UUID uuid, @RequestBody UserInputDTO user) {
         Optional<UserOutputDTO> userOptional = userService.findById(uuid);
@@ -52,6 +57,7 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{uuid}")
     public ResponseEntity<?> delete(@PathVariable UUID uuid) {
         Optional<UserOutputDTO> userOptional = userService.findById(uuid);

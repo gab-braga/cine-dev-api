@@ -12,7 +12,6 @@ public class UserOutputDTO {
     private UUID uuid;
     private String name;
     private String email;
-    private String password;
     private String cpf;
     private String phoneNumber;
     private String profilePicture;
@@ -30,7 +29,6 @@ public class UserOutputDTO {
             userOutputDTO.uuid = user.getUuid();
             userOutputDTO.name = user.getName();
             userOutputDTO.email = user.getEmail();
-            userOutputDTO.password = user.getPassword();
             userOutputDTO.cpf = user.getCpf();
             userOutputDTO.phoneNumber = user.getPhoneNumber();
             userOutputDTO.profilePicture = user.getProfilePicture();
@@ -64,14 +62,6 @@ public class UserOutputDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getCpf() {
