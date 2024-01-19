@@ -28,8 +28,10 @@ public class FilmController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FilmOutputDTO>> findAllWithFilter(@RequestParam(required = false) String title) {
-        List<FilmOutputDTO> films = (title == null) ? filmService.findAll() : filmService.findByTitleContaining(title);
+    public ResponseEntity<List<FilmOutputDTO>> findAllWithFilter(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String genres) {
+        List<FilmOutputDTO> films = filmService.findAll(title, genres);
         return ResponseEntity.ok(films);
     }
 

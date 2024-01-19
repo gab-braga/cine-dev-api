@@ -27,8 +27,8 @@ public class FilmService {
         return films.stream().map(FilmOutputDTO::ofFilm).toList();
     }
 
-    public List<FilmOutputDTO> findByTitleContaining(String title) {
-        List<Film> films = filmRepository.findByTitleContainingIgnoreCase(title);
+    public List<FilmOutputDTO> findAll(String title, String genres) {
+        List<Film> films = filmRepository.findAllWithFilter(title, genres);
         return films.stream().map(FilmOutputDTO::ofFilm).toList();
     }
 

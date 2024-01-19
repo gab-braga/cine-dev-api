@@ -37,7 +37,7 @@ public class UserService {
         return users.stream().map(UserOutputDTO::ofUser).toList();
     }
 
-    public List<UserOutputDTO> findAllWithFilter(String name, String email, String cpf) {
+    public List<UserOutputDTO> findAll(String name, String email, String cpf) {
         List<User> users = userRepository.findAllWithFilter(name, email, cpf);
         return users.stream().map(UserOutputDTO::ofUser).toList();
     }

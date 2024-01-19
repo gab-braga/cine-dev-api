@@ -38,11 +38,11 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<List<UserOutputDTO>> findAllWithFilter(
+    public ResponseEntity<List<UserOutputDTO>> findAll(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String cpf) {
-        List<UserOutputDTO> users = userService.findAllWithFilter(name, email, cpf);
+        List<UserOutputDTO> users = userService.findAll(name, email, cpf);
         return ResponseEntity.ok(users);
     }
 
