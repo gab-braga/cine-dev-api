@@ -41,7 +41,7 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
-        this.active = false;
+        this.active = true;
         this.confirmed = false;
         this.createdAt = LocalDateTime.now();
     }

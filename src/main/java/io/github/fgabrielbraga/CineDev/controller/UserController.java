@@ -29,10 +29,20 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @GetMapping
+//    public ResponseEntity<List<UserOutputDTO>> findAll() {
+//        List<UserOutputDTO> users = userService.findAll();
+//        return ResponseEntity.ok(users);
+//    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<List<UserOutputDTO>> findAll() {
-        List<UserOutputDTO> users = userService.findAll();
+    public ResponseEntity<List<UserOutputDTO>> findAllWithFilter(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String cpf) {
+        List<UserOutputDTO> users = userService.findAllWithFilter(name, email, cpf);
         return ResponseEntity.ok(users);
     }
 
