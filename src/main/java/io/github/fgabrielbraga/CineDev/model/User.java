@@ -29,7 +29,7 @@ public class User {
     @Column(name = "profile_picture", columnDefinition = "MEDIUMTEXT")
     private String profilePicture;
     @Column(nullable = false)
-    private Boolean disabled;
+    private Boolean active;
     @Column(nullable = false)
     private Boolean confirmed;
     @Enumerated(EnumType.STRING)
@@ -41,7 +41,7 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
-        this.disabled = false;
+        this.active = false;
         this.confirmed = false;
         this.createdAt = LocalDateTime.now();
     }
@@ -105,12 +105,12 @@ public class User {
         this.profilePicture = profilePicture;
     }
 
-    public Boolean getDisabled() {
-        return disabled;
+    public Boolean getActive() {
+        return active;
     }
 
-    public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public Boolean getConfirmed() {
@@ -149,7 +149,7 @@ public class User {
                 Objects.equals(getCpf(), user.getCpf()) &&
                 Objects.equals(getPhoneNumber(), user.getPhoneNumber()) &&
                 Objects.equals(getProfilePicture(), user.getProfilePicture()) &&
-                Objects.equals(getDisabled(), user.getDisabled()) &&
+                Objects.equals(getActive(), user.getActive()) &&
                 Objects.equals(getConfirmed(), user.getConfirmed()) &&
                 getRole() == user.getRole() &&
                 Objects.equals(getCreatedAt(), user.getCreatedAt());
@@ -164,7 +164,7 @@ public class User {
                 getCpf(),
                 getPhoneNumber(),
                 getProfilePicture(),
-                getDisabled(),
+                getActive(),
                 getConfirmed(),
                 getRole(),
                 getCreatedAt());

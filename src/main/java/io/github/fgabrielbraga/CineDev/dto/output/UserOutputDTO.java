@@ -15,7 +15,7 @@ public class UserOutputDTO {
     private String cpf;
     private String phoneNumber;
     private String profilePicture;
-    private Boolean disabled;
+    private Boolean active;
     private Boolean confirmed;
     private Role role = Role.CLIENT;
     private LocalDateTime createdAt;
@@ -32,7 +32,7 @@ public class UserOutputDTO {
             userOutputDTO.cpf = user.getCpf();
             userOutputDTO.phoneNumber = user.getPhoneNumber();
             userOutputDTO.profilePicture = user.getProfilePicture();
-            userOutputDTO.disabled = user.getDisabled();
+            userOutputDTO.active = user.getActive();
             userOutputDTO.confirmed = user.getConfirmed();
             userOutputDTO.role = user.getRole();
             userOutputDTO.createdAt = user.getCreatedAt();
@@ -88,12 +88,12 @@ public class UserOutputDTO {
         this.profilePicture = profilePicture;
     }
 
-    public Boolean getDisabled() {
-        return disabled;
+    public Boolean getActive() {
+        return active;
     }
 
-    public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public Boolean getConfirmed() {

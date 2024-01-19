@@ -22,7 +22,7 @@ public class UserSecurity implements UserDetails {
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.role = user.getRole().getRole();
-        this.enable = !user.getDisabled();
+        this.enable = user.getActive();
     }
 
     @Override

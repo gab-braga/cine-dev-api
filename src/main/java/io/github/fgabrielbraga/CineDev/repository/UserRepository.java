@@ -15,10 +15,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByEmail(String email);
 
     @Modifying
-    @Query(value = "UPDATE users u SET u.disable = 1 WHERE uuid = ?", nativeQuery = true)
+    @Query(value = "UPDATE users u SET u.active = 0 WHERE uuid = ?", nativeQuery = true)
     void disableUserById(UUID uuid);
 
     @Modifying
-    @Query(value = "UPDATE users u SET u.disable = 0 WHERE uuid = ?", nativeQuery = true)
+    @Query(value = "UPDATE users u SET u.active = 1 WHERE uuid = ?", nativeQuery = true)
     void enableUserById(UUID uuid);
 }

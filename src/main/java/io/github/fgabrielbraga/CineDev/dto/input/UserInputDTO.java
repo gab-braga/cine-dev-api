@@ -16,7 +16,7 @@ public class UserInputDTO {
     private String cpf;
     private String phoneNumber;
     private String profilePicture;
-    private Boolean disabled;
+    private Boolean active;
     private Boolean confirmed;
     private Role role = Role.CLIENT;
     private LocalDateTime createdAt;
@@ -34,7 +34,7 @@ public class UserInputDTO {
             user.setCpf(dto.getCpf());
             user.setPhoneNumber(dto.getPhoneNumber());
             user.setProfilePicture(dto.getProfilePicture());
-            user.setDisabled(dto.getDisabled());
+            user.setActive(dto.getActive());
             user.setConfirmed(dto.getConfirmed());
             user.setRole(dto.getRole());
             user.setCreatedAt(dto.getCreatedAt());
@@ -98,12 +98,12 @@ public class UserInputDTO {
         this.profilePicture = profilePicture;
     }
 
-    public Boolean getDisabled() {
-        return disabled;
+    public Boolean getActive() {
+        return active;
     }
 
-    public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public Boolean getConfirmed() {

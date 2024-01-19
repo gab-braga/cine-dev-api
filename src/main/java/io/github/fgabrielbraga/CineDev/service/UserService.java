@@ -7,6 +7,7 @@ import io.github.fgabrielbraga.CineDev.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,10 +62,12 @@ public class UserService {
         userRepository.deleteById(uuid);
     }
 
+    @Transactional
     public void disable(UUID uuid) {
         userRepository.disableUserById(uuid);
     }
 
+    @Transactional
     public void enable(UUID uuid) {
         userRepository.enableUserById(uuid);
     }
