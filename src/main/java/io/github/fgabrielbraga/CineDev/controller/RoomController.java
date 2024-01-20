@@ -6,6 +6,7 @@ import io.github.fgabrielbraga.CineDev.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{uuid}")
     public ResponseEntity<RoomOutputDTO> findById(@PathVariable UUID uuid) {
         Optional<RoomOutputDTO> roomOptional = roomService.findById(uuid);
@@ -27,6 +29,7 @@ public class RoomController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<RoomOutputDTO>> findAll(
             @RequestParam(required = false) Short number) {
@@ -34,6 +37,7 @@ public class RoomController {
         return ResponseEntity.ok(rooms);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<RoomOutputDTO> create(@RequestBody RoomInputDTO room) {
         room.setUuid(null);
@@ -41,6 +45,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.CREATED).body(roomSaved);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{uuid}")
     public ResponseEntity<RoomOutputDTO> update(@PathVariable UUID uuid, @RequestBody RoomInputDTO room) {
         Optional<RoomOutputDTO> roomOptional = roomService.findById(uuid);
@@ -53,6 +58,7 @@ public class RoomController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{uuid}")
     public ResponseEntity<?> delete(@PathVariable UUID uuid) {
         Optional<RoomOutputDTO> roomOptional = roomService.findById(uuid);

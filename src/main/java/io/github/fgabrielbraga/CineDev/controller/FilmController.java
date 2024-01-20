@@ -6,6 +6,7 @@ import io.github.fgabrielbraga.CineDev.service.FilmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class FilmController {
     @Autowired
     private FilmService filmService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{uuid}")
     public ResponseEntity<FilmOutputDTO> findById(@PathVariable UUID uuid) {
         Optional<FilmOutputDTO> filmOptional = filmService.findById(uuid);
@@ -27,6 +29,7 @@ public class FilmController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<FilmOutputDTO>> findAll(
             @RequestParam(required = false) String title,
@@ -35,6 +38,7 @@ public class FilmController {
         return ResponseEntity.ok(films);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<FilmOutputDTO> create(@RequestBody FilmInputDTO film) {
         film.setUuid(null);
@@ -42,6 +46,7 @@ public class FilmController {
         return ResponseEntity.status(HttpStatus.CREATED).body(filmSaved);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{uuid}")
     public ResponseEntity<FilmOutputDTO> update(@PathVariable UUID uuid, @RequestBody FilmInputDTO film) {
         Optional<FilmOutputDTO> filmOptional = filmService.findById(uuid);
@@ -54,6 +59,7 @@ public class FilmController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{uuid}")
     public ResponseEntity<?> delete(@PathVariable UUID uuid) {
         Optional<FilmOutputDTO> filmOptional = filmService.findById(uuid);

@@ -19,6 +19,8 @@ public class Seat {
     private Short positionInX;
     @Column(name = "position_in_y", nullable = false)
     private Short positionInY;
+    @Column(name = "empty_space", nullable = false)
+    private Boolean empty;
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
@@ -58,6 +60,14 @@ public class Seat {
         this.positionInY = positionInY;
     }
 
+    public Boolean getEmpty() {
+        return empty;
+    }
+
+    public void setEmpty(Boolean empty) {
+        this.empty = empty;
+    }
+
     public Room getRoom() {
         return room;
     }
@@ -75,6 +85,7 @@ public class Seat {
                 Objects.equals(getNumber(), seat.getNumber()) &&
                 Objects.equals(getPositionInX(), seat.getPositionInX()) &&
                 Objects.equals(getPositionInY(), seat.getPositionInY()) &&
+                Objects.equals(getEmpty(), seat.getEmpty()) &&
                 Objects.equals(getRoom(), seat.getRoom());
     }
 
@@ -84,6 +95,7 @@ public class Seat {
                 getNumber(),
                 getPositionInX(),
                 getPositionInY(),
+                getEmpty(),
                 getRoom());
     }
 }

@@ -11,6 +11,7 @@ public class SeatOutputDTO {
     private Short number;
     private Short positionInX;
     private Short positionInY;
+    private Boolean empty;
     private UUID uuidRoom;
 
     public SeatOutputDTO() {
@@ -23,6 +24,7 @@ public class SeatOutputDTO {
             seatOutputDTO.number = seat.getNumber();
             seatOutputDTO.positionInX = seat.getPositionInX();
             seatOutputDTO.positionInY = seat.getPositionInY();
+            seatOutputDTO.empty = seat.getEmpty();
             seatOutputDTO.uuidRoom = seat.getRoom().getUuid();
             return seatOutputDTO;
         }).orElse(null);
@@ -58,6 +60,14 @@ public class SeatOutputDTO {
 
     public void setPositionInY(Short positionInY) {
         this.positionInY = positionInY;
+    }
+
+    public Boolean getEmpty() {
+        return empty;
+    }
+
+    public void setEmpty(Boolean empty) {
+        this.empty = empty;
     }
 
     public UUID getUuidRoom() {
