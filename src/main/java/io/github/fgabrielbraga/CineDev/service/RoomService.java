@@ -27,6 +27,11 @@ public class RoomService {
         return rooms.stream().map(RoomOutputDTO::ofRoom).toList();
     }
 
+    public List<RoomOutputDTO> findAll(Short number) {
+        List<Room> rooms = roomRepository.findAllWithFilter(number);
+        return rooms.stream().map(RoomOutputDTO::ofRoom).toList();
+    }
+
     public RoomOutputDTO save(RoomInputDTO roomInputDTO) {
         Room room = RoomInputDTO.parseRoom(roomInputDTO);
         room.getSeats().stream().forEach(seat -> seat.setRoom(room));

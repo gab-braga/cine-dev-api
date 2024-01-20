@@ -28,8 +28,9 @@ public class RoomController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoomOutputDTO>> findAll() {
-        List<RoomOutputDTO> rooms = roomService.findAll();
+    public ResponseEntity<List<RoomOutputDTO>> findAll(
+            @RequestParam(required = false) Short number) {
+        List<RoomOutputDTO> rooms = roomService.findAll(number);
         return ResponseEntity.ok(rooms);
     }
 
