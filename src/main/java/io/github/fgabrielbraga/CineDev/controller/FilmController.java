@@ -28,16 +28,10 @@ public class FilmController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FilmOutputDTO>> findAllWithFilter(
+    public ResponseEntity<List<FilmOutputDTO>> findAll(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String genres) {
         List<FilmOutputDTO> films = filmService.findAll(title, genres);
-        return ResponseEntity.ok(films);
-    }
-
-    @GetMapping("/genres/{genres}")
-    public ResponseEntity<List<FilmOutputDTO>> findByGenresContaining(@PathVariable String genres) {
-        List<FilmOutputDTO> films =  filmService.findByGenresContaining(genres);
         return ResponseEntity.ok(films);
     }
 
@@ -54,7 +48,7 @@ public class FilmController {
         return filmOptional
                 .map(filmFound -> {
                     film.setUuid(uuid);
-                    FilmOutputDTO filmUpdated = filmService.save(film);
+                    FilmOutputDTO filmUpdated = filmService.update(film);
                     return ResponseEntity.ok(filmUpdated);
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());

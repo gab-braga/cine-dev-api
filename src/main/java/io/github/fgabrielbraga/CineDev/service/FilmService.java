@@ -37,10 +37,24 @@ public class FilmService {
         return films.stream().map(FilmOutputDTO::ofFilm).toList();
     }
 
-    public FilmOutputDTO save(FilmInputDTO filmInputDTO) {
-        Film film = FilmInputDTO.parseFilm(filmInputDTO);
+    public FilmOutputDTO save(FilmInputDTO filmDTO) {
+        Film film = FilmInputDTO.parseFilm(filmDTO);
         Film filmSaved = filmRepository.save(film);
         return FilmOutputDTO.ofFilm(filmSaved);
+    }
+
+    public FilmOutputDTO update(FilmInputDTO filmDTO) {
+        Optional<Film> filmOpt = filmRepository.findById(filmDTO.getUuid());
+        return filmOpt.map(filmFound -> {
+            filmFound.setTitle(filmDTO.getTitle());
+            filmFound.setResume(filmDTO.getResume());
+            filmFound.setGenres(filmDTO.getGenres());
+            filmFound.setDuration(filmDTO.getDuration());
+            filmFound.setPublishedIn(filmDTO.getPublishedIn());
+            filmFound.setCoverImage(filmDTO.getCoverImage());
+            Film filmSaved = filmRepository.save(filmFound);
+            return FilmOutputDTO.ofFilm(filmSaved);
+        }).orElseThrow();
     }
 
     public void deleteById(UUID uuid) {
