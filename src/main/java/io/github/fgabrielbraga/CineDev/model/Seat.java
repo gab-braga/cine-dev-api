@@ -15,6 +15,8 @@ public class Seat {
     private UUID uuid;
     @Column(name = "number_seat", nullable = false)
     private Short number;
+    @Column(nullable = false)
+    private Short position;
     @Column(name = "position_in_x", nullable = false)
     private Short positionInX;
     @Column(name = "position_in_y", nullable = false)
@@ -42,6 +44,14 @@ public class Seat {
 
     public void setNumber(Short number) {
         this.number = number;
+    }
+
+    public Short getPosition() {
+        return position;
+    }
+
+    public void setPosition(Short position) {
+        this.position = position;
     }
 
     public Short getPositionInX() {
@@ -83,6 +93,7 @@ public class Seat {
         Seat seat = (Seat) o;
         return Objects.equals(getUuid(), seat.getUuid()) &&
                 Objects.equals(getNumber(), seat.getNumber()) &&
+                Objects.equals(getPosition(), seat.getPosition()) &&
                 Objects.equals(getPositionInX(), seat.getPositionInX()) &&
                 Objects.equals(getPositionInY(), seat.getPositionInY()) &&
                 Objects.equals(getEmpty(), seat.getEmpty()) &&
@@ -93,6 +104,7 @@ public class Seat {
     public int hashCode() {
         return Objects.hash(getUuid(),
                 getNumber(),
+                getPosition(),
                 getPositionInX(),
                 getPositionInY(),
                 getEmpty(),

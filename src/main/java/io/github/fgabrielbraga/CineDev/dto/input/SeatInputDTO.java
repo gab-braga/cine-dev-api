@@ -10,6 +10,7 @@ public class SeatInputDTO {
 
     private UUID uuid;
     private Short number;
+    private Short position;
     private Short positionInX;
     private Short positionInY;
     private Boolean empty;
@@ -23,6 +24,7 @@ public class SeatInputDTO {
             Seat seat = new Seat();
             seat.setUuid(dto.getUuid());
             seat.setNumber(dto.getNumber());
+            seat.setPosition(dto.getPosition());
             seat.setPositionInX(dto.getPositionInX());
             seat.setPositionInY(dto.getPositionInY());
             seat.setEmpty(dto.getEmpty());
@@ -51,6 +53,14 @@ public class SeatInputDTO {
 
     public void setNumber(Short number) {
         this.number = number;
+    }
+
+    public Short getPosition() {
+        return position;
+    }
+
+    public void setPosition(Short position) {
+        this.position = position;
     }
 
     public Short getPositionInX() {

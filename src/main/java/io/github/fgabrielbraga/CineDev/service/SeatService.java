@@ -17,23 +17,8 @@ public class SeatService {
     @Autowired
     private SeatRepository seatRepository;
 
-    public Optional<SeatOutputDTO> findById(UUID uuid) {
-        Optional<Seat> seatOpt = seatRepository.findById(uuid);
-        return seatOpt.map(SeatOutputDTO::ofSeat);
-    }
-
-    public List<SeatOutputDTO> findAll() {
-        List<Seat> seats = seatRepository.findAll();
+    public List<SeatOutputDTO> findByRoomId(UUID uuid) {
+        List<Seat> seats = seatRepository.findByRoomId(uuid);
         return seats.stream().map(SeatOutputDTO::ofSeat).toList();
-    }
-
-    public SeatOutputDTO save(SeatInputDTO seatInputDTO) {
-        Seat seat = SeatInputDTO.parseSeat(seatInputDTO);
-        Seat seatSaved = seatRepository.save(seat);
-        return SeatOutputDTO.ofSeat(seatSaved);
-    }
-
-    public void deleteById(UUID uuid) {
-        seatRepository.deleteById(uuid);
     }
 }

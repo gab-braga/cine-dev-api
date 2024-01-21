@@ -24,11 +24,13 @@ public class RoomService {
 
     public List<RoomOutputDTO> findAll() {
         List<Room> rooms = roomRepository.findAll();
+        rooms.stream().forEach(room -> room.getSeats().clear());
         return rooms.stream().map(RoomOutputDTO::ofRoom).toList();
     }
 
     public List<RoomOutputDTO> findAll(Short number) {
         List<Room> rooms = roomRepository.findAllWithFilter(number);
+        rooms.stream().forEach(room -> room.getSeats().clear());
         return rooms.stream().map(RoomOutputDTO::ofRoom).toList();
     }
 
