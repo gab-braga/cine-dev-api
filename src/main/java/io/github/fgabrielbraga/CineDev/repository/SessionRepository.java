@@ -2,6 +2,7 @@ package io.github.fgabrielbraga.CineDev.repository;
 
 import io.github.fgabrielbraga.CineDev.model.Session;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +12,14 @@ import java.util.UUID;
 
 @Repository
 public interface SessionRepository extends JpaRepository<Session, UUID> {
+
+    @Modifying
+    @Query(value = "UPDATE sessions s SET s.open = 0 WHERE s.uuid = ?", nativeQuery = true)
+    void closeSessionById(UUID uuid);
+
+    @Modifying
+    @Query(value = "UPDATE sessions s SET s.open = 1 WHERE s.uuid = ?", nativeQuery = true)
+    void openSessionById(UUID uuid);
 
     @Query(value = "SELECT s.* FROM sessions s " +
             "JOIN rooms r ON s.room_id = r.uuid " +

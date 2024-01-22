@@ -10,6 +10,7 @@ import io.github.fgabrielbraga.CineDev.repository.RoomRepository;
 import io.github.fgabrielbraga.CineDev.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -76,5 +77,15 @@ public class SessionService {
 
     public void deleteById(UUID uuid) {
         sessionRepository.deleteById(uuid);
+    }
+
+    @Transactional
+    public void close(UUID uuid) {
+        sessionRepository.closeSessionById(uuid);
+    }
+
+    @Transactional
+    public void open(UUID uuid) {
+        sessionRepository.openSessionById(uuid);
     }
 }

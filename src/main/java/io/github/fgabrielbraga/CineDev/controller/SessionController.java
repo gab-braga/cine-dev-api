@@ -83,4 +83,28 @@ public class SessionController {
         return ResponseEntity.notFound().build();
 
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{uuid}/close")
+    public ResponseEntity<?> close(@PathVariable UUID uuid) {
+        Optional<SessionOutputDTO> sessionOptional = sessionService.findById(uuid);
+        return sessionOptional
+                .map(sessionFound -> {
+                    sessionService.close(uuid);
+                    return ResponseEntity.ok().build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{uuid}/open")
+    public ResponseEntity<?> open(@PathVariable UUID uuid) {
+        Optional<SessionOutputDTO> sessionOptional = sessionService.findById(uuid);
+        return sessionOptional
+                .map(sessionFound -> {
+                    sessionService.open(uuid);
+                    return ResponseEntity.ok().build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
