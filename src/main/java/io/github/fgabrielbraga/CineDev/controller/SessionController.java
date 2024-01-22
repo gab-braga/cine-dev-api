@@ -66,13 +66,21 @@ public class SessionController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{uuid}")
     public ResponseEntity<SessionOutputDTO> update(@PathVariable UUID uuid, @RequestBody SessionInputDTO session) {
-        Optional<SessionOutputDTO> sessionOptional = sessionService.findById(uuid);
-        return sessionOptional
-                .map(sessionFound -> {
-                    session.setUuid(uuid);
-                    SessionOutputDTO sessionUpdated = sessionService.save(session);
-                    return ResponseEntity.ok(sessionUpdated);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        UUID filmId = session.getFilmId();
+        UUID roomId = session.getRoomId();
+        Optional<FilmOutputDTO> filmOptional = filmService.findById(filmId);
+        Optional<RoomOutputDTO> roomOptional = roomService.findById(roomId);
+        if(filmOptional.isPresent() && roomOptional.isPresent()) {
+            Optional<SessionOutputDTO> sessionOptional = sessionService.findById(uuid);
+            return sessionOptional
+                    .map(sessionFound -> {
+                        session.setUuid(uuid);
+                        SessionOutputDTO sessionUpdated = sessionService.update(filmId, roomId, session);
+                        return ResponseEntity.ok(sessionUpdated);
+                    })
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        }
+        return ResponseEntity.notFound().build();
+
     }
 }

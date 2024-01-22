@@ -17,6 +17,6 @@ public interface SessionRepository extends JpaRepository<Session, UUID> {
             "JOIN films f ON s.film_id = f.uuid WHERE " +
             "s.date_session = IFNULL(?, s.date_session) AND " +
             "r.number_room = IFNULL(?, r.number_room) AND " +
-            "f.title LIKE CONCAT(IFNULL(?, ''), '%')", nativeQuery = true)
+            "f.title LIKE CONCAT('%', IFNULL(?, ''), '%')", nativeQuery = true)
     List<Session> findAllWithFilter(LocalDate date, Short number, String title);
 }

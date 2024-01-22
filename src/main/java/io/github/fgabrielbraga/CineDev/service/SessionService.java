@@ -47,15 +47,31 @@ public class SessionService {
         return SessionOutputDTO.ofSession(sessionSaved);
     }
 
-    public SessionOutputDTO save(UUID filmId, UUID roomId, SessionInputDTO sessionInputDTO) {
+    public SessionOutputDTO save(UUID filmId, UUID roomId, SessionInputDTO sessionDTO) {
         Film film = filmRepository.findById(filmId).orElseThrow();
         Room room = roomRepository.findById(roomId).orElseThrow();
-        Session session = SessionInputDTO.parseSession(sessionInputDTO);
+        Session session = SessionInputDTO.parseSession(sessionDTO);
         session.setFilm(film);
         session.setRoom(room);
         session.setNumberFreeSeats(room.getCapacity());
         Session sessionSaved = sessionRepository.save(session);
         return SessionOutputDTO.ofSession(sessionSaved);
+    }
+
+    public SessionOutputDTO update(UUID filmId, UUID roomId, SessionInputDTO sessionDTO) {
+        Film film = filmRepository.findById(filmId).orElseThrow();
+        Room room = roomRepository.findById(roomId).orElseThrow();
+        Optional<Session> sessionOpt = sessionRepository.findById(sessionDTO.getUuid());
+        return sessionOpt.map(sessionFound -> {
+            sessionFound.setFilm(film);
+            sessionFound.setRoom(room);
+            sessionFound.setDate(sessionDTO.getDate());
+            sessionFound.setHour(sessionDTO.getHour());
+            sessionFound.setTicketPrice(sessionDTO.getTicketPrice());
+            sessionFound.setNumberFreeSeats(room.getCapacity());
+            Session sessionSaved = sessionRepository.save(sessionFound);
+            return SessionOutputDTO.ofSession(sessionSaved);
+        }).orElseThrow();
     }
 
     public void deleteById(UUID uuid) {
