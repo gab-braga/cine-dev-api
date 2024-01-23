@@ -2,9 +2,11 @@ package io.github.fgabrielbraga.CineDev.controller;
 
 import io.github.fgabrielbraga.CineDev.dto.input.SessionInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.FilmOutputDTO;
+import io.github.fgabrielbraga.CineDev.dto.output.ReservationOutputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.RoomOutputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.SessionOutputDTO;
 import io.github.fgabrielbraga.CineDev.service.FilmService;
+import io.github.fgabrielbraga.CineDev.service.ReservationService;
 import io.github.fgabrielbraga.CineDev.service.RoomService;
 import io.github.fgabrielbraga.CineDev.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class SessionController {
     private FilmService filmService;
     @Autowired
     private RoomService roomService;
+    @Autowired
+    private ReservationService reservationService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{uuid}")
@@ -66,22 +70,25 @@ public class SessionController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{uuid}")
     public ResponseEntity<SessionOutputDTO> update(@PathVariable UUID uuid, @RequestBody SessionInputDTO session) {
-        UUID filmId = session.getFilmId();
-        UUID roomId = session.getRoomId();
-        Optional<FilmOutputDTO> filmOptional = filmService.findById(filmId);
-        Optional<RoomOutputDTO> roomOptional = roomService.findById(roomId);
-        if(filmOptional.isPresent() && roomOptional.isPresent()) {
-            Optional<SessionOutputDTO> sessionOptional = sessionService.findById(uuid);
-            return sessionOptional
-                    .map(sessionFound -> {
-                        session.setUuid(uuid);
-                        SessionOutputDTO sessionUpdated = sessionService.update(filmId, roomId, session);
-                        return ResponseEntity.ok(sessionUpdated);
-                    })
-                    .orElseGet(() -> ResponseEntity.notFound().build());
+        List<ReservationOutputDTO> reservations = reservationService.findBySessionId(uuid);
+        if(reservations.isEmpty()) {
+            UUID filmId = session.getFilmId();
+            UUID roomId = session.getRoomId();
+            Optional<FilmOutputDTO> filmOptional = filmService.findById(filmId);
+            Optional<RoomOutputDTO> roomOptional = roomService.findById(roomId);
+            if(filmOptional.isPresent() && roomOptional.isPresent()) {
+                Optional<SessionOutputDTO> sessionOptional = sessionService.findById(uuid);
+                return sessionOptional
+                        .map(sessionFound -> {
+                            session.setUuid(uuid);
+                            SessionOutputDTO sessionUpdated = sessionService.update(filmId, roomId, session);
+                            return ResponseEntity.ok(sessionUpdated);
+                        })
+                        .orElseGet(() -> ResponseEntity.notFound().build());
+            }
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
-
+        return ResponseEntity.badRequest().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")

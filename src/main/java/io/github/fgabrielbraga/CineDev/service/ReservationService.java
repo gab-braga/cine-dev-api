@@ -36,4 +36,9 @@ public class ReservationService {
     public void deleteById(UUID uuid) {
         reservationRepository.deleteById(uuid);
     }
+
+    public List<ReservationOutputDTO> findBySessionId(UUID uuid) {
+        List<Reservation> reservations = reservationRepository.findBySessionId(uuid);
+        return reservations.stream().map(ReservationOutputDTO::ofReservation).toList();
+    }
 }
