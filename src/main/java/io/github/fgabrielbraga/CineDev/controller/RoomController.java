@@ -47,12 +47,12 @@ public class RoomController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{uuid}")
-    public ResponseEntity<RoomOutputDTO> update(@PathVariable UUID uuid, @RequestBody RoomInputDTO room) {
+    public ResponseEntity<RoomOutputDTO> updateDetails(@PathVariable UUID uuid, @RequestBody RoomInputDTO room) {
         Optional<RoomOutputDTO> roomOptional = roomService.findById(uuid);
         return roomOptional
                 .map(roomFound -> {
                     room.setUuid(uuid);
-                    RoomOutputDTO roomUpdated = roomService.save(room);
+                    RoomOutputDTO roomUpdated = roomService.updateDetails(room);
                     return ResponseEntity.ok(roomUpdated);
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());

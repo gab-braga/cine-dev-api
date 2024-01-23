@@ -34,11 +34,21 @@ public class RoomService {
         return rooms.stream().map(RoomOutputDTO::ofRoom).toList();
     }
 
-    public RoomOutputDTO save(RoomInputDTO roomInputDTO) {
-        Room room = RoomInputDTO.parseRoom(roomInputDTO);
+    public RoomOutputDTO save(RoomInputDTO roomDTO) {
+        Room room = RoomInputDTO.parseRoom(roomDTO);
         room.getSeats().stream().forEach(seat -> seat.setRoom(room));
         Room roomSaved = roomRepository.save(room);
         return RoomOutputDTO.ofRoom(roomSaved);
+    }
+
+    public RoomOutputDTO updateDetails(RoomInputDTO roomDTO) {
+        Optional<Room> roomOpt = roomRepository.findById(roomDTO.getUuid());
+        return roomOpt.map(roomFound -> {
+            roomFound.setNumber(roomDTO.getNumber());
+            roomFound.setProjectionType(roomDTO.getProjectionType());
+            Room roomSaved = roomRepository.save(roomFound);
+            return RoomOutputDTO.ofRoom(roomSaved);
+        }).orElseThrow();
     }
 
     public void deleteById(UUID uuid) {
