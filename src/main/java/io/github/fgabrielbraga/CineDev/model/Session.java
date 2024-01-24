@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -33,7 +34,7 @@ public class Session {
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
-    private List<Ticket> tickets;
+    private List<Ticket> tickets = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

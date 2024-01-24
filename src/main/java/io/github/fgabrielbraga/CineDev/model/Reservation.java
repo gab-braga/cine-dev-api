@@ -4,6 +4,7 @@ import io.github.fgabrielbraga.CineDev.enums.StatusReservation;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,7 +29,7 @@ public class Reservation {
     @JoinColumn(name = "session_id", nullable = false)
     private Session session;
     @OneToMany(mappedBy = "reservation")
-    private List<Ticket> tickets;
+    private List<Ticket> tickets = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

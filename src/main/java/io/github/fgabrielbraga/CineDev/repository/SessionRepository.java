@@ -28,4 +28,7 @@ public interface SessionRepository extends JpaRepository<Session, UUID> {
             "r.number_room = IFNULL(?, r.number_room) AND " +
             "f.title LIKE CONCAT('%', IFNULL(?, ''), '%')", nativeQuery = true)
     List<Session> findAllWithFilter(LocalDate date, Short number, String title);
+
+    @Query(value = "SELECT * FROM sessions WHERE room_id = ?", nativeQuery = true)
+    List<Session> findByRoomId(UUID uuid);
 }

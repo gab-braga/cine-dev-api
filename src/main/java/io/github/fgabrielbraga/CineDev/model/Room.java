@@ -2,6 +2,7 @@ package io.github.fgabrielbraga.CineDev.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class Room {
     @Column(name = "projection_type", nullable = false, length = 50)
     private String projectionType;
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
-    List<Seat> seats;
+    List<Seat> seats = new ArrayList<>();
 
     public Room() {
     }

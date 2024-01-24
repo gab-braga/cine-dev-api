@@ -1,11 +1,15 @@
 package io.github.fgabrielbraga.CineDev.service;
 
 import io.github.fgabrielbraga.CineDev.dto.input.RoomInputDTO;
+import io.github.fgabrielbraga.CineDev.dto.input.SeatInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.RoomOutputDTO;
 import io.github.fgabrielbraga.CineDev.model.Room;
+import io.github.fgabrielbraga.CineDev.model.Seat;
 import io.github.fgabrielbraga.CineDev.repository.RoomRepository;
+import io.github.fgabrielbraga.CineDev.repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +20,8 @@ public class RoomService {
 
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private SeatRepository seatRepository;
 
     public Optional<RoomOutputDTO> findById(UUID uuid) {
         Optional<Room> roomOpt = roomRepository.findById(uuid);
@@ -49,6 +55,28 @@ public class RoomService {
             Room roomSaved = roomRepository.save(roomFound);
             return RoomOutputDTO.ofRoom(roomSaved);
         }).orElseThrow();
+    }
+
+    @Transactional
+    public RoomOutputDTO updateSeatMap(RoomInputDTO roomDTO) {
+        Optional<Room> roomOpt = roomRepository.findById(roomDTO.getUuid());
+        return roomOpt.map(roomFound -> {
+            deleteAllByRoomId(roomFound.getUuid());
+            roomFound.setWidth(roomDTO.getWidth());
+            roomFound.setHeight(roomDTO.getHeight());
+            roomFound.setCapacity(roomDTO.getCapacity());
+            List<Seat> seats = SeatInputDTO.toSeatList(roomDTO.getSeats());
+            seats.stream().forEach(seat -> seat.setRoom(roomFound));
+            roomFound.getSeats().clear();
+            roomFound.getSeats().addAll(seats);
+            Room roomSaved = roomRepository.save(roomFound);
+            return RoomOutputDTO.ofRoom(roomSaved);
+        }).orElseThrow();
+    }
+
+    @Transactional
+    private void deleteAllByRoomId(UUID uuid) {
+        seatRepository.deleteAllByRoomId(uuid);
     }
 
     public void deleteById(UUID uuid) {

@@ -42,6 +42,11 @@ public class SessionService {
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 
+    public List<SessionOutputDTO> findByRoomId(UUID uuid) {
+        List<Session> sessions = sessionRepository.findByRoomId(uuid);
+        return sessions.stream().map(SessionOutputDTO::ofSession).toList();
+    }
+
     public SessionOutputDTO save(SessionInputDTO sessionInputDTO) {
         Session session = SessionInputDTO.parseSession(sessionInputDTO);
         Session sessionSaved = sessionRepository.save(session);
