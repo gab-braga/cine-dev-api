@@ -42,6 +42,16 @@ public class SessionService {
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 
+    public List<SessionOutputDTO> findNearby() {
+        List<Session> sessions = sessionRepository.findNearby();
+        return sessions.stream().map(SessionOutputDTO::ofSession).toList();
+    }
+
+    public List<SessionOutputDTO> findAllThisWeek() {
+        List<Session> sessions = sessionRepository.findAllThisWeek();
+        return sessions.stream().map(SessionOutputDTO::ofSession).toList();
+    }
+
     public List<SessionOutputDTO> findByRoomId(UUID uuid) {
         List<Session> sessions = sessionRepository.findByRoomId(uuid);
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();

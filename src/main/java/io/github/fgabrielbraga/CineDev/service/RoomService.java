@@ -62,13 +62,13 @@ public class RoomService {
         Optional<Room> roomOpt = roomRepository.findById(roomDTO.getUuid());
         return roomOpt.map(roomFound -> {
             deleteAllByRoomId(roomFound.getUuid());
-            roomFound.setWidth(roomDTO.getWidth());
-            roomFound.setHeight(roomDTO.getHeight());
-            roomFound.setCapacity(roomDTO.getCapacity());
             List<Seat> seats = SeatInputDTO.toSeatList(roomDTO.getSeats());
             seats.stream().forEach(seat -> seat.setRoom(roomFound));
             roomFound.getSeats().clear();
             roomFound.getSeats().addAll(seats);
+            roomFound.setWidth(roomDTO.getWidth());
+            roomFound.setHeight(roomDTO.getHeight());
+            roomFound.setCapacity(roomDTO.getCapacity());
             Room roomSaved = roomRepository.save(roomFound);
             return RoomOutputDTO.ofRoom(roomSaved);
         }).orElseThrow();

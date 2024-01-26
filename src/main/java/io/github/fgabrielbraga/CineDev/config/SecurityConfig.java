@@ -27,7 +27,7 @@ import java.util.Arrays;
 @EnableMethodSecurity //https://docs.spring.io/spring-security/reference/servlet/authorization/method-security.html
 public class SecurityConfig {
 
-    private final String[] PUBLIC_ROUTES = {"/auth/**"};
+    private final String[] PUBLIC_ROUTES = {"/auth/**", "/public/**"};
 
     @Autowired
     private JwtTokenFilter jwtTokenFilter;
