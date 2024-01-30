@@ -29,13 +29,6 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @GetMapping
-//    public ResponseEntity<List<UserOutputDTO>> findAll() {
-//        List<UserOutputDTO> users = userService.findAll();
-//        return ResponseEntity.ok(users);
-//    }
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserOutputDTO>> findAll(

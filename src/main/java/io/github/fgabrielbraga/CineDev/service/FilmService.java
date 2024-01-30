@@ -37,6 +37,11 @@ public class FilmService {
         return films.stream().map(FilmOutputDTO::ofFilm).toList();
     }
 
+    public Optional<FilmOutputDTO> findByIdForClient(UUID uuid) {
+        Optional<Film> filmOpt = filmRepository.findById(uuid);
+        return filmOpt.map(FilmOutputDTO::ofFilm);
+    }
+
     public FilmOutputDTO save(FilmInputDTO filmDTO) {
         Film film = FilmInputDTO.parseFilm(filmDTO);
         Film filmSaved = filmRepository.save(film);
