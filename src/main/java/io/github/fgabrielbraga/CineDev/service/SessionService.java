@@ -42,8 +42,8 @@ public class SessionService {
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 
-    public List<SessionOutputDTO> findNearby() {
-        List<Session> sessions = sessionRepository.findNearby();
+    public List<SessionOutputDTO> findRecentByDate(LocalDate date) {
+        List<Session> sessions = sessionRepository.findRecentByDate(date);
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 

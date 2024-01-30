@@ -36,6 +36,9 @@ public interface SessionRepository extends JpaRepository<Session, UUID> {
     @Query(value = "SELECT * FROM sessions WHERE open = 1 AND WEEK(date_session) = WEEK(NOW()) ORDER BY date_session", nativeQuery = true)
     List<Session> findAllThisWeek();
 
-    @Query(value = "SELECT * FROM sessions WHERE open = 1 AND date_session >= CURDATE() ORDER BY date_session", nativeQuery = true)
-    List<Session> findNearby();
+    @Query(value = "SELECT s.* FROM sessions s JOIN films f ON s.film_id = f.uuid " +
+            "WHERE s.open = 1 AND s.date_session >= CURDATE() " +
+            "AND s.date_session = IFNULL(?, s.date_session) " +
+            "ORDER BY date_session LIMIT 120", nativeQuery = true)
+    List<Session> findRecentByDate(LocalDate date);
 }
