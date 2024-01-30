@@ -41,4 +41,10 @@ public interface SessionRepository extends JpaRepository<Session, UUID> {
             "AND s.date_session = IFNULL(?, s.date_session) " +
             "ORDER BY date_session LIMIT 120", nativeQuery = true)
     List<Session> findRecentByDate(LocalDate date);
+
+    @Query(value = "SELECT s.* FROM sessions s JOIN films f ON s.film_id = f.uuid " +
+            "WHERE s.open = 1 AND s.date_session >= CURDATE() " +
+            "AND f.genres LIKE CONCAT('%', IFNULL(?, ''), '%') " +
+            "ORDER BY date_session LIMIT 120", nativeQuery = true)
+    List<Session> findByGenresForClient(String genres);
 }

@@ -57,6 +57,16 @@ public class SessionService {
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 
+    public Optional<SessionOutputDTO> findByIdForClient(UUID uuid) {
+        Optional<Session> sessionOpt = sessionRepository.findById(uuid);
+        return sessionOpt.map(SessionOutputDTO::ofSession);
+    }
+
+    public List<SessionOutputDTO> findByGenresForClient(String genres) {
+        List<Session> sessions = sessionRepository.findByGenresForClient(genres);
+        return sessions.stream().map(SessionOutputDTO::ofSession).toList();
+    }
+
     public SessionOutputDTO save(SessionInputDTO sessionInputDTO) {
         Session session = SessionInputDTO.parseSession(sessionInputDTO);
         Session sessionSaved = sessionRepository.save(session);

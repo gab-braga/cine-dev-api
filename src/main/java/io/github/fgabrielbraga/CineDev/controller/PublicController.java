@@ -29,9 +29,25 @@ public class PublicController {
         return ResponseEntity.ok(sessions);
     }
 
+    @GetMapping("/sessions/{uuid}")
+    public ResponseEntity<SessionOutputDTO> findSessionById(
+            @PathVariable UUID uuid) {
+        Optional<SessionOutputDTO> sessionOpt = sessionService.findByIdForClient(uuid);
+        return sessionOpt.map(session -> {
+            return ResponseEntity.ok(session);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/sessions/week")
     public ResponseEntity<List<SessionOutputDTO>> findAllSessionsThisWeek() {
         List<SessionOutputDTO> sessions = sessionService.findThisWeek();
+        return ResponseEntity.ok(sessions);
+    }
+
+    @GetMapping("/sessions/genres")
+    public ResponseEntity<List<SessionOutputDTO>> findSessionsByGenres(
+            @RequestParam String genres) {
+        List<SessionOutputDTO> sessions = sessionService.findByGenresForClient(genres);
         return ResponseEntity.ok(sessions);
     }
 
