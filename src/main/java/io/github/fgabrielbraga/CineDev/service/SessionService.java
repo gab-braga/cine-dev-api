@@ -47,8 +47,8 @@ public class SessionService {
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 
-    public List<SessionOutputDTO> findAllThisWeek() {
-        List<Session> sessions = sessionRepository.findAllThisWeek();
+    public List<SessionOutputDTO> findThisWeek() {
+        List<Session> sessions = sessionRepository.findThisWeek();
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 

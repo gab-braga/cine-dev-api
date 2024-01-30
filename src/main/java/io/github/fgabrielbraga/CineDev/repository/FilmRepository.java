@@ -19,4 +19,7 @@ public interface FilmRepository extends JpaRepository<Film, UUID> {
             "f.title LIKE CONCAT('%', IFNULL(?, ''), '%') AND " +
             "f.genres LIKE CONCAT('%', IFNULL(?, ''), '%')", nativeQuery = true)
     List<Film> findAllWithFilter(String title, String genres);
+
+    @Query(value = "SELECT * FROM films ORDER BY published_in DESC LIMIT 120", nativeQuery = true)
+    List<Film> findForClient();
 }
