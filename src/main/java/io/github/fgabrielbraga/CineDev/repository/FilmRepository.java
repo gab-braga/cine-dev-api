@@ -12,10 +12,6 @@ import java.util.UUID;
 @Repository
 public interface FilmRepository extends JpaRepository<Film, UUID> {
 
-    List<Film> findByTitleContainingIgnoreCase(String title);
-
-    List<Film> findByGenresContainingIgnoreCase(String genres);
-
     @Query(value = "SELECT * FROM films f WHERE " +
             "f.title LIKE CONCAT('%', IFNULL(?, ''), '%') AND " +
             "f.genres LIKE CONCAT('%', IFNULL(?, ''), '%')", nativeQuery = true)
@@ -23,4 +19,8 @@ public interface FilmRepository extends JpaRepository<Film, UUID> {
 
     @Query(value = "SELECT * FROM films ORDER BY published_in DESC LIMIT 120", nativeQuery = true)
     List<Film> findForClient();
+
+    @Query(value = "SELECT * FROM films WHERE genres LIKE CONCAT('%', IFNULL(?, ''), '%') " +
+            "ORDER BY published_in DESC LIMIT 120", nativeQuery = true)
+    List<Film> findByGenresForClient(String genres);
 }

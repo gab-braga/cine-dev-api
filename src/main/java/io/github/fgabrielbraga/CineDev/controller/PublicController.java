@@ -35,12 +35,6 @@ public class PublicController {
         return ResponseEntity.ok(sessions);
     }
 
-    @GetMapping("/films")
-    public ResponseEntity<List<FilmOutputDTO>> findFilms() {
-        List<FilmOutputDTO> films = filmService.findForClient();
-        return ResponseEntity.ok(films);
-    }
-
     @GetMapping("/films/{uuid}")
     public ResponseEntity<FilmOutputDTO> findFilmById(
             @PathVariable UUID uuid) {
@@ -48,5 +42,18 @@ public class PublicController {
         return filmOpt.map(film -> {
             return ResponseEntity.ok(film);
         }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/films/genres")
+    public ResponseEntity<List<FilmOutputDTO>> findFilmByGenres(
+            @RequestParam String genres) {
+        List<FilmOutputDTO> films = filmService.findByGenresForClient(genres);
+        return ResponseEntity.ok(films);
+    }
+
+    @GetMapping("/films")
+    public ResponseEntity<List<FilmOutputDTO>> findFilms() {
+        List<FilmOutputDTO> films = filmService.findForClient();
+        return ResponseEntity.ok(films);
     }
 }

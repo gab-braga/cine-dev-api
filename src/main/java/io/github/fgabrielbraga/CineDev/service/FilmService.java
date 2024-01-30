@@ -32,14 +32,19 @@ public class FilmService {
         return films.stream().map(FilmOutputDTO::ofFilm).toList();
     }
 
-    public List<FilmOutputDTO> findForClient() {
-        List<Film> films = filmRepository.findForClient();
-        return films.stream().map(FilmOutputDTO::ofFilm).toList();
-    }
-
     public Optional<FilmOutputDTO> findByIdForClient(UUID uuid) {
         Optional<Film> filmOpt = filmRepository.findById(uuid);
         return filmOpt.map(FilmOutputDTO::ofFilm);
+    }
+
+    public List<FilmOutputDTO> findByGenresForClient(String genres) {
+        List<Film> films = filmRepository.findByGenresForClient(genres);
+        return films.stream().map(FilmOutputDTO::ofFilm).toList();
+    }
+
+    public List<FilmOutputDTO> findForClient() {
+        List<Film> films = filmRepository.findForClient();
+        return films.stream().map(FilmOutputDTO::ofFilm).toList();
     }
 
     public FilmOutputDTO save(FilmInputDTO filmDTO) {
