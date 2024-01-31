@@ -45,7 +45,7 @@ public class AuthService {
         String uuid = user.getUUID();
         String email = user.getUsername();
         String role = getRole(user.getAuthorities());
-        return jwtTokenUtil.generateJwtToken(uuid, email, role);
+        return jwtTokenUtil.generateJwtToken(email, uuid, role);
     }
 
     private String getRole(Collection<? extends GrantedAuthority> authorities) {

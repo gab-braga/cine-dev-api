@@ -28,6 +28,11 @@ public class RoomService {
         return roomOpt.map(RoomOutputDTO::ofRoom);
     }
 
+    public Optional<RoomOutputDTO> findBySessionId(UUID uuid) {
+        Optional<Room> roomOpt = roomRepository.findBySessionId(uuid);
+        return roomOpt.map(RoomOutputDTO::ofRoom);
+    }
+
     public List<RoomOutputDTO> findAll() {
         List<Room> rooms = roomRepository.findAll();
         rooms.stream().forEach(room -> room.getSeats().clear());

@@ -27,8 +27,8 @@ public class RoomController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{uuid}")
     public ResponseEntity<RoomOutputDTO> findById(@PathVariable UUID uuid) {
-        Optional<RoomOutputDTO> roomOptional = roomService.findById(uuid);
-        return roomOptional
+        Optional<RoomOutputDTO> roomOpt = roomService.findById(uuid);
+        return roomOpt
                 .map(roomFound -> ResponseEntity.ok(roomFound))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -39,6 +39,16 @@ public class RoomController {
             @RequestParam(required = false) Short number) {
         List<RoomOutputDTO> rooms = roomService.findAll(number);
         return ResponseEntity.ok(rooms);
+    }
+
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/sessions/{uuid}")
+    public ResponseEntity<RoomOutputDTO> findBySessionId(
+            @PathVariable UUID uuid) {
+        Optional<RoomOutputDTO> roomOpt = roomService.findBySessionId(uuid);
+        return roomOpt
+                .map(roomFound -> ResponseEntity.ok(roomFound))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
