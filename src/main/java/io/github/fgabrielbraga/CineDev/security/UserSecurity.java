@@ -7,9 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 public class UserSecurity implements UserDetails {
 
+    private UUID uuid;
     private String email;
     private String password;
     private String role;
@@ -19,6 +21,7 @@ public class UserSecurity implements UserDetails {
     }
 
     public UserSecurity(User user) {
+        this.uuid = user.getUuid();
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.role = user.getRole().getRole();
@@ -60,5 +63,9 @@ public class UserSecurity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enable;
+    }
+
+    public String getUUID() {
+        return this.uuid.toString();
     }
 }

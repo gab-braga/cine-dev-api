@@ -35,10 +35,11 @@ public class JwtTokenUtil {
                 .getSubject();
     }
 
-    public String generateJwtToken(String email, String role) {
+    public String generateJwtToken(String uuid, String email, String role) {
         Date expirationDate = new Date(System.currentTimeMillis() + jwtExpirationTime);
         return JWT.create()
-                .withSubject(email)
+                .withSubject(uuid)
+                .withClaim("name", email)
                 .withClaim("role", role)
                 .withExpiresAt(expirationDate)
                 .sign(Algorithm.HMAC512(jwtSecretKey));

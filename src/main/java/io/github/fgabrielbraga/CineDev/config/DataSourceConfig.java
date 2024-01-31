@@ -14,7 +14,7 @@ public class DataSourceConfig {
         DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.url("jdbc:mysql://127.0.0.1:3306/cinedev_db");
         dataSourceBuilder.username("root");
-        dataSourceBuilder.password("root3306");
+        dataSourceBuilder.password("123456");
         return dataSourceBuilder.build();
     }
 }

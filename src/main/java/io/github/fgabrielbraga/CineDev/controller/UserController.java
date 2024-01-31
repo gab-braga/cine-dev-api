@@ -20,6 +20,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserOutputDTO> findByEmail(@PathVariable String email) {
+        Optional<UserOutputDTO> userOptional = userService.findByEmail(email);
+        return userOptional
+                .map(userFound -> ResponseEntity.ok(userFound))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{uuid}")
     public ResponseEntity<UserOutputDTO> findById(@PathVariable UUID uuid) {
