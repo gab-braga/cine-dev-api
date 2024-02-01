@@ -1,6 +1,5 @@
 package io.github.fgabrielbraga.CineDev.dto.input;
 
-import io.github.fgabrielbraga.CineDev.enums.StatusTicket;
 import io.github.fgabrielbraga.CineDev.model.Ticket;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.UUID;
 public class TicketInputDTO {
 
     private UUID uuid;
-    private StatusTicket status;
+    private Boolean gap;
     private SeatInputDTO seat;
     private SessionInputDTO session;
     private ReservationInputDTO reservation;
@@ -22,7 +21,7 @@ public class TicketInputDTO {
         return Optional.ofNullable(ticketInputDTO).map(dto -> {
             Ticket ticket = new Ticket();
             ticket.setUuid(dto.getUuid());
-            ticket.setStatus(dto.getStatus());
+            ticket.setGap(dto.getGap());
             ticket.setSeat(SeatInputDTO.parseSeat(dto.getSeat()));
             ticket.setSession(SessionInputDTO.parseSession(dto.getSession()));
             ticket.setReservation(ReservationInputDTO.parseReservation(dto.getReservation()));
@@ -44,12 +43,12 @@ public class TicketInputDTO {
         this.uuid = uuid;
     }
 
-    public StatusTicket getStatus() {
-        return status;
+    public Boolean getGap() {
+        return gap;
     }
 
-    public void setStatus(StatusTicket status) {
-        this.status = status;
+    public void setGap(Boolean gap) {
+        this.gap = gap;
     }
 
     public SeatInputDTO getSeat() {

@@ -1,6 +1,5 @@
 package io.github.fgabrielbraga.CineDev.model;
 
-import io.github.fgabrielbraga.CineDev.enums.StatusTicket;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -14,9 +13,8 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, unique = true, updatable = false)
     private UUID uuid;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status_ticket", nullable = false)
-    private StatusTicket status;
+    @Column(nullable = false)
+    private Boolean gap;
     @ManyToOne
     @JoinColumn(name = "seat_id", nullable = false)
     private Seat seat;
@@ -26,11 +24,6 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
-
-    @PrePersist
-    protected void onCreate() {
-        this.status = StatusTicket.FREE;
-    }
 
     public Ticket() {
     }
@@ -43,12 +36,12 @@ public class Ticket {
         this.uuid = uuid;
     }
 
-    public StatusTicket getStatus() {
-        return status;
+    public Boolean getGap() {
+        return gap;
     }
 
-    public void setStatus(StatusTicket status) {
-        this.status = status;
+    public void setGap(Boolean gap) {
+        this.gap = gap;
     }
 
     public Seat getSeat() {
@@ -81,7 +74,7 @@ public class Ticket {
         if (o == null || getClass() != o.getClass()) return false;
         Ticket ticket = (Ticket) o;
         return Objects.equals(getUuid(), ticket.getUuid()) &&
-                getStatus() == ticket.getStatus() &&
+                getGap() == ticket.getGap() &&
                 Objects.equals(getSeat(), ticket.getSeat()) &&
                 Objects.equals(getSession(), ticket.getSession()) &&
                 Objects.equals(getReservation(), ticket.getReservation());
@@ -90,7 +83,7 @@ public class Ticket {
     @Override
     public int hashCode() {
         return Objects.hash(getUuid(),
-                getStatus(),
+                getGap(),
                 getSeat(),
                 getSession(),
                 getReservation());
