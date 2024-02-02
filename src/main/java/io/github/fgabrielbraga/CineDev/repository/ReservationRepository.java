@@ -11,6 +11,6 @@ import java.util.UUID;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, UUID> {
 
-    @Query(value = "SELECT * FROM reservations WHERE session_id = ?", nativeQuery = true)
+    @Query(value = "SELECT * FROM reservations WHERE session_uuid = ?", nativeQuery = true)
     List<Reservation> findBySessionId(UUID uuid);
 }

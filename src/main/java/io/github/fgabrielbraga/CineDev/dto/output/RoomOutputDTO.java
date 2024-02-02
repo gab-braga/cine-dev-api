@@ -9,10 +9,10 @@ public class RoomOutputDTO {
 
     private UUID uuid;
     private Short number;
-    private Short width;
-    private Short height;
     private Short capacity;
     private String projectionType;
+
+    private MapOutputDTO map;
 
     public RoomOutputDTO() {
     }
@@ -22,10 +22,9 @@ public class RoomOutputDTO {
             RoomOutputDTO roomOutputDTO = new RoomOutputDTO();
             roomOutputDTO.uuid = room.getUuid();
             roomOutputDTO.number = room.getNumber();
-            roomOutputDTO.width = room.getWidth();
-            roomOutputDTO.height = room.getHeight();
             roomOutputDTO.capacity = room.getCapacity();
             roomOutputDTO.projectionType = room.getProjectionType();
+            roomOutputDTO.map = MapOutputDTO.ofMap(room.getMap());
             return roomOutputDTO;
         }).orElse(null);
     }
@@ -46,22 +45,6 @@ public class RoomOutputDTO {
         this.number = number;
     }
 
-    public Short getWidth() {
-        return width;
-    }
-
-    public void setWidth(Short width) {
-        this.width = width;
-    }
-
-    public Short getHeight() {
-        return height;
-    }
-
-    public void setHeight(Short height) {
-        this.height = height;
-    }
-
     public Short getCapacity() {
         return capacity;
     }
@@ -76,5 +59,13 @@ public class RoomOutputDTO {
 
     public void setProjectionType(String projectionType) {
         this.projectionType = projectionType;
+    }
+
+    public MapOutputDTO getMap() {
+        return map;
+    }
+
+    public void setMap(MapOutputDTO map) {
+        this.map = map;
     }
 }

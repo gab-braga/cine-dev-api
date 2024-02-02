@@ -1,12 +1,11 @@
 package io.github.fgabrielbraga.CineDev.service;
 
 import io.github.fgabrielbraga.CineDev.dto.input.RoomInputDTO;
-import io.github.fgabrielbraga.CineDev.dto.input.SeatInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.RoomOutputDTO;
+import io.github.fgabrielbraga.CineDev.model.Map;
 import io.github.fgabrielbraga.CineDev.model.Room;
-import io.github.fgabrielbraga.CineDev.model.Seat;
 import io.github.fgabrielbraga.CineDev.repository.RoomRepository;
-import io.github.fgabrielbraga.CineDev.repository.SeatRepository;
+import io.github.fgabrielbraga.CineDev.repository.AreaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +20,7 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
     @Autowired
-    private SeatRepository seatRepository;
+    private AreaRepository areaRepository;
 
     public Optional<RoomOutputDTO> findById(UUID uuid) {
         Optional<Room> roomOpt = roomRepository.findById(uuid);
@@ -35,19 +34,21 @@ public class RoomService {
 
     public List<RoomOutputDTO> findAll() {
         List<Room> rooms = roomRepository.findAll();
-        rooms.stream().forEach(room -> room.getSeats().clear());
+        rooms.stream().forEach(room -> room.getMap().getAreas().clear());
         return rooms.stream().map(RoomOutputDTO::ofRoom).toList();
     }
 
     public List<RoomOutputDTO> findAll(Short number) {
-        List<Room> rooms = roomRepository.findAllWithFilter(number);
-        rooms.stream().forEach(room -> room.getSeats().clear());
+        List<Room> rooms = roomRepository.findByRoomNumber(number);
+        rooms.stream().forEach(room -> room.getMap().getAreas().clear());
         return rooms.stream().map(RoomOutputDTO::ofRoom).toList();
     }
 
     public RoomOutputDTO save(RoomInputDTO roomDTO) {
         Room room = RoomInputDTO.parseRoom(roomDTO);
-        room.getSeats().stream().forEach(seat -> seat.setRoom(room));
+        Map map = room.getMap();
+        map.setRoom(room);
+        map.getAreas().stream().forEach(area -> area.setMap(map));
         Room roomSaved = roomRepository.save(room);
         return RoomOutputDTO.ofRoom(roomSaved);
     }
@@ -64,24 +65,25 @@ public class RoomService {
 
     @Transactional
     public RoomOutputDTO updateSeatMap(RoomInputDTO roomDTO) {
-        Optional<Room> roomOpt = roomRepository.findById(roomDTO.getUuid());
-        return roomOpt.map(roomFound -> {
-            deleteAllByRoomId(roomFound.getUuid());
-            List<Seat> seats = SeatInputDTO.toSeatList(roomDTO.getSeats());
-            seats.stream().forEach(seat -> seat.setRoom(roomFound));
-            roomFound.getSeats().clear();
-            roomFound.getSeats().addAll(seats);
-            roomFound.setWidth(roomDTO.getWidth());
-            roomFound.setHeight(roomDTO.getHeight());
-            roomFound.setCapacity(roomDTO.getCapacity());
-            Room roomSaved = roomRepository.save(roomFound);
-            return RoomOutputDTO.ofRoom(roomSaved);
-        }).orElseThrow();
+//        Optional<Room> roomOpt = roomRepository.findById(roomDTO.getUuid());
+//        return roomOpt.map(roomFound -> {
+//            deleteAllByRoomId(roomFound.getUuid());
+//            List<Area> areas = AreaInputDTO.toAreaList(roomDTO.getSeats());
+//            areas.stream().forEach(seat -> seat.setRoom(roomFound));
+//            roomFound.getSeats().clear();
+//            roomFound.getSeats().addAll(areas);
+//            roomFound.setWidth(roomDTO.getWidth());
+//            roomFound.setHeight(roomDTO.getHeight());
+//            roomFound.setCapacity(roomDTO.getCapacity());
+//            Room roomSaved = roomRepository.save(roomFound);
+//            return RoomOutputDTO.ofRoom(roomSaved);
+//        }).orElseThrow();
+        return null;
     }
 
     @Transactional
     private void deleteAllByRoomId(UUID uuid) {
-        seatRepository.deleteAllByRoomId(uuid);
+        areaRepository.deleteAllByRoomId(uuid);
     }
 
     public void deleteById(UUID uuid) {

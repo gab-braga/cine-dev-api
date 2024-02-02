@@ -11,7 +11,6 @@ import java.util.UUID;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, UUID> {
 
-    @Query(value = "SELECT t.* FROM tickets t JOIN seats se ON t.seat_id = se.uuid " +
-            "WHERE t.session_id = ? ORDER BY se.position", nativeQuery = true)
+    @Query(value = "SELECT * FROM tickets WHERE session_uuid = ?", nativeQuery = true)
     List<Ticket> findBySessionId(UUID uuid);
 }

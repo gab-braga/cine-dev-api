@@ -2,8 +2,6 @@ package io.github.fgabrielbraga.CineDev.model;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -15,18 +13,15 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, unique = true, updatable = false)
     private UUID uuid;
-    @Column(name = "number_room", nullable = false, unique = true)
+    @Column(name = "room_number", nullable = false, unique = true)
     private Short number;
-    @Column(nullable = false)
-    private Short width;
-    @Column(nullable = false)
-    private Short height;
     @Column(nullable = false)
     private Short capacity;
     @Column(name = "projection_type", nullable = false, length = 50)
     private String projectionType;
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
-    List<Seat> seats = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "map_uuid", nullable = false)
+    private Map map;
 
     public Room() {
     }
@@ -41,22 +36,6 @@ public class Room {
 
     public Short getNumber() {
         return number;
-    }
-
-    public Short getWidth() {
-        return width;
-    }
-
-    public void setWidth(Short width) {
-        this.width = width;
-    }
-
-    public Short getHeight() {
-        return height;
-    }
-
-    public void setHeight(Short height) {
-        this.height = height;
     }
 
     public void setNumber(Short number) {
@@ -79,12 +58,12 @@ public class Room {
         this.projectionType = projectionType;
     }
 
-    public List<Seat> getSeats() {
-        return seats;
+    public Map getMap() {
+        return map;
     }
 
-    public void setSeats(List<Seat> seats) {
-        this.seats = seats;
+    public void setMap(Map map) {
+        this.map = map;
     }
 
     @Override
@@ -94,21 +73,17 @@ public class Room {
         Room room = (Room) o;
         return Objects.equals(getUuid(), room.getUuid()) &&
                 Objects.equals(getNumber(), room.getNumber()) &&
-                Objects.equals(getWidth(), room.getWidth()) &&
-                Objects.equals(getHeight(), room.getHeight()) &&
                 Objects.equals(getCapacity(), room.getCapacity()) &&
                 Objects.equals(getProjectionType(), room.getProjectionType()) &&
-                Objects.equals(getSeats(), room.getSeats());
+                Objects.equals(getMap(), room.getMap());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getUuid(),
                 getNumber(),
-                getWidth(),
-                getHeight(),
                 getCapacity(),
                 getProjectionType(),
-                getSeats());
+                getMap());
     }
 }

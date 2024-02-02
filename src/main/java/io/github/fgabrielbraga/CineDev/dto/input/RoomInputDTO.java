@@ -10,11 +10,9 @@ public class RoomInputDTO {
 
     private UUID uuid;
     private Short number;
-    private Short width;
-    private Short height;
     private Short capacity;
     private String projectionType;
-    List<SeatInputDTO> seats;
+    List<AreaInputDTO> areas;
 
     public RoomInputDTO() {
     }
@@ -24,11 +22,8 @@ public class RoomInputDTO {
             Room room = new Room();
             room.setUuid(dto.getUuid());
             room.setNumber(dto.getNumber());
-            room.setWidth(dto.getWidth());
-            room.setHeight(dto.getHeight());
             room.setCapacity(dto.getCapacity());
             room.setProjectionType(dto.getProjectionType());
-            room.setSeats(SeatInputDTO.toSeatList(dto.getSeats()));
             return room;
         }).orElse(null);
     }
@@ -49,22 +44,6 @@ public class RoomInputDTO {
         this.number = number;
     }
 
-    public Short getWidth() {
-        return width;
-    }
-
-    public void setWidth(Short width) {
-        this.width = width;
-    }
-
-    public Short getHeight() {
-        return height;
-    }
-
-    public void setHeight(Short height) {
-        this.height = height;
-    }
-
     public Short getCapacity() {
         return capacity;
     }
@@ -81,11 +60,11 @@ public class RoomInputDTO {
         this.projectionType = projectionType;
     }
 
-    public List<SeatInputDTO> getSeats() {
-        return seats;
+    public List<AreaInputDTO> getAreas() {
+        return areas;
     }
 
-    public void setSeats(List<SeatInputDTO> seats) {
-        this.seats = seats;
+    public void setAreas(List<AreaInputDTO> areas) {
+        this.areas = areas;
     }
 }

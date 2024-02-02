@@ -22,29 +22,34 @@ public interface SessionRepository extends JpaRepository<Session, UUID> {
     void openSessionById(UUID uuid);
 
     @Query(value = "SELECT s.* FROM sessions s " +
-            "JOIN rooms r ON s.room_id = r.uuid " +
-            "JOIN films f ON s.film_id = f.uuid WHERE " +
-            "s.date_session = IFNULL(?, s.date_session) AND " +
-            "r.number_room = IFNULL(?, r.number_room) AND " +
+            "JOIN rooms r ON s.room_uuid = r.uuid " +
+            "JOIN films f ON s.film_uuid = f.uuid WHERE " +
+            "s.session_date = IFNULL(?, s.session_date) AND " +
+            "r.room_number = IFNULL(?, r.room_number) AND " +
             "f.title LIKE CONCAT('%', IFNULL(?, ''), '%') " +
-            "ORDER BY date_session", nativeQuery = true)
+            "ORDER BY session_date", nativeQuery = true)
     List<Session> findAllWithFilter(LocalDate date, Short number, String title);
 
-    @Query(value = "SELECT * FROM sessions WHERE room_id = ? ORDER BY date_session", nativeQuery = true)
+    @Query(value = "SELECT * FROM sessions WHERE room_uuid = ? " +
+            "ORDER BY session_date", nativeQuery = true)
     List<Session> findByRoomId(UUID uuid);
 
-    @Query(value = "SELECT * FROM sessions WHERE open = 1 AND WEEK(date_session) = WEEK(NOW()) ORDER BY date_session", nativeQuery = true)
+    @Query(value = "SELECT * FROM sessions " +
+            "WHERE open = 1 AND WEEK(session_date) = WEEK(NOW()) " +
+            "ORDER BY session_date", nativeQuery = true)
     List<Session> findThisWeek();
 
-    @Query(value = "SELECT s.* FROM sessions s JOIN films f ON s.film_id = f.uuid " +
-            "WHERE s.open = 1 AND s.date_session >= CURDATE() " +
-            "AND s.date_session = IFNULL(?, s.date_session) " +
-            "ORDER BY date_session LIMIT 120", nativeQuery = true)
+    @Query(value = "SELECT s.* FROM sessions s " +
+            "JOIN films f ON s.film_uuid = f.uuid " +
+            "WHERE s.open = 1 AND s.session_date >= CURDATE() " +
+            "AND s.session_date = IFNULL(?, s.session_date) " +
+            "ORDER BY session_date LIMIT 120", nativeQuery = true)
     List<Session> findRecentByDate(LocalDate date);
 
-    @Query(value = "SELECT s.* FROM sessions s JOIN films f ON s.film_id = f.uuid " +
-            "WHERE s.open = 1 AND s.date_session >= CURDATE() " +
+    @Query(value = "SELECT s.* FROM sessions s " +
+            "JOIN films f ON s.film_uuid = f.uuid " +
+            "WHERE s.open = 1 AND s.session_date >= CURDATE() " +
             "AND f.genres LIKE CONCAT('%', IFNULL(?, ''), '%') " +
-            "ORDER BY date_session LIMIT 120", nativeQuery = true)
+            "ORDER BY session_date LIMIT 120", nativeQuery = true)
     List<Session> findByGenresForClient(String genres);
 }

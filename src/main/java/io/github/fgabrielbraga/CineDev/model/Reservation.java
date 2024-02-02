@@ -23,10 +23,10 @@ public class Reservation {
     @Column(name = "status_reservation", nullable = false)
     private StatusReservation status;
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_uuid", nullable = false)
     private User user;
     @ManyToOne
-    @JoinColumn(name = "session_id", nullable = false)
+    @JoinColumn(name = "session_uuid", nullable = false)
     private Session session;
     @OneToMany(mappedBy = "reservation")
     private List<Ticket> tickets = new ArrayList<>();

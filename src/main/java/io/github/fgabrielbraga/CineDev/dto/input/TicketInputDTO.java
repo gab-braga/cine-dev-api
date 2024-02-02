@@ -9,8 +9,7 @@ import java.util.UUID;
 public class TicketInputDTO {
 
     private UUID uuid;
-    private Boolean gap;
-    private SeatInputDTO seat;
+    private AreaInputDTO area;
     private SessionInputDTO session;
     private ReservationInputDTO reservation;
 
@@ -21,8 +20,7 @@ public class TicketInputDTO {
         return Optional.ofNullable(ticketInputDTO).map(dto -> {
             Ticket ticket = new Ticket();
             ticket.setUuid(dto.getUuid());
-            ticket.setGap(dto.getGap());
-            ticket.setSeat(SeatInputDTO.parseSeat(dto.getSeat()));
+            ticket.setArea(AreaInputDTO.parseArea(dto.getArea()));
             ticket.setSession(SessionInputDTO.parseSession(dto.getSession()));
             ticket.setReservation(ReservationInputDTO.parseReservation(dto.getReservation()));
             return ticket;
@@ -43,20 +41,12 @@ public class TicketInputDTO {
         this.uuid = uuid;
     }
 
-    public Boolean getGap() {
-        return gap;
+    public AreaInputDTO getArea() {
+        return area;
     }
 
-    public void setGap(Boolean gap) {
-        this.gap = gap;
-    }
-
-    public SeatInputDTO getSeat() {
-        return seat;
-    }
-
-    public void setSeat(SeatInputDTO seat) {
-        this.seat = seat;
+    public void setArea(AreaInputDTO area) {
+        this.area = area;
     }
 
     public SessionInputDTO getSession() {

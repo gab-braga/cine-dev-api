@@ -17,9 +17,9 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, unique = true, updatable = false)
     private UUID uuid;
-    @Column(name = "date_session", nullable = false)
+    @Column(name = "session_date", nullable = false)
     private LocalDate date;
-    @Column(name = "hour_session", nullable = false)
+    @Column(name = "session_hour", nullable = false)
     private LocalTime hour;
     @Column(nullable = false)
     private Boolean open;
@@ -28,10 +28,10 @@ public class Session {
     @Column(name = "number_free_seats",nullable = false)
     private Short numberFreeSeats;
     @ManyToOne
-    @JoinColumn(name = "film_id", nullable = false)
+    @JoinColumn(name = "film_uuid", nullable = false)
     private Film film;
     @ManyToOne
-    @JoinColumn(name = "room_id", nullable = false)
+    @JoinColumn(name = "room_uuid", nullable = false)
     private Room room;
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
     private List<Ticket> tickets = new ArrayList<>();

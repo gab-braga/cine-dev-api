@@ -13,16 +13,14 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, unique = true, updatable = false)
     private UUID uuid;
-    @Column(nullable = false)
-    private Boolean gap;
     @ManyToOne
-    @JoinColumn(name = "seat_id", nullable = false)
-    private Seat seat;
+    @JoinColumn(name = "area_uuid", nullable = false)
+    private Area area;
     @ManyToOne
-    @JoinColumn(name = "session_id", nullable = false)
+    @JoinColumn(name = "session_uuid", nullable = false)
     private Session session;
     @ManyToOne
-    @JoinColumn(name = "reservation_id")
+    @JoinColumn(name = "reservation_uuid")
     private Reservation reservation;
 
     public Ticket() {
@@ -36,20 +34,12 @@ public class Ticket {
         this.uuid = uuid;
     }
 
-    public Boolean getGap() {
-        return gap;
+    public Area getArea() {
+        return area;
     }
 
-    public void setGap(Boolean gap) {
-        this.gap = gap;
-    }
-
-    public Seat getSeat() {
-        return seat;
-    }
-
-    public void setSeat(Seat seat) {
-        this.seat = seat;
+    public void setArea(Area area) {
+        this.area = area;
     }
 
     public Session getSession() {
@@ -74,8 +64,7 @@ public class Ticket {
         if (o == null || getClass() != o.getClass()) return false;
         Ticket ticket = (Ticket) o;
         return Objects.equals(getUuid(), ticket.getUuid()) &&
-                getGap() == ticket.getGap() &&
-                Objects.equals(getSeat(), ticket.getSeat()) &&
+                Objects.equals(getArea(), ticket.getArea()) &&
                 Objects.equals(getSession(), ticket.getSession()) &&
                 Objects.equals(getReservation(), ticket.getReservation());
     }
@@ -83,8 +72,7 @@ public class Ticket {
     @Override
     public int hashCode() {
         return Objects.hash(getUuid(),
-                getGap(),
-                getSeat(),
+                getArea(),
                 getSession(),
                 getReservation());
     }

@@ -23,7 +23,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Query(value = "UPDATE users u SET u.active = 1 WHERE u.uuid = ?", nativeQuery = true)
     void enableUserById(UUID uuid);
 
-    @Query(value = "SELECT * FROM users u WHERE " +
+    @Query(value = "SELECT u.* FROM users u WHERE " +
             "u.name LIKE CONCAT('%', IFNULL(?, ''), '%') AND " +
             "u.email LIKE CONCAT(IFNULL(?, ''), '%') AND " +
             "u.cpf LIKE CONCAT(IFNULL(?, ''), '%')", nativeQuery = true)

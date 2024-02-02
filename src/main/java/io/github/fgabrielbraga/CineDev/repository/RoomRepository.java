@@ -11,11 +11,13 @@ import java.util.UUID;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, UUID> {
-    @Query(value = "SELECT * FROM rooms r WHERE " +
-            "r.number_room = IFNULL(?, r.number_room)", nativeQuery = true)
-    List<Room> findAllWithFilter(Short number);
 
-    @Query(value = "SELECT r.* FROM rooms r JOIN sessions s " +
-            "ON r.uuid = s.room_id WHERE s.uuid = ?", nativeQuery = true)
+    @Query(value = "SELECT * FROM rooms r WHERE " +
+            "r.room_number = IFNULL(?, r.room_number)", nativeQuery = true)
+    List<Room> findByRoomNumber(Short number);
+
+    @Query(value = "SELECT r.* FROM rooms r " +
+            "JOIN sessions s ON s.room_uuid = r.uuid " +
+            "WHERE s.uuid = ?", nativeQuery = true)
     Optional<Room> findBySessionId(UUID uuid);
 }
