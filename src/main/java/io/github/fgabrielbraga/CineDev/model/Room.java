@@ -19,7 +19,7 @@ public class Room {
     private Short capacity;
     @Column(name = "projection_type", nullable = false, length = 50)
     private String projectionType;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "map_uuid", nullable = false)
     private Map map;
 

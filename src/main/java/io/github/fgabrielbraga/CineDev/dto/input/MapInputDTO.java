@@ -11,7 +11,7 @@ public class MapInputDTO {
     private UUID uuid;
     private Short width;
     private Short height;
-    List<AreaInputDTO> areas;
+    private List<AreaInputDTO> areas;
 
     public MapInputDTO() {
     }

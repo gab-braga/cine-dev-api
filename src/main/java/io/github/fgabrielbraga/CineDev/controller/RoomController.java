@@ -54,7 +54,6 @@ public class RoomController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<RoomOutputDTO> create(@RequestBody RoomInputDTO room) {
-        room.setUuid(null);
         RoomOutputDTO roomSaved = roomService.save(room);
         return ResponseEntity.status(HttpStatus.CREATED).body(roomSaved);
     }

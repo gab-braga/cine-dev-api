@@ -11,7 +11,6 @@ public class RoomOutputDTO {
     private Short number;
     private Short capacity;
     private String projectionType;
-
     private MapOutputDTO map;
 
     public RoomOutputDTO() {

@@ -19,10 +19,7 @@ public class Map {
     private Short width;
     @Column(nullable = false)
     private Short height;
-    @OneToOne()
-    @JoinColumn(name = "room_uuid", nullable = false)
-    private Room room;
-    @OneToMany(mappedBy = "map", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "map", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     List<Area> areas = new ArrayList<>();
 
     public Map() {
@@ -52,14 +49,6 @@ public class Map {
         this.height = height;
     }
 
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
     public List<Area> getAreas() {
         return areas;
     }
@@ -76,8 +65,7 @@ public class Map {
         return Objects.equals(getUuid(), map.getUuid()) &&
                 Objects.equals(getWidth(), map.getWidth()) &&
                 Objects.equals(getHeight(), map.getHeight()) &&
-                Objects.equals(getAreas(), map.getAreas()) &&
-                Objects.equals(getRoom(), map.getRoom());
+                Objects.equals(getAreas(), map.getAreas());
     }
 
     @Override

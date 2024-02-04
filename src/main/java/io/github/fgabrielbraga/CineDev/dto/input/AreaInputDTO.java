@@ -1,5 +1,6 @@
 package io.github.fgabrielbraga.CineDev.dto.input;
 
+import io.github.fgabrielbraga.CineDev.enums.AreaType;
 import io.github.fgabrielbraga.CineDev.model.Area;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public class AreaInputDTO {
     private Short number;
     private Short indexInX;
     private Short indexInY;
-    private MapInputDTO map;
+    private AreaType areaType;
 
     public AreaInputDTO() {
     }
@@ -24,7 +25,7 @@ public class AreaInputDTO {
             area.setNumber(dto.getNumber());
             area.setIndexInX(dto.getIndexInX());
             area.setIndexInY(dto.getIndexInY());
-            area.setMap(MapInputDTO.parseMap(dto.getMap()));
+            area.setAreaType(dto.getAreaType());
             return area;
         }).orElse(null);
     }
@@ -67,11 +68,11 @@ public class AreaInputDTO {
         this.indexInY = indexInY;
     }
 
-    public MapInputDTO getMap() {
-        return map;
+    public AreaType getAreaType() {
+        return areaType;
     }
 
-    public void setMap(MapInputDTO map) {
-        this.map = map;
+    public void setAreaType(AreaType areaType) {
+        this.areaType = areaType;
     }
 }

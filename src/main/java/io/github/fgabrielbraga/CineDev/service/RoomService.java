@@ -2,7 +2,7 @@ package io.github.fgabrielbraga.CineDev.service;
 
 import io.github.fgabrielbraga.CineDev.dto.input.RoomInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.RoomOutputDTO;
-import io.github.fgabrielbraga.CineDev.model.Map;
+import io.github.fgabrielbraga.CineDev.enums.AreaType;
 import io.github.fgabrielbraga.CineDev.model.Room;
 import io.github.fgabrielbraga.CineDev.repository.RoomRepository;
 import io.github.fgabrielbraga.CineDev.repository.AreaRepository;
@@ -45,10 +45,16 @@ public class RoomService {
     }
 
     public RoomOutputDTO save(RoomInputDTO roomDTO) {
+        roomDTO.setUuid(null);
+        roomDTO.getMap().setUuid(null);
+        roomDTO.getMap().getAreas().stream().forEach(area -> area.setUuid(null));
         Room room = RoomInputDTO.parseRoom(roomDTO);
-        Map map = room.getMap();
-        map.setRoom(room);
-        map.getAreas().stream().forEach(area -> area.setMap(map));
+        room.setCapacity((short) room.getMap().getAreas().stream().filter(area -> {
+            return area.getAreaType() == AreaType.SEAT;
+        }).count());
+        room.getMap().getAreas().stream().forEach(area -> {
+            area.setMap(room.getMap());
+        });
         Room roomSaved = roomRepository.save(room);
         return RoomOutputDTO.ofRoom(roomSaved);
     }

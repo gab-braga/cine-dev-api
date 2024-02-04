@@ -12,7 +12,7 @@ public class RoomInputDTO {
     private Short number;
     private Short capacity;
     private String projectionType;
-    List<AreaInputDTO> areas;
+    private MapInputDTO map;
 
     public RoomInputDTO() {
     }
@@ -24,6 +24,7 @@ public class RoomInputDTO {
             room.setNumber(dto.getNumber());
             room.setCapacity(dto.getCapacity());
             room.setProjectionType(dto.getProjectionType());
+            room.setMap(MapInputDTO.parseMap(dto.getMap()));
             return room;
         }).orElse(null);
     }
@@ -60,11 +61,11 @@ public class RoomInputDTO {
         this.projectionType = projectionType;
     }
 
-    public List<AreaInputDTO> getAreas() {
-        return areas;
+    public MapInputDTO getMap() {
+        return map;
     }
 
-    public void setAreas(List<AreaInputDTO> areas) {
-        this.areas = areas;
+    public void setMap(MapInputDTO map) {
+        this.map = map;
     }
 }
