@@ -9,6 +9,7 @@ import java.util.UUID;
 public class AreaOutputDTO {
 
     private UUID uuid;
+    private Short number;
     private Short indexInX;
     private Short indexInY;
     private AreaType areaType;
@@ -20,6 +21,7 @@ public class AreaOutputDTO {
         return Optional.ofNullable(areaObj).map(area -> {
             AreaOutputDTO areaOutputDTO = new AreaOutputDTO();
             areaOutputDTO.uuid = area.getUuid();
+            areaOutputDTO.number = area.getNumber();
             areaOutputDTO.indexInX = area.getIndexInX();
             areaOutputDTO.indexInY = area.getIndexInY();
             areaOutputDTO.areaType = area.getAreaType();
@@ -33,6 +35,14 @@ public class AreaOutputDTO {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    public Short getNumber() {
+        return number;
+    }
+
+    public void setNumber(Short number) {
+        this.number = number;
     }
 
     public Short getIndexInX() {

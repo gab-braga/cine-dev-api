@@ -17,10 +17,4 @@ public interface AreaRepository extends JpaRepository<Area, UUID> {
             "JOIN rooms r ON m.room_uuid = r.uuid " +
             "WHERE r.uuid = ?", nativeQuery = true)
     List<Area> findByRoomId(UUID uuid);
-
-    @Modifying
-    @Query(value = "DELETE FROM areas a " +
-            "JOIN maps m ON a.map_uuid = m.uuid " +
-            "WHERE m.room_uuid = ?", nativeQuery = true)
-    void deleteAllByRoomId(UUID uuid);
 }

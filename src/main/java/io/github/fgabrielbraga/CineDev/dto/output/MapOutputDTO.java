@@ -2,6 +2,7 @@ package io.github.fgabrielbraga.CineDev.dto.output;
 
 import io.github.fgabrielbraga.CineDev.model.Map;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ public class MapOutputDTO {
     private UUID uuid;
     private Short width;
     private Short height;
+    private List<AreaOutputDTO>areas;
 
     public MapOutputDTO() {
     }
@@ -20,6 +22,7 @@ public class MapOutputDTO {
             mapOutputDTO.uuid = map.getUuid();
             mapOutputDTO.width = map.getWidth();
             mapOutputDTO.height = map.getHeight();
+            mapOutputDTO.areas = map.getAreas().stream().map(AreaOutputDTO::ofArea).toList();
             return mapOutputDTO;
         }).orElse(null);
     }
@@ -46,5 +49,13 @@ public class MapOutputDTO {
 
     public void setHeight(Short height) {
         this.height = height;
+    }
+
+    public List<AreaOutputDTO> getAreas() {
+        return areas;
+    }
+
+    public void setAreas(List<AreaOutputDTO> areas) {
+        this.areas = areas;
     }
 }

@@ -4,8 +4,8 @@ import io.github.fgabrielbraga.CineDev.dto.input.RoomInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.RoomOutputDTO;
 import io.github.fgabrielbraga.CineDev.enums.AreaType;
 import io.github.fgabrielbraga.CineDev.model.Room;
+import io.github.fgabrielbraga.CineDev.repository.MapRepository;
 import io.github.fgabrielbraga.CineDev.repository.RoomRepository;
-import io.github.fgabrielbraga.CineDev.repository.AreaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,7 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
     @Autowired
-    private AreaRepository areaRepository;
+    private MapRepository mapRepository;
 
     public Optional<RoomOutputDTO> findById(UUID uuid) {
         Optional<Room> roomOpt = roomRepository.findById(uuid);
@@ -69,27 +69,22 @@ public class RoomService {
         }).orElseThrow();
     }
 
-    @Transactional
     public RoomOutputDTO updateSeatMap(RoomInputDTO roomDTO) {
-//        Optional<Room> roomOpt = roomRepository.findById(roomDTO.getUuid());
-//        return roomOpt.map(roomFound -> {
-//            deleteAllByRoomId(roomFound.getUuid());
-//            List<Area> areas = AreaInputDTO.toAreaList(roomDTO.getSeats());
-//            areas.stream().forEach(seat -> seat.setRoom(roomFound));
-//            roomFound.getSeats().clear();
-//            roomFound.getSeats().addAll(areas);
-//            roomFound.setWidth(roomDTO.getWidth());
-//            roomFound.setHeight(roomDTO.getHeight());
-//            roomFound.setCapacity(roomDTO.getCapacity());
-//            Room roomSaved = roomRepository.save(roomFound);
-//            return RoomOutputDTO.ofRoom(roomSaved);
-//        }).orElseThrow();
-        return null;
-    }
-
-    @Transactional
-    private void deleteAllByRoomId(UUID uuid) {
-        areaRepository.deleteAllByRoomId(uuid);
+        Optional<Room> roomOpt = roomRepository.findById(roomDTO.getUuid());
+        return roomOpt.map(roomFound -> {
+            mapRepository.deleteById(roomFound.getMap().getUuid());
+            Room roomEdited = RoomInputDTO.parseRoom((roomDTO));
+            roomEdited.setCapacity((short) roomEdited.getMap().getAreas().stream().filter(area -> {
+                return area.getAreaType() == AreaType.SEAT;
+            }).count());
+            roomFound.setMap(roomEdited.getMap());
+            roomFound.setCapacity(roomEdited.getCapacity());
+            roomFound.getMap().getAreas().stream().forEach(area -> {
+                area.setMap(roomFound.getMap());
+            });
+            Room roomSaved = roomRepository.save(roomFound);
+            return RoomOutputDTO.ofRoom(roomSaved);
+        }).orElseThrow();
     }
 
     public void deleteById(UUID uuid) {

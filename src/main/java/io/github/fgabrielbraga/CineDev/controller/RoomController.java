@@ -72,20 +72,21 @@ public class RoomController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{uuid}/map")
-    public ResponseEntity<RoomOutputDTO> updateSeatMap(@PathVariable UUID uuid, @RequestBody RoomInputDTO room) {
-        List<SessionOutputDTO> sessions = sessionService.findByRoomId(uuid);
-        if(sessions.isEmpty()) {
+    @PutMapping("/{uuid}/maps")
+    public ResponseEntity<?> updateSeatMap(@PathVariable UUID uuid, @RequestBody RoomInputDTO room) {
+
             Optional<RoomOutputDTO> roomOptional = roomService.findById(uuid);
             return roomOptional
                     .map(roomFound -> {
-                        room.setUuid(uuid);
-                        RoomOutputDTO roomUpdated = roomService.updateSeatMap(room);
-                        return ResponseEntity.ok(roomUpdated);
+                        List<SessionOutputDTO> sessions = sessionService.findByRoomId(uuid);
+                        if(sessions.isEmpty()) {
+                            room.setUuid(uuid);
+                            RoomOutputDTO roomUpdated = roomService.updateSeatMap(room);
+                            return ResponseEntity.ok(roomUpdated);
+                        }
+                        return ResponseEntity.badRequest().build();
                     })
                     .orElseGet(() -> ResponseEntity.notFound().build());
-        }
-        return ResponseEntity.badRequest().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
