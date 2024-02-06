@@ -19,8 +19,6 @@ public class RoomService {
 
     @Autowired
     private RoomRepository roomRepository;
-    @Autowired
-    private MapRepository mapRepository;
 
     public Optional<RoomOutputDTO> findById(UUID uuid) {
         Optional<Room> roomOpt = roomRepository.findById(uuid);
@@ -72,7 +70,6 @@ public class RoomService {
     public RoomOutputDTO updateSeatMap(RoomInputDTO roomDTO) {
         Optional<Room> roomOpt = roomRepository.findById(roomDTO.getUuid());
         return roomOpt.map(roomFound -> {
-            mapRepository.deleteById(roomFound.getMap().getUuid());
             Room roomEdited = RoomInputDTO.parseRoom((roomDTO));
             roomEdited.setCapacity((short) roomEdited.getMap().getAreas().stream().filter(area -> {
                 return area.getAreaType() == AreaType.SEAT;
