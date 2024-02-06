@@ -4,7 +4,6 @@ import io.github.fgabrielbraga.CineDev.enums.StatusReservation;
 import io.github.fgabrielbraga.CineDev.model.Reservation;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,7 +14,6 @@ public class ReservationOutputDTO {
     private StatusReservation status;
     private UserOutputDTO user;
     private SessionOutputDTO session;
-    private List<TicketOutputDTO> tickets;
 
     public ReservationOutputDTO() {
     }
@@ -27,7 +25,6 @@ public class ReservationOutputDTO {
             reservationOutputDTO.setReservedAt(reservation.getReservedAt());
             reservationOutputDTO.setUser(UserOutputDTO.ofUser(reservation.getUser()));
             reservationOutputDTO.setSession(SessionOutputDTO.ofSession(reservation.getSession()));
-            reservationOutputDTO.setTickets(TicketOutputDTO.toTicketOutputDTOList(reservation.getTickets()));
             return reservationOutputDTO;
         }).orElse(null);
     }
@@ -70,14 +67,6 @@ public class ReservationOutputDTO {
 
     public void setSession(SessionOutputDTO session) {
         this.session = session;
-    }
-
-    public List<TicketOutputDTO> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<TicketOutputDTO> tickets) {
-        this.tickets = tickets;
     }
 }
 

@@ -15,4 +15,10 @@ public interface MapRepository extends JpaRepository<Map, UUID> {
             "JOIN rooms r ON r.map_uuid = m.uuid " +
             "WHERE r.uuid = ?", nativeQuery = true)
     Optional<Map> findByRoomId(UUID uuid);
+
+    @Query(value = "SELECT m.* FROM maps m " +
+            "JOIN rooms r ON r.map_uuid = m.uuid " +
+            "JOIN sessions s ON s.room_uuid = r.uuid " +
+            "WHERE s.uuid = ?", nativeQuery = true)
+    Optional<Map> findBySessionId(UUID uuid);
 }

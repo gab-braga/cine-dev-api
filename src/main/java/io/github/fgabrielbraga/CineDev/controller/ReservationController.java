@@ -2,7 +2,10 @@ package io.github.fgabrielbraga.CineDev.controller;
 
 import io.github.fgabrielbraga.CineDev.dto.input.ReservationInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.ReservationOutputDTO;
+import io.github.fgabrielbraga.CineDev.dto.output.UserOutputDTO;
 import io.github.fgabrielbraga.CineDev.service.ReservationService;
+import io.github.fgabrielbraga.CineDev.service.SessionService;
+import io.github.fgabrielbraga.CineDev.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,10 @@ public class ReservationController {
 
     @Autowired
     private ReservationService reservationService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private SessionService sessionService;
 
     @GetMapping("/{uuid}")
     public ResponseEntity<?> findById(@PathVariable UUID uuid) {
@@ -35,9 +42,15 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody ReservationInputDTO reservation) {
-        reservation.setUuid(null);
-        ReservationOutputDTO reservationSaved = reservationService.save(reservation);
-        return ResponseEntity.status(HttpStatus.CREATED).body(reservationSaved);
+        UUID userId = reservation.getUser().getUuid();
+        UUID sessionId = reservation.getSession().getUuid();
+        Optional<?> userOpt = userService.findById(userId);
+        Optional<?> sessionOpt = sessionService.findById(sessionId);
+        if(userOpt.isPresent() && sessionOpt.isPresent()) {
+            ReservationOutputDTO reservationSaved = reservationService.save(reservation);
+            return ResponseEntity.status(HttpStatus.CREATED).body(reservationSaved);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @PutMapping("/{uuid}")

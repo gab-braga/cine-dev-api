@@ -29,7 +29,7 @@ public class TicketOutputDTO {
 
     public static List<TicketOutputDTO> toTicketOutputDTOList(List<Ticket> tickets) {
         return Optional.ofNullable(tickets).map(list -> {
-            return list.stream().map(ticket -> ofTicket(ticket)).toList();
+            return list.stream().map(TicketOutputDTO::ofTicket).toList();
         }).orElse(null);
     }
 

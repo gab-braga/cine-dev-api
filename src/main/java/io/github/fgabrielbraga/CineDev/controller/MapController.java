@@ -22,7 +22,16 @@ public class MapController {
     public ResponseEntity<?> findByRoomId(@PathVariable UUID uuid) {
         Optional<MapOutputDTO> mapOpt = mapService.findByRoomId(uuid);
         return mapOpt
-                .map(mapFound -> ResponseEntity.ok(mapFound))
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/sessions/{uuid}")
+    public ResponseEntity<?> findBySessionId(@PathVariable UUID uuid) {
+        Optional<MapOutputDTO> mapOpt = mapService.findBySesionId(uuid);
+        return mapOpt
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

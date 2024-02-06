@@ -21,4 +21,11 @@ public class MapService {
             return MapOutputDTO.ofMap(map);
         });
     }
+
+    public Optional<MapOutputDTO> findBySesionId(UUID uuid) {
+        Optional<Map> mapOpt = mapRepository.findBySessionId(uuid);
+        return mapOpt.map(map -> {
+            return MapOutputDTO.ofMap(map);
+        });
+    }
 }
