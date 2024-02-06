@@ -1,7 +1,6 @@
 package io.github.fgabrielbraga.CineDev.controller;
 
 import io.github.fgabrielbraga.CineDev.dto.output.MapOutputDTO;
-import io.github.fgabrielbraga.CineDev.dto.output.RoomOutputDTO;
 import io.github.fgabrielbraga.CineDev.service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,8 @@ public class MapController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/rooms/{uuid}")
-    public ResponseEntity<MapOutputDTO> findMapByRoomId(@PathVariable UUID uuid) {
-        Optional<MapOutputDTO> mapOpt = mapService.findMapByRoomId(uuid);
+    public ResponseEntity<?> findByRoomId(@PathVariable UUID uuid) {
+        Optional<MapOutputDTO> mapOpt = mapService.findByRoomId(uuid);
         return mapOpt
                 .map(mapFound -> ResponseEntity.ok(mapFound))
                 .orElseGet(() -> ResponseEntity.notFound().build());

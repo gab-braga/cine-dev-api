@@ -23,15 +23,14 @@ public class PublicController {
     private FilmService filmService;
 
     @GetMapping("/sessions")
-    public ResponseEntity<List<SessionOutputDTO>> findSessionsRecentByDate(
+    public ResponseEntity<?> findSessionsRecentByDate(
             @RequestParam(required = false) LocalDate date) {
         List<SessionOutputDTO> sessions = sessionService.findRecentByDate(date);
         return ResponseEntity.ok(sessions);
     }
 
     @GetMapping("/sessions/{uuid}")
-    public ResponseEntity<SessionOutputDTO> findSessionById(
-            @PathVariable UUID uuid) {
+    public ResponseEntity<?> findSessionById(@PathVariable UUID uuid) {
         Optional<SessionOutputDTO> sessionOpt = sessionService.findByIdForClient(uuid);
         return sessionOpt.map(session -> {
             return ResponseEntity.ok(session);
@@ -39,21 +38,19 @@ public class PublicController {
     }
 
     @GetMapping("/sessions/week")
-    public ResponseEntity<List<SessionOutputDTO>> findAllSessionsThisWeek() {
+    public ResponseEntity<?> findSessionsThisWeek() {
         List<SessionOutputDTO> sessions = sessionService.findThisWeek();
         return ResponseEntity.ok(sessions);
     }
 
     @GetMapping("/sessions/genres")
-    public ResponseEntity<List<SessionOutputDTO>> findSessionsByGenres(
-            @RequestParam String genres) {
+    public ResponseEntity<?> findSessionsByGenres(@RequestParam String genres) {
         List<SessionOutputDTO> sessions = sessionService.findByGenresForClient(genres);
         return ResponseEntity.ok(sessions);
     }
 
     @GetMapping("/films/{uuid}")
-    public ResponseEntity<FilmOutputDTO> findFilmById(
-            @PathVariable UUID uuid) {
+    public ResponseEntity<?> findFilmById(@PathVariable UUID uuid) {
         Optional<FilmOutputDTO> filmOpt = filmService.findByIdForClient(uuid);
         return filmOpt.map(film -> {
             return ResponseEntity.ok(film);
@@ -61,14 +58,13 @@ public class PublicController {
     }
 
     @GetMapping("/films/genres")
-    public ResponseEntity<List<FilmOutputDTO>> findFilmByGenres(
-            @RequestParam String genres) {
+    public ResponseEntity<?> findFilmByGenres(@RequestParam String genres) {
         List<FilmOutputDTO> films = filmService.findByGenresForClient(genres);
         return ResponseEntity.ok(films);
     }
 
     @GetMapping("/films")
-    public ResponseEntity<List<FilmOutputDTO>> findFilms() {
+    public ResponseEntity<?> findFilms() {
         List<FilmOutputDTO> films = filmService.findForClient();
         return ResponseEntity.ok(films);
     }

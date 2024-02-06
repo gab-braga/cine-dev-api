@@ -20,7 +20,7 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<ReservationOutputDTO> findById(@PathVariable UUID uuid) {
+    public ResponseEntity<?> findById(@PathVariable UUID uuid) {
         Optional<ReservationOutputDTO> reservationOptional = reservationService.findById(uuid);
         return reservationOptional
                 .map(reservationFound -> ResponseEntity.ok(reservationFound))
@@ -28,20 +28,20 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationOutputDTO>> findAll() {
+    public ResponseEntity<?> findAll() {
         List<ReservationOutputDTO> reservations = reservationService.findAll();
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationOutputDTO> create(@RequestBody ReservationInputDTO reservation) {
+    public ResponseEntity<?> create(@RequestBody ReservationInputDTO reservation) {
         reservation.setUuid(null);
         ReservationOutputDTO reservationSaved = reservationService.save(reservation);
         return ResponseEntity.status(HttpStatus.CREATED).body(reservationSaved);
     }
 
     @PutMapping("/{uuid}")
-    public ResponseEntity<ReservationOutputDTO> update(@PathVariable UUID uuid, @RequestBody ReservationInputDTO reservation) {
+    public ResponseEntity<?> update(@PathVariable UUID uuid, @RequestBody ReservationInputDTO reservation) {
         Optional<ReservationOutputDTO> reservationOptional = reservationService.findById(uuid);
         return reservationOptional
                 .map(reservationFound -> {

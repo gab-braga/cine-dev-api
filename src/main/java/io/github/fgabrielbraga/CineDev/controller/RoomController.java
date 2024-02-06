@@ -24,9 +24,18 @@ public class RoomController {
     @Autowired
     private SessionService sessionService;
 
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/sessions/{uuid}")
+    public ResponseEntity<?> findBySessionId(@PathVariable UUID uuid) {
+        Optional<RoomOutputDTO> roomOpt = roomService.findBySessionId(uuid);
+        return roomOpt
+                .map(roomFound -> ResponseEntity.ok(roomFound))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{uuid}")
-    public ResponseEntity<RoomOutputDTO> findById(@PathVariable UUID uuid) {
+    public ResponseEntity<?> findById(@PathVariable UUID uuid) {
         Optional<RoomOutputDTO> roomOpt = roomService.findById(uuid);
         return roomOpt
                 .map(roomFound -> ResponseEntity.ok(roomFound))
@@ -35,32 +44,24 @@ public class RoomController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<List<RoomOutputDTO>> findAll(
+    public ResponseEntity<?> findAll(
             @RequestParam(required = false) Short number) {
         List<RoomOutputDTO> rooms = roomService.findAll(number);
         return ResponseEntity.ok(rooms);
     }
 
-    @PreAuthorize("hasRole('CLIENT')")
-    @GetMapping("/sessions/{uuid}")
-    public ResponseEntity<RoomOutputDTO> findBySessionId(
-            @PathVariable UUID uuid) {
-        Optional<RoomOutputDTO> roomOpt = roomService.findBySessionId(uuid);
-        return roomOpt
-                .map(roomFound -> ResponseEntity.ok(roomFound))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<RoomOutputDTO> create(@RequestBody RoomInputDTO room) {
+    public ResponseEntity<?> create(@RequestBody RoomInputDTO room) {
         RoomOutputDTO roomSaved = roomService.save(room);
         return ResponseEntity.status(HttpStatus.CREATED).body(roomSaved);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{uuid}")
-    public ResponseEntity<RoomOutputDTO> updateDetails(@PathVariable UUID uuid, @RequestBody RoomInputDTO room) {
+    public ResponseEntity<?> updateDetails(
+            @PathVariable UUID uuid,
+            @RequestBody RoomInputDTO room) {
         Optional<RoomOutputDTO> roomOptional = roomService.findById(uuid);
         return roomOptional
                 .map(roomFound -> {
@@ -73,8 +74,9 @@ public class RoomController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{uuid}/maps")
-    public ResponseEntity<?> updateSeatMap(@PathVariable UUID uuid, @RequestBody RoomInputDTO room) {
-
+    public ResponseEntity<?> updateSeatMap(
+            @PathVariable UUID uuid,
+            @RequestBody RoomInputDTO room) {
             Optional<RoomOutputDTO> roomOptional = roomService.findById(uuid);
             return roomOptional
                     .map(roomFound -> {

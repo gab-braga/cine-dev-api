@@ -22,7 +22,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping("/email/{email}")
-    public ResponseEntity<UserOutputDTO> findByEmail(@PathVariable String email) {
+    public ResponseEntity<?> findByEmail(@PathVariable String email) {
         Optional<UserOutputDTO> userOptional = userService.findByEmail(email);
         return userOptional
                 .map(userFound -> ResponseEntity.ok(userFound))
@@ -31,7 +31,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{uuid}")
-    public ResponseEntity<UserOutputDTO> findById(@PathVariable UUID uuid) {
+    public ResponseEntity<?> findById(@PathVariable UUID uuid) {
         Optional<UserOutputDTO> userOptional = userService.findById(uuid);
         return userOptional
                 .map(userFound -> ResponseEntity.ok(userFound))
@@ -40,7 +40,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<List<UserOutputDTO>> findAll(
+    public ResponseEntity<?> findAll(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String cpf) {
@@ -50,7 +50,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<UserOutputDTO> create(@RequestBody UserInputDTO user) {
+    public ResponseEntity<?> create(@RequestBody UserInputDTO user) {
         user.setUuid(null);
         UserOutputDTO userSaved = userService.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(userSaved);
@@ -58,7 +58,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{uuid}")
-    public ResponseEntity<UserOutputDTO> update(@PathVariable UUID uuid, @RequestBody UserInputDTO user) {
+    public ResponseEntity<?> update(@PathVariable UUID uuid, @RequestBody UserInputDTO user) {
         Optional<UserOutputDTO> userOptional = userService.findById(uuid);
         return userOptional
                 .map(userFound -> {

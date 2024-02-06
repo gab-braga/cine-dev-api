@@ -15,8 +15,8 @@ public class MapService {
     @Autowired
     private MapRepository mapRepository;
 
-    public Optional<MapOutputDTO> findMapByRoomId(UUID uuid) {
-        Optional<Map> mapOpt = mapRepository.findMapByRoomId(uuid);
+    public Optional<MapOutputDTO> findByRoomId(UUID uuid) {
+        Optional<Map> mapOpt = mapRepository.findByRoomId(uuid);
         return mapOpt.map(map -> {
             return MapOutputDTO.ofMap(map);
         });

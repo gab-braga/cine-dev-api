@@ -22,7 +22,7 @@ public class FilmController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{uuid}")
-    public ResponseEntity<FilmOutputDTO> findById(@PathVariable UUID uuid) {
+    public ResponseEntity<?> findById(@PathVariable UUID uuid) {
         Optional<FilmOutputDTO> filmOptional = filmService.findById(uuid);
         return filmOptional
                 .map(filmFound -> ResponseEntity.ok(filmFound))
@@ -31,7 +31,7 @@ public class FilmController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<List<FilmOutputDTO>> findAll(
+    public ResponseEntity<?> findAll(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String genres) {
         List<FilmOutputDTO> films = filmService.findAll(title, genres);
@@ -40,7 +40,7 @@ public class FilmController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<FilmOutputDTO> create(@RequestBody FilmInputDTO film) {
+    public ResponseEntity<?> create(@RequestBody FilmInputDTO film) {
         film.setUuid(null);
         FilmOutputDTO filmSaved = filmService.save(film);
         return ResponseEntity.status(HttpStatus.CREATED).body(filmSaved);
@@ -48,7 +48,9 @@ public class FilmController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{uuid}")
-    public ResponseEntity<FilmOutputDTO> update(@PathVariable UUID uuid, @RequestBody FilmInputDTO film) {
+    public ResponseEntity<?> update(
+            @PathVariable UUID uuid,
+            @RequestBody FilmInputDTO film) {
         Optional<FilmOutputDTO> filmOptional = filmService.findById(uuid);
         return filmOptional
                 .map(filmFound -> {

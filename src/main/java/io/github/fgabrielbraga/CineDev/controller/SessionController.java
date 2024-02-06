@@ -35,7 +35,7 @@ public class SessionController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{uuid}")
-    public ResponseEntity<SessionOutputDTO> findById(@PathVariable UUID uuid) {
+    public ResponseEntity<?> findById(@PathVariable UUID uuid) {
         Optional<SessionOutputDTO> sessionOptional = sessionService.findById(uuid);
         return sessionOptional
                 .map(sessionFound -> ResponseEntity.ok(sessionFound))
@@ -44,7 +44,7 @@ public class SessionController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<List<SessionOutputDTO>> findAll(
+    public ResponseEntity<?> findAll(
             @RequestParam(required = false) LocalDate date,
             @RequestParam(required = false) Short number,
             @RequestParam(required = false) String title) {
@@ -54,7 +54,7 @@ public class SessionController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<SessionOutputDTO> create(@RequestBody SessionInputDTO session) {
+    public ResponseEntity<?> create(@RequestBody SessionInputDTO session) {
         UUID filmId = session.getFilmId();
         UUID roomId = session.getRoomId();
         Optional<FilmOutputDTO> filmOptional = filmService.findById(filmId);
@@ -69,26 +69,29 @@ public class SessionController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{uuid}")
-    public ResponseEntity<SessionOutputDTO> update(@PathVariable UUID uuid, @RequestBody SessionInputDTO session) {
-        List<ReservationOutputDTO> reservations = reservationService.findBySessionId(uuid);
-        if(reservations.isEmpty()) {
-            UUID filmId = session.getFilmId();
-            UUID roomId = session.getRoomId();
-            Optional<FilmOutputDTO> filmOptional = filmService.findById(filmId);
-            Optional<RoomOutputDTO> roomOptional = roomService.findById(roomId);
-            if(filmOptional.isPresent() && roomOptional.isPresent()) {
-                Optional<SessionOutputDTO> sessionOptional = sessionService.findById(uuid);
-                return sessionOptional
-                        .map(sessionFound -> {
+    public ResponseEntity<?> update(
+            @PathVariable UUID uuid,
+            @RequestBody SessionInputDTO session) {
+        Optional<SessionOutputDTO> sessionOpt = sessionService.findById(uuid);
+        return sessionOpt
+                .map(sessionFound -> {
+                    List<ReservationOutputDTO> reservations = reservationService.findBySessionId(uuid);
+                    if(reservations.isEmpty()) {
+                        UUID filmId = session.getFilmId();
+                        UUID roomId = session.getRoomId();
+                        Optional<FilmOutputDTO> filmOptional = filmService.findById(filmId);
+                        Optional<RoomOutputDTO> roomOptional = roomService.findById(roomId);
+                        if(filmOptional.isPresent() && roomOptional.isPresent()) {
                             session.setUuid(uuid);
                             SessionOutputDTO sessionUpdated = sessionService.update(filmId, roomId, session);
                             return ResponseEntity.ok(sessionUpdated);
-                        })
-                        .orElseGet(() -> ResponseEntity.notFound().build());
-            }
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.badRequest().build();
+
+                        }
+                        return ResponseEntity.notFound().build();
+                    }
+                    return ResponseEntity.badRequest().build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
