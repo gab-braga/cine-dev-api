@@ -19,7 +19,7 @@ BEGIN
     INSERT INTO tickets (uuid, area_uuid, session_uuid)
     SELECT UUID_TO_BIN(UUID()), a.uuid, NEW.uuid
     FROM areas a JOIN rooms r ON r.map_uuid = a.map_uuid
-    WHERE r.uuid = NEW.room_uuid;
+    WHERE r.uuid = NEW.room_uuid AND a.area_type = 'SEAT';
 END;
 
 CREATE TRIGGER after_update_session
@@ -30,7 +30,7 @@ BEGIN
     INSERT INTO tickets (uuid, area_uuid, session_uuid)
     SELECT UUID_TO_BIN(UUID()), a.uuid, NEW.uuid
     FROM areas a JOIN rooms r ON r.map_uuid = a.map_uuid
-    WHERE r.uuid = NEW.room_uuid;
+    WHERE r.uuid = NEW.room_uuid AND a.area_type = 'SEAT';
 END;
 //
 
