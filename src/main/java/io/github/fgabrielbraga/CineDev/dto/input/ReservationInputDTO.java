@@ -25,6 +25,7 @@ public class ReservationInputDTO {
             Reservation reservation = new Reservation();
             reservation.setUuid(dto.getUuid());
             reservation.setReservedAt(dto.getReservedAt());
+            reservation.setStatus(dto.getStatus());
             reservation.setUser(UserInputDTO.parseUser(dto.getUser()));
             reservation.setSession(SessionInputDTO.parseSession(dto.getSession()));
             reservation.setTickets(TicketInputDTO.toTicketList(dto.getTickets()));

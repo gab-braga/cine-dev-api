@@ -50,20 +50,27 @@ public class ReservationService {
         User user = userRepository
                 .findById(reservation.getUser().getUuid()).orElseThrow();
         Session session = sessionRepository
-                .findById(reservation.getUser().getUuid()).orElseThrow();
+                .findById(reservation.getSession().getUuid()).orElseThrow();
         reservation.setUser(user);
         reservation.setSession(session);
         if(session.getOpen()) {
             List<Ticket> tickets = reservation.getTickets();
             List<UUID> uuids = tickets.stream().map(Ticket::getUuid).toList();
             List<Ticket> ticketsFound = ticketRepository.findByIdIn(uuids);
+            System.out.println("===================================== uuids " + uuids);
+            System.out.println("===================================== tickets " + tickets);
+            System.out.println("===================================== ticketsFound " + ticketsFound);
+            System.out.println("===================================== uuids " + uuids);
             int countTickets = tickets.size();
             int countTicketsExistence = ticketsFound.size();
             if(countTickets == countTicketsExistence) {
-                reservation.setTickets(ticketsFound);
-                ticketsFound.forEach(ticket -> ticket.setReservation(reservation));
-                Reservation reservationSaved = reservationRepository.save(reservation);
-                return ReservationOutputDTO.ofReservation(reservationSaved);
+                if(ticketsFound.stream().filter(ticket -> ticket.getReservation() != null).toList().isEmpty()) {
+                    reservation.setTickets(ticketsFound);
+                    ticketsFound.forEach(ticket -> ticket.setReservation(reservation));
+                    Reservation reservationSaved = reservationRepository.save(reservation);
+                    return ReservationOutputDTO.ofReservation(reservationSaved);
+                }
+                throw new RuntimeException("Ticket reservated.");
             }
             throw new RuntimeException("Tickets not found.");
         }

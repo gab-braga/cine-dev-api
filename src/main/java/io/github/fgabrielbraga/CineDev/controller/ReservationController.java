@@ -9,6 +9,7 @@ import io.github.fgabrielbraga.CineDev.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class ReservationController {
     @Autowired
     private SessionService sessionService;
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
     @GetMapping("/{uuid}")
     public ResponseEntity<?> findById(@PathVariable UUID uuid) {
         Optional<ReservationOutputDTO> reservationOptional = reservationService.findById(uuid);
@@ -34,12 +36,14 @@ public class ReservationController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<?> findAll() {
         List<ReservationOutputDTO> reservations = reservationService.findAll();
         return ResponseEntity.ok(reservations);
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
     @PostMapping
     public ResponseEntity<?> create(@RequestBody ReservationInputDTO reservation) {
         UUID userId = reservation.getUser().getUuid();
@@ -53,6 +57,7 @@ public class ReservationController {
         return ResponseEntity.badRequest().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{uuid}")
     public ResponseEntity<?> update(@PathVariable UUID uuid, @RequestBody ReservationInputDTO reservation) {
         Optional<ReservationOutputDTO> reservationOptional = reservationService.findById(uuid);
@@ -65,6 +70,7 @@ public class ReservationController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{uuid}")
     public ResponseEntity<?> delete(@PathVariable UUID uuid) {
         Optional<ReservationOutputDTO> reservationOptional = reservationService.findById(uuid);

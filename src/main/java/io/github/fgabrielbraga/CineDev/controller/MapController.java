@@ -26,10 +26,10 @@ public class MapController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
     @GetMapping("/sessions/{uuid}")
     public ResponseEntity<?> findBySessionId(@PathVariable UUID uuid) {
-        Optional<MapOutputDTO> mapOpt = mapService.findBySesionId(uuid);
+        Optional<MapOutputDTO> mapOpt = mapService.findBySessionId(uuid);
         return mapOpt
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

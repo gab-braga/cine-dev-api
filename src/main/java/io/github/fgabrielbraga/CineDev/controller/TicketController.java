@@ -17,7 +17,7 @@ public class TicketController {
     @Autowired
     private TicketService ticketService;
 
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
     @GetMapping("/sessions/{uuid}")
     public ResponseEntity<?> findBySessionId(@PathVariable UUID uuid) {
         List<TicketOutputDTO> tickets = ticketService.findBySessionId(uuid);
