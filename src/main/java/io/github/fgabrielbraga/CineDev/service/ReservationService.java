@@ -57,20 +57,18 @@ public class ReservationService {
             List<Ticket> tickets = reservation.getTickets();
             List<UUID> uuids = tickets.stream().map(Ticket::getUuid).toList();
             List<Ticket> ticketsFound = ticketRepository.findByIdIn(uuids);
-            System.out.println("===================================== uuids " + uuids);
-            System.out.println("===================================== tickets " + tickets);
-            System.out.println("===================================== ticketsFound " + ticketsFound);
-            System.out.println("===================================== uuids " + uuids);
             int countTickets = tickets.size();
-            int countTicketsExistence = ticketsFound.size();
-            if(countTickets == countTicketsExistence) {
-                if(ticketsFound.stream().filter(ticket -> ticket.getReservation() != null).toList().isEmpty()) {
+            int countTicketsFound = ticketsFound.size();
+            if(countTickets == countTicketsFound) {
+                List<Ticket> reservedTickets = ticketsFound.stream().filter(ticket ->
+                        ticket.getReservation() != null).toList();
+                if(reservedTickets.isEmpty()) {
                     reservation.setTickets(ticketsFound);
                     ticketsFound.forEach(ticket -> ticket.setReservation(reservation));
                     Reservation reservationSaved = reservationRepository.save(reservation);
                     return ReservationOutputDTO.ofReservation(reservationSaved);
                 }
-                throw new RuntimeException("Ticket reservated.");
+                throw new RuntimeException("Ticket reserved.");
             }
             throw new RuntimeException("Tickets not found.");
         }
