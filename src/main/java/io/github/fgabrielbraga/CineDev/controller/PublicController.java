@@ -49,6 +49,12 @@ public class PublicController {
         return ResponseEntity.ok(sessions);
     }
 
+    @GetMapping("/sessions/films/{uuid}")
+    public ResponseEntity<?> findSessionsByFilmId(@PathVariable UUID uuid) {
+        List<SessionOutputDTO> sessions = sessionService.findByFilmId(uuid);
+        return ResponseEntity.ok(sessions);
+    }
+
     @GetMapping("/films/{uuid}")
     public ResponseEntity<?> findFilmById(@PathVariable UUID uuid) {
         Optional<FilmOutputDTO> filmOpt = filmService.findByIdForClient(uuid);

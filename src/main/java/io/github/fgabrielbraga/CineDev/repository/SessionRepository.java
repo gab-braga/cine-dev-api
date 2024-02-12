@@ -52,4 +52,9 @@ public interface SessionRepository extends JpaRepository<Session, UUID> {
             "AND f.genres LIKE CONCAT('%', IFNULL(?, ''), '%') " +
             "ORDER BY session_date LIMIT 120", nativeQuery = true)
     List<Session> findByGenresForClient(String genres);
+
+    @Query(value = "SELECT * FROM sessions " +
+            "WHERE film_uuid = ? AND open = 1 " +
+            "ORDER BY session_date", nativeQuery = true)
+    List<Session> findByFilmId(UUID uuid);
 }
