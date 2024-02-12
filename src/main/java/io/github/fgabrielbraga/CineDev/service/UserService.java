@@ -63,6 +63,15 @@ public class UserService {
         }).orElseThrow();
     }
 
+    public UserOutputDTO updateProfilePicture(UserInputDTO userDTO) {
+        Optional<User> userOpt = userRepository.findById(userDTO.getUuid());
+        return userOpt.map(userFound -> {
+            userFound.setProfilePicture(userDTO.getProfilePicture());
+            User userSaved = userRepository.save(userFound);
+            return UserOutputDTO.ofUser(userSaved);
+        }).orElseThrow();
+    }
+
     public void deleteById(UUID uuid) {
         userRepository.deleteById(uuid);
     }
