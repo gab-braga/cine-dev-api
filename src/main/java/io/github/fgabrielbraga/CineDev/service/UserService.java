@@ -1,5 +1,6 @@
 package io.github.fgabrielbraga.CineDev.service;
 
+import io.github.fgabrielbraga.CineDev.dto.input.PasswordInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.input.UserInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.UserOutputDTO;
 import io.github.fgabrielbraga.CineDev.model.User;
@@ -60,6 +61,31 @@ public class UserService {
             userFound.setPhoneNumber(userDTO.getPhoneNumber());
             User userSaved = userRepository.save(userFound);
             return UserOutputDTO.ofUser(userSaved);
+        }).orElseThrow();
+    }
+
+    public UserOutputDTO updateProfile(UserInputDTO userDTO) {
+        Optional<User> userOpt = userRepository.findById(userDTO.getUuid());
+        return userOpt.map(userFound -> {
+            userFound.setName(userDTO.getName());
+            userFound.setCpf(userDTO.getCpf());
+            userFound.setEmail(userDTO.getEmail());
+            userFound.setPhoneNumber(userDTO.getPhoneNumber());
+            User userSaved = userRepository.save(userFound);
+            return UserOutputDTO.ofUser(userSaved);
+        }).orElseThrow();
+    }
+
+    public UserOutputDTO updatePassword(UUID uuid, String currentPassword, String newPassword) {
+        Optional<User> userOpt = userRepository.findById(uuid);
+        return userOpt.map(userFound -> {
+            if(passwordEncoder.matches(currentPassword, userFound.getPassword())) {
+                String passwordEncoded = passwordEncoder.encode(newPassword);
+                userFound.setPassword(passwordEncoded);
+                User userSaved = userRepository.save(userFound);
+                return UserOutputDTO.ofUser(userSaved);
+            }
+            throw new RuntimeException("Incorrect password");
         }).orElseThrow();
     }
 

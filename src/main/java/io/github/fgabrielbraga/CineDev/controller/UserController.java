@@ -1,5 +1,6 @@
 package io.github.fgabrielbraga.CineDev.controller;
 
+import io.github.fgabrielbraga.CineDev.dto.input.PasswordInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.input.UserInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.UserOutputDTO;
 import io.github.fgabrielbraga.CineDev.service.UserService;
@@ -67,6 +68,41 @@ public class UserController {
                     user.setUuid(uuid);
                     UserOutputDTO userUpdated = userService.update(user);
                     return ResponseEntity.ok(userUpdated);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
+    @PutMapping("/{uuid}/profile")
+    public ResponseEntity<?> updateProfile(
+            @PathVariable UUID uuid,
+            @RequestBody UserInputDTO user) {
+        Optional<UserOutputDTO> userOptional = userService.findById(uuid);
+        return userOptional
+                .map(userFound -> {
+                    user.setUuid(uuid);
+                    UserOutputDTO userUpdated = userService.updateProfile(user);
+                    return ResponseEntity.ok(userUpdated);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
+    @PutMapping("/{uuid}/password")
+    public ResponseEntity<?> updatePassword(
+            @PathVariable UUID uuid,
+            @RequestBody PasswordInputDTO passwordDTO) {
+        Optional<UserOutputDTO> userOptional = userService.findById(uuid);
+        return userOptional
+                .map(userFound -> {
+                    String currentPassword = passwordDTO.getCurrentPassword();
+                    String newPassword = passwordDTO.getNewPassword();
+                    String confirmPassword = passwordDTO.getConfirmPassword();
+                    if(newPassword.equals(confirmPassword)) {
+                        UserOutputDTO userUpdated = userService.updatePassword(uuid, currentPassword, newPassword);
+                        return ResponseEntity.ok(userUpdated);
+                    } else
+                        return ResponseEntity.badRequest().build();
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
