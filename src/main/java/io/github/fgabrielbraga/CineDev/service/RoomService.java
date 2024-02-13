@@ -31,7 +31,7 @@ public class RoomService {
     }
 
     public List<RoomOutputDTO> findAll() {
-        List<Room> rooms = roomRepository.findAll();
+        List<Room> rooms = roomRepository.findAllByOrderByNumber();
         rooms.stream().forEach(room -> room.getMap().getAreas().clear());
         return rooms.stream().map(RoomOutputDTO::ofRoom).toList();
     }

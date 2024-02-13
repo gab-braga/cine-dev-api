@@ -17,8 +17,6 @@ public class SessionInputDTO {
     private Short numberFreeSeats;
     private FilmInputDTO film;
     private RoomInputDTO room;
-    private UUID filmId;
-    private UUID roomId;
 
     public static Session parseSession(SessionInputDTO sessionInputDTO) {
         return Optional.ofNullable(sessionInputDTO).map(dto -> {
@@ -100,21 +98,5 @@ public class SessionInputDTO {
 
     public void setRoom(RoomInputDTO room) {
         this.room = room;
-    }
-
-    public UUID getFilmId() {
-        return filmId;
-    }
-
-    public void setFilmId(UUID filmId) {
-        this.filmId = filmId;
-    }
-
-    public UUID getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(UUID roomId) {
-        this.roomId = roomId;
     }
 }

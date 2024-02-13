@@ -55,8 +55,8 @@ public class SessionController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<?> create(@RequestBody SessionInputDTO session) {
-        UUID filmId = session.getFilmId();
-        UUID roomId = session.getRoomId();
+        UUID filmId = session.getFilm().getUuid();
+        UUID roomId = session.getRoom().getUuid();
         Optional<FilmOutputDTO> filmOptional = filmService.findById(filmId);
         Optional<RoomOutputDTO> roomOptional = roomService.findById(roomId);
         if(filmOptional.isPresent() && roomOptional.isPresent()) {
@@ -77,8 +77,8 @@ public class SessionController {
                 .map(sessionFound -> {
                     List<ReservationOutputDTO> reservations = reservationService.findBySessionId(uuid);
                     if(reservations.isEmpty()) {
-                        UUID filmId = session.getFilmId();
-                        UUID roomId = session.getRoomId();
+                        UUID filmId = session.getFilm().getUuid();
+                        UUID roomId = session.getRoom().getUuid();
                         Optional<FilmOutputDTO> filmOptional = filmService.findById(filmId);
                         Optional<RoomOutputDTO> roomOptional = roomService.findById(roomId);
                         if(filmOptional.isPresent() && roomOptional.isPresent()) {
