@@ -4,6 +4,7 @@ import io.github.fgabrielbraga.CineDev.dto.input.SessionInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.FilmOutputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.RoomOutputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.SessionOutputDTO;
+import io.github.fgabrielbraga.CineDev.exceptions.ResourceNotFoundException;
 import io.github.fgabrielbraga.CineDev.service.FilmService;
 import io.github.fgabrielbraga.CineDev.service.ReservationService;
 import io.github.fgabrielbraga.CineDev.service.RoomService;
@@ -65,7 +66,7 @@ public class SessionController {
             SessionOutputDTO sessionSaved = sessionService.save(filmId, roomId, session);
             return ResponseEntity.status(HttpStatus.CREATED).body(sessionSaved);
         }
-        return ResponseEntity.notFound().build();
+        throw new ResourceNotFoundException("Filme ou sala não encontrados.");
     }
 
     @PreAuthorize("hasRole('ADMIN')")
