@@ -22,28 +22,18 @@ public class FilmService {
         return filmOpt.map(FilmOutputDTO::ofFilm);
     }
 
-    public List<FilmOutputDTO> findAll() {
-        List<Film> films = filmRepository.findAll();
+    public List<FilmOutputDTO> findTop1000() {
+        List<Film> films = filmRepository.findTop1000();
         return films.stream().map(FilmOutputDTO::ofFilm).toList();
     }
 
-    public List<FilmOutputDTO> findAll(String title, String genres) {
-        List<Film> films = filmRepository.findAllWithFilter(title, genres);
+    public List<FilmOutputDTO> findTop1000ByTitleAndGenres(String title, String genres) {
+        List<Film> films = filmRepository.findTop1000ByTitleAndGenres(title, genres);
         return films.stream().map(FilmOutputDTO::ofFilm).toList();
     }
 
-    public Optional<FilmOutputDTO> findByIdForClient(UUID uuid) {
-        Optional<Film> filmOpt = filmRepository.findById(uuid);
-        return filmOpt.map(FilmOutputDTO::ofFilm);
-    }
-
-    public List<FilmOutputDTO> findByGenresForClient(String genres) {
-        List<Film> films = filmRepository.findByGenresForClient(genres);
-        return films.stream().map(FilmOutputDTO::ofFilm).toList();
-    }
-
-    public List<FilmOutputDTO> findForClient() {
-        List<Film> films = filmRepository.findForClient();
+    public List<FilmOutputDTO> findTop1000ByGenres(String genres) {
+        List<Film> films = filmRepository.findTop1000ByGenres(genres);
         return films.stream().map(FilmOutputDTO::ofFilm).toList();
     }
 

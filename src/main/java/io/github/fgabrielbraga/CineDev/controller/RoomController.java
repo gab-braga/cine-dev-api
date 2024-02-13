@@ -24,15 +24,6 @@ public class RoomController {
     @Autowired
     private SessionService sessionService;
 
-    @PreAuthorize("hasRole('CLIENT')")
-    @GetMapping("/sessions/{uuid}")
-    public ResponseEntity<?> findBySessionId(@PathVariable UUID uuid) {
-        Optional<RoomOutputDTO> roomOpt = roomService.findBySessionId(uuid);
-        return roomOpt
-                .map(roomFound -> ResponseEntity.ok(roomFound))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{uuid}")
     public ResponseEntity<?> findById(@PathVariable UUID uuid) {
@@ -46,8 +37,17 @@ public class RoomController {
     @GetMapping
     public ResponseEntity<?> findAll(
             @RequestParam(required = false) Short number) {
-        List<RoomOutputDTO> rooms = roomService.findAll(number);
+        List<RoomOutputDTO> rooms = roomService.findTop1000ByNumber(number);
         return ResponseEntity.ok(rooms);
+    }
+
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/sessions/{uuid}")
+    public ResponseEntity<?> findBySessionId(@PathVariable UUID uuid) {
+        Optional<RoomOutputDTO> roomOpt = roomService.findBySessionId(uuid);
+        return roomOpt
+                .map(roomFound -> ResponseEntity.ok(roomFound))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -80,7 +80,7 @@ public class RoomController {
             Optional<RoomOutputDTO> roomOptional = roomService.findById(uuid);
             return roomOptional
                     .map(roomFound -> {
-                        List<SessionOutputDTO> sessions = sessionService.findByRoomId(uuid);
+                        List<SessionOutputDTO> sessions = sessionService.findTop1000ByRoomId(uuid);
                         if(sessions.isEmpty()) {
                             room.setUuid(uuid);
                             RoomOutputDTO roomUpdated = roomService.updateSeatMap(room);

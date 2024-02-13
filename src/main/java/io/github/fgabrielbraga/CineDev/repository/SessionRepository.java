@@ -23,38 +23,50 @@ public interface SessionRepository extends JpaRepository<Session, UUID> {
 
     @Query(value = "SELECT s.* FROM sessions s " +
             "JOIN rooms r ON s.room_uuid = r.uuid " +
-            "JOIN films f ON s.film_uuid = f.uuid WHERE " +
-            "s.session_date = IFNULL(?, s.session_date) AND " +
-            "r.room_number = IFNULL(?, r.room_number) AND " +
-            "f.title LIKE CONCAT('%', IFNULL(?, ''), '%') " +
-            "ORDER BY session_date", nativeQuery = true)
-    List<Session> findAllWithFilter(LocalDate date, Short number, String title);
-
-    @Query(value = "SELECT * FROM sessions WHERE room_uuid = ? " +
-            "ORDER BY session_date", nativeQuery = true)
-    List<Session> findByRoomId(UUID uuid);
+            "JOIN films f ON s.film_uuid = f.uuid " +
+            "WHERE s.session_date = IFNULL(?, s.session_date) " +
+            "AND r.room_number = IFNULL(?, r.room_number) " +
+            "AND f.title LIKE CONCAT('%', IFNULL(?, ''), '%') " +
+            "ORDER BY s.session_date " +
+            "LIMIT 1000", nativeQuery = true)
+    List<Session> findTop1000ByDateAndNumberAndTitle(LocalDate date, Short number, String title);
 
     @Query(value = "SELECT * FROM sessions " +
-            "WHERE open = 1 AND WEEK(session_date) = WEEK(NOW()) " +
-            "ORDER BY session_date", nativeQuery = true)
-    List<Session> findThisWeek();
+            "WHERE room_uuid = ? " +
+            "ORDER BY session_date " +
+            "LIMIT 1000", nativeQuery = true)
+    List<Session> findTop1000ByRoomId(UUID uuid);
+
+    @Query(value = "SELECT * FROM sessions " +
+            "WHERE open = 1 " +
+            "AND WEEK(session_date) = WEEK(NOW()) " +
+            "ORDER BY session_date " +
+            "LIMIT 1000", nativeQuery = true)
+    List<Session> findTop1000ThisWeek();
 
     @Query(value = "SELECT s.* FROM sessions s " +
             "JOIN films f ON s.film_uuid = f.uuid " +
-            "WHERE s.open = 1 AND s.session_date >= CURDATE() " +
+            "WHERE s.open = 1 " +
+            "AND s.session_date >= CURDATE() " +
             "AND s.session_date = IFNULL(?, s.session_date) " +
-            "ORDER BY session_date LIMIT 120", nativeQuery = true)
-    List<Session> findRecentByDate(LocalDate date);
+            "ORDER BY s.session_date " +
+            "LIMIT 1000", nativeQuery = true)
+    List<Session> findTop1000ByDate(LocalDate date);
 
     @Query(value = "SELECT s.* FROM sessions s " +
             "JOIN films f ON s.film_uuid = f.uuid " +
-            "WHERE s.open = 1 AND s.session_date >= CURDATE() " +
+            "WHERE s.open = 1 " +
+            "AND s.session_date >= CURDATE() " +
             "AND f.genres LIKE CONCAT('%', IFNULL(?, ''), '%') " +
-            "ORDER BY session_date LIMIT 120", nativeQuery = true)
-    List<Session> findByGenresForClient(String genres);
+            "ORDER BY s.session_date " +
+            "LIMIT 1000", nativeQuery = true)
+    List<Session> findTop1000ByGenres(String genres);
 
     @Query(value = "SELECT * FROM sessions " +
-            "WHERE film_uuid = ? AND open = 1 " +
-            "ORDER BY session_date", nativeQuery = true)
-    List<Session> findByFilmId(UUID uuid);
+            "WHERE open = 1 " +
+            "AND session_date >= CURDATE() " +
+            "AND film_uuid = ? " +
+            "ORDER BY session_date " +
+            "LIMIT 1000", nativeQuery = true)
+    List<Session> findTop1000ByFilmId(UUID uuid);
 }

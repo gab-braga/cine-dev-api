@@ -48,7 +48,7 @@ public class SessionController {
             @RequestParam(required = false) LocalDate date,
             @RequestParam(required = false) Short number,
             @RequestParam(required = false) String title) {
-        List<SessionOutputDTO> sessions = sessionService.findAll(date, number, title);
+        List<SessionOutputDTO> sessions = sessionService.findTop1000ByDateAndNumberAndTitle(date, number, title);
         return ResponseEntity.ok(sessions);
     }
 
@@ -75,7 +75,7 @@ public class SessionController {
         Optional<SessionOutputDTO> sessionOpt = sessionService.findById(uuid);
         return sessionOpt
                 .map(sessionFound -> {
-                    List<ReservationOutputDTO> reservations = reservationService.findBySessionId(uuid);
+                    List<?> reservations = reservationService.findTop1000BySessionId(uuid);
                     if(reservations.isEmpty()) {
                         UUID filmId = session.getFilm().getUuid();
                         UUID roomId = session.getRoom().getUuid();

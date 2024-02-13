@@ -38,8 +38,8 @@ public class UserService {
         return users.stream().map(UserOutputDTO::ofUser).toList();
     }
 
-    public List<UserOutputDTO> findAll(String name, String email, String cpf) {
-        List<User> users = userRepository.findAllWithFilter(name, email, cpf);
+    public List<UserOutputDTO> findTop1000ByNameAndEmailAndCpf(String name, String email, String cpf) {
+        List<User> users = userRepository.findTop1000ByNameAndEmailAndCpf(name, email, cpf);
         return users.stream().map(UserOutputDTO::ofUser).toList();
     }
 

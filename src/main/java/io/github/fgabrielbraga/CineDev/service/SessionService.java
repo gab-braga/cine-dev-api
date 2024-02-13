@@ -37,38 +37,33 @@ public class SessionService {
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 
-    public List<SessionOutputDTO> findAll(LocalDate date, Short number, String title) {
-        List<Session> sessions = sessionRepository.findAllWithFilter(date, number, title);
+    public List<SessionOutputDTO> findTop1000ByDateAndNumberAndTitle(LocalDate date, Short number, String title) {
+        List<Session> sessions = sessionRepository.findTop1000ByDateAndNumberAndTitle(date, number, title);
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 
-    public List<SessionOutputDTO> findRecentByDate(LocalDate date) {
-        List<Session> sessions = sessionRepository.findRecentByDate(date);
+    public List<SessionOutputDTO> findTop1000RecentByDate(LocalDate date) {
+        List<Session> sessions = sessionRepository.findTop1000ByDate(date);
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 
-    public List<SessionOutputDTO> findThisWeek() {
-        List<Session> sessions = sessionRepository.findThisWeek();
+    public List<SessionOutputDTO> findTop1000ThisWeek() {
+        List<Session> sessions = sessionRepository.findTop1000ThisWeek();
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 
-    public List<SessionOutputDTO> findByRoomId(UUID uuid) {
-        List<Session> sessions = sessionRepository.findByRoomId(uuid);
+    public List<SessionOutputDTO> findTop1000ByRoomId(UUID uuid) {
+        List<Session> sessions = sessionRepository.findTop1000ByRoomId(uuid);
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 
-    public Optional<SessionOutputDTO> findByIdForClient(UUID uuid) {
-        Optional<Session> sessionOpt = sessionRepository.findById(uuid);
-        return sessionOpt.map(SessionOutputDTO::ofSession);
-    }
-
-    public List<SessionOutputDTO> findByGenresForClient(String genres) {
-        List<Session> sessions = sessionRepository.findByGenresForClient(genres);
+    public List<SessionOutputDTO> findTop1000ByGenresForClient(String genres) {
+        List<Session> sessions = sessionRepository.findTop1000ByGenres(genres);
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 
-    public List<SessionOutputDTO> findByFilmId(UUID uuid) {
-        List<Session> sessions = sessionRepository.findByFilmId(uuid);
+    public List<SessionOutputDTO> findTop1000ByFilmId(UUID uuid) {
+        List<Session> sessions = sessionRepository.findTop1000ByFilmId(uuid);
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 

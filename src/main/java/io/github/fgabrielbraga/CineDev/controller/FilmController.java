@@ -31,10 +31,10 @@ public class FilmController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<?> findAll(
+    public ResponseEntity<?> findTop1000ByTitleAndGenres(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String genres) {
-        List<FilmOutputDTO> films = filmService.findAll(title, genres);
+        List<FilmOutputDTO> films = filmService.findTop1000ByTitleAndGenres(title, genres);
         return ResponseEntity.ok(films);
     }
 

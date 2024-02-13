@@ -12,16 +12,16 @@ import java.util.UUID;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, UUID> {
 
-    @Query(value = "SELECT * FROM rooms WHERE " +
-            "room_number = IFNULL(?, room_number) " +
-            "ORDER BY room_number", nativeQuery = true)
-    List<Room> findByRoomNumber(Short number);
+    List<Room> findTop1000ByOrderByNumber();
+
+    @Query(value = "SELECT * FROM rooms " +
+            "WHERE room_number = IFNULL(?, room_number) " +
+            "ORDER BY room_number " +
+            "LIMIT 1000", nativeQuery = true)
+    List<Room> findTop1000ByNumber(Short number);
 
     @Query(value = "SELECT r.* FROM rooms r " +
             "JOIN sessions s ON s.room_uuid = r.uuid " +
-            "WHERE s.uuid = ? " +
-            "ORDER BY r.room_number", nativeQuery = true)
+            "WHERE s.uuid = ? ", nativeQuery = true)
     Optional<Room> findBySessionId(UUID uuid);
-
-    List<Room> findAllByOrderByNumber();
 }

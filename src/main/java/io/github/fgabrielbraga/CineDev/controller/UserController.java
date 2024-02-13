@@ -22,15 +22,6 @@ public class UserController {
     private UserService userService;
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
-    @GetMapping("/{uuid}/client")
-    public ResponseEntity<?> findByIdForClient(@PathVariable UUID uuid) {
-        Optional<UserOutputDTO> userOptional = userService.findById(uuid);
-        return userOptional
-                .map(userFound -> ResponseEntity.ok(userFound))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{uuid}")
     public ResponseEntity<?> findById(@PathVariable UUID uuid) {
         Optional<UserOutputDTO> userOptional = userService.findById(uuid);
@@ -41,11 +32,11 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<?> findAll(
+    public ResponseEntity<?> findTop1000ByNameAndEmailAndCpf(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String cpf) {
-        List<UserOutputDTO> users = userService.findAll(name, email, cpf);
+        List<UserOutputDTO> users = userService.findTop1000ByNameAndEmailAndCpf(name, email, cpf);
         return ResponseEntity.ok(users);
     }
 

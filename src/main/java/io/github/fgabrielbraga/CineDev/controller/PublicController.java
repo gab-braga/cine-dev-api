@@ -23,55 +23,55 @@ public class PublicController {
     private FilmService filmService;
 
     @GetMapping("/sessions")
-    public ResponseEntity<?> findSessionsRecentByDate(
+    public ResponseEntity<?> findTop1000SessionsRecentByDate(
             @RequestParam(required = false) LocalDate date) {
-        List<SessionOutputDTO> sessions = sessionService.findRecentByDate(date);
+        List<SessionOutputDTO> sessions = sessionService.findTop1000RecentByDate(date);
         return ResponseEntity.ok(sessions);
     }
 
     @GetMapping("/sessions/{uuid}")
     public ResponseEntity<?> findSessionById(@PathVariable UUID uuid) {
-        Optional<SessionOutputDTO> sessionOpt = sessionService.findByIdForClient(uuid);
+        Optional<SessionOutputDTO> sessionOpt = sessionService.findById(uuid);
         return sessionOpt.map(session -> {
             return ResponseEntity.ok(session);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/sessions/week")
-    public ResponseEntity<?> findSessionsThisWeek() {
-        List<SessionOutputDTO> sessions = sessionService.findThisWeek();
+    public ResponseEntity<?> findTop1000SessionsThisWeek() {
+        List<SessionOutputDTO> sessions = sessionService.findTop1000ThisWeek();
         return ResponseEntity.ok(sessions);
     }
 
     @GetMapping("/sessions/genres")
-    public ResponseEntity<?> findSessionsByGenres(@RequestParam String genres) {
-        List<SessionOutputDTO> sessions = sessionService.findByGenresForClient(genres);
+    public ResponseEntity<?> findTop1000SessionsByGenres(@RequestParam String genres) {
+        List<SessionOutputDTO> sessions = sessionService.findTop1000ByGenresForClient(genres);
         return ResponseEntity.ok(sessions);
     }
 
     @GetMapping("/sessions/films/{uuid}")
-    public ResponseEntity<?> findSessionsByFilmId(@PathVariable UUID uuid) {
-        List<SessionOutputDTO> sessions = sessionService.findByFilmId(uuid);
+    public ResponseEntity<?> findTop1000SessionsByFilmId(@PathVariable UUID uuid) {
+        List<SessionOutputDTO> sessions = sessionService.findTop1000ByFilmId(uuid);
         return ResponseEntity.ok(sessions);
     }
 
     @GetMapping("/films/{uuid}")
     public ResponseEntity<?> findFilmById(@PathVariable UUID uuid) {
-        Optional<FilmOutputDTO> filmOpt = filmService.findByIdForClient(uuid);
+        Optional<FilmOutputDTO> filmOpt = filmService.findById(uuid);
         return filmOpt.map(film -> {
             return ResponseEntity.ok(film);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/films/genres")
-    public ResponseEntity<?> findFilmByGenres(@RequestParam String genres) {
-        List<FilmOutputDTO> films = filmService.findByGenresForClient(genres);
+    public ResponseEntity<?> findTop1000FilmsByGenres(@RequestParam String genres) {
+        List<FilmOutputDTO> films = filmService.findTop1000ByGenres(genres);
         return ResponseEntity.ok(films);
     }
 
     @GetMapping("/films")
-    public ResponseEntity<?> findFilms() {
-        List<FilmOutputDTO> films = filmService.findForClient();
+    public ResponseEntity<?> findTop1000Films() {
+        List<FilmOutputDTO> films = filmService.findTop1000();
         return ResponseEntity.ok(films);
     }
 }

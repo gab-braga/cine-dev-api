@@ -34,13 +34,13 @@ public class ReservationService {
         return reservationOpt.map(ReservationOutputDTO::ofReservation);
     }
 
-    public List<ReservationOutputDTO> findAll() {
-        List<Reservation> reservations = reservationRepository.findAll();
+    public List<ReservationOutputDTO> findTop1000() {
+        List<Reservation> reservations = reservationRepository.findTop1000();
         return reservations.stream().map(ReservationOutputDTO::ofReservation).toList();
     }
 
-    public List<ReservationOutputDTO> findBySessionId(UUID uuid) {
-        List<Reservation> reservations = reservationRepository.findBySessionId(uuid);
+    public List<ReservationOutputDTO> findTop1000BySessionId(UUID uuid) {
+        List<Reservation> reservations = reservationRepository.findTop1000BySessionId(uuid);
         return reservations.stream().map(ReservationOutputDTO::ofReservation).toList();
     }
 
@@ -73,9 +73,5 @@ public class ReservationService {
             throw new RuntimeException("Tickets not found.");
         }
         throw new RuntimeException("Session is closed.");
-    }
-
-    public void deleteById(UUID uuid) {
-        reservationRepository.deleteById(uuid);
     }
 }

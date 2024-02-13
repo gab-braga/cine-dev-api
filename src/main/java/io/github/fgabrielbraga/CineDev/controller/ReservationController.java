@@ -28,8 +28,8 @@ public class ReservationController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<?> findAll() {
-        List<ReservationOutputDTO> reservations = reservationService.findAll();
+    public ResponseEntity<?> findTop1000() {
+        List<ReservationOutputDTO> reservations = reservationService.findTop1000();
         return ResponseEntity.ok(reservations);
     }
 

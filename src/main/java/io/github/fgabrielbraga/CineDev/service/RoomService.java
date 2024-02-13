@@ -4,11 +4,9 @@ import io.github.fgabrielbraga.CineDev.dto.input.RoomInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.RoomOutputDTO;
 import io.github.fgabrielbraga.CineDev.enums.AreaType;
 import io.github.fgabrielbraga.CineDev.model.Room;
-import io.github.fgabrielbraga.CineDev.repository.MapRepository;
 import io.github.fgabrielbraga.CineDev.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,14 +28,14 @@ public class RoomService {
         return roomOpt.map(RoomOutputDTO::ofRoom);
     }
 
-    public List<RoomOutputDTO> findAll() {
-        List<Room> rooms = roomRepository.findAllByOrderByNumber();
+    public List<RoomOutputDTO> findTop1000() {
+        List<Room> rooms = roomRepository.findTop1000ByOrderByNumber();
         rooms.stream().forEach(room -> room.getMap().getAreas().clear());
         return rooms.stream().map(RoomOutputDTO::ofRoom).toList();
     }
 
-    public List<RoomOutputDTO> findAll(Short number) {
-        List<Room> rooms = roomRepository.findByRoomNumber(number);
+    public List<RoomOutputDTO> findTop1000ByNumber(Short number) {
+        List<Room> rooms = roomRepository.findTop1000ByNumber(number);
         rooms.stream().forEach(room -> room.getMap().getAreas().clear());
         return rooms.stream().map(RoomOutputDTO::ofRoom).toList();
     }

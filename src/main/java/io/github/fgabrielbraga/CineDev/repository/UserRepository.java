@@ -23,9 +23,11 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Query(value = "UPDATE users u SET u.active = 1 WHERE u.uuid = ?", nativeQuery = true)
     void enableUserById(UUID uuid);
 
-    @Query(value = "SELECT u.* FROM users u WHERE " +
-            "u.name LIKE CONCAT('%', IFNULL(?, ''), '%') AND " +
-            "u.email LIKE CONCAT(IFNULL(?, ''), '%') AND " +
-            "u.cpf LIKE CONCAT(IFNULL(?, ''), '%')", nativeQuery = true)
-    List<User> findAllWithFilter(String name, String email, String cpf);
+    @Query(value = "SELECT u.* FROM users u " +
+            "WHERE u.name LIKE CONCAT('%', IFNULL(?, ''), '%') " +
+            "AND u.email LIKE CONCAT(IFNULL(?, ''), '%') " +
+            "AND u.cpf LIKE CONCAT(IFNULL(?, ''), '%') " +
+            "ORDER BY u.name " +
+            "LIMIT 1000", nativeQuery = true)
+    List<User> findTop1000ByNameAndEmailAndCpf(String name, String email, String cpf);
 }
