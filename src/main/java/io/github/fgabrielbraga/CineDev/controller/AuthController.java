@@ -6,6 +6,7 @@ import io.github.fgabrielbraga.CineDev.dto.output.TokenOutputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.UserOutputDTO;
 import io.github.fgabrielbraga.CineDev.service.AuthService;
 import io.github.fgabrielbraga.CineDev.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +24,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenOutputDTO> login(
-            @RequestBody CredentialsInputDTO credentials) {
+            @Valid @RequestBody CredentialsInputDTO credentials) {
         TokenOutputDTO token = authService.login(credentials);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/signup")
     public ResponseEntity<UserOutputDTO> signup(
-            @RequestBody UserInputDTO userInputDTO) {
+            @Valid @RequestBody UserInputDTO userInputDTO) {
         UserOutputDTO userSaved = userService.save(userInputDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(userSaved);
     }

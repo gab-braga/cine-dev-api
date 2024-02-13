@@ -2,13 +2,13 @@ package io.github.fgabrielbraga.CineDev.controller;
 
 import io.github.fgabrielbraga.CineDev.dto.input.SessionInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.FilmOutputDTO;
-import io.github.fgabrielbraga.CineDev.dto.output.ReservationOutputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.RoomOutputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.SessionOutputDTO;
 import io.github.fgabrielbraga.CineDev.service.FilmService;
 import io.github.fgabrielbraga.CineDev.service.ReservationService;
 import io.github.fgabrielbraga.CineDev.service.RoomService;
 import io.github.fgabrielbraga.CineDev.service.SessionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +54,8 @@ public class SessionController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody SessionInputDTO session) {
+    public ResponseEntity<?> create(
+            @Valid @RequestBody SessionInputDTO session) {
         UUID filmId = session.getFilm().getUuid();
         UUID roomId = session.getRoom().getUuid();
         Optional<FilmOutputDTO> filmOptional = filmService.findById(filmId);
@@ -71,7 +72,7 @@ public class SessionController {
     @PutMapping("/{uuid}")
     public ResponseEntity<?> update(
             @PathVariable UUID uuid,
-            @RequestBody SessionInputDTO session) {
+            @Valid @RequestBody SessionInputDTO session) {
         Optional<SessionOutputDTO> sessionOpt = sessionService.findById(uuid);
         return sessionOpt
                 .map(sessionFound -> {

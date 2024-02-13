@@ -5,6 +5,7 @@ import io.github.fgabrielbraga.CineDev.dto.output.ReservationOutputDTO;
 import io.github.fgabrielbraga.CineDev.service.ReservationService;
 import io.github.fgabrielbraga.CineDev.service.SessionService;
 import io.github.fgabrielbraga.CineDev.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,8 @@ public class ReservationController {
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody ReservationInputDTO reservation) {
+    public ResponseEntity<?> create(
+            @Valid @RequestBody ReservationInputDTO reservation) {
         UUID userId = reservation.getUser().getUuid();
         UUID sessionId = reservation.getSession().getUuid();
         Optional<?> userOpt = userService.findById(userId);

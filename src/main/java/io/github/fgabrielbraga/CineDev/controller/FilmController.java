@@ -3,6 +3,7 @@ package io.github.fgabrielbraga.CineDev.controller;
 import io.github.fgabrielbraga.CineDev.dto.input.FilmInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.FilmOutputDTO;
 import io.github.fgabrielbraga.CineDev.service.FilmService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,8 @@ public class FilmController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody FilmInputDTO film) {
+    public ResponseEntity<?> create(
+            @Valid @RequestBody FilmInputDTO film) {
         film.setUuid(null);
         FilmOutputDTO filmSaved = filmService.save(film);
         return ResponseEntity.status(HttpStatus.CREATED).body(filmSaved);
@@ -50,7 +52,7 @@ public class FilmController {
     @PutMapping("/{uuid}")
     public ResponseEntity<?> update(
             @PathVariable UUID uuid,
-            @RequestBody FilmInputDTO film) {
+            @Valid @RequestBody FilmInputDTO film) {
         Optional<FilmOutputDTO> filmOptional = filmService.findById(uuid);
         return filmOptional
                 .map(filmFound -> {

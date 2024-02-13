@@ -1,17 +1,23 @@
 package io.github.fgabrielbraga.CineDev.dto.input;
 
 import io.github.fgabrielbraga.CineDev.model.Room;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class RoomInputDTO {
 
     private UUID uuid;
+    @NotNull(message = "O número da sala é obrigatório.")
     private Short number;
     private Short capacity;
+    @NotBlank(message = "A projeção da sala é obrigatória.")
+    @Size(max = 50, message = "O número de caracteres da projeção excede o limite.")
     private String projectionType;
+    @NotNull(message = "O mapa de assentos da sala é obrigatório.")
     private MapInputDTO map;
 
     public RoomInputDTO() {

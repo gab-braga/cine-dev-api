@@ -1,6 +1,9 @@
 package io.github.fgabrielbraga.CineDev.dto.input;
 
 import io.github.fgabrielbraga.CineDev.model.Session;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,12 +13,17 @@ import java.util.UUID;
 public class SessionInputDTO {
 
     private UUID uuid;
+    @NotNull(message = "A data da sessão é obrigatória.")
     private LocalDate date;
+    @NotNull(message = "O horário da sessão é obrigatório.")
     private LocalTime hour;
     private Boolean open;
+    @NotNull(message = "O preço do ingresso da sessão é obrigatório.")
     private Float ticketPrice;
     private Short numberFreeSeats;
+    @NotNull(message = "O filme da sessão é obrigatório.")
     private FilmInputDTO film;
+    @NotNull(message = "A sala da sessão é obrigatória.")
     private RoomInputDTO room;
 
     public static Session parseSession(SessionInputDTO sessionInputDTO) {

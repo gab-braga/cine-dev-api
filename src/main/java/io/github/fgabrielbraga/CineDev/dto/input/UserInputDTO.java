@@ -2,6 +2,10 @@ package io.github.fgabrielbraga.CineDev.dto.input;
 
 import io.github.fgabrielbraga.CineDev.model.User;
 import io.github.fgabrielbraga.CineDev.enums.Role;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -10,10 +14,19 @@ import java.util.UUID;
 public class UserInputDTO {
 
     private UUID uuid;
+    @NotBlank(message = "O nome do usuário é obrigatório.")
+    @Size(max = 120, message = "O número de caracteres do nome excede o limite.")
     private String name;
+    @Email(message = "O e-mail do usuário está inválido.")
+    @NotBlank(message = "O e-mail do usuário é obrigatório.")
+    @Size(max = 150, message = "O número de caracteres do e-mail excede o limite.")
     private String email;
+    @NotBlank(message = "A senha do usuário é obrigatória.")
     private String password;
+    @CPF(message = "O CPF do usuário está inválido.")
+    @NotBlank(message = "O CPF do usuário é obrigatório.")
     private String cpf;
+    @Size(max = 16, message = "O número de caracteres do telefone excede o limite.")
     private String phoneNumber;
     private String profilePicture;
     private Boolean active;

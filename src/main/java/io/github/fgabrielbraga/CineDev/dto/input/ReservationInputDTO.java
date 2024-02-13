@@ -2,6 +2,8 @@ package io.github.fgabrielbraga.CineDev.dto.input;
 
 import io.github.fgabrielbraga.CineDev.enums.StatusReservation;
 import io.github.fgabrielbraga.CineDev.model.Reservation;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,8 +15,12 @@ public class ReservationInputDTO {
     private UUID uuid;
     private LocalDateTime reservedAt;
     private StatusReservation status;
+    @NotNull(message = "O usuário é obrigatório.")
     private UserInputDTO user;
+    @NotNull(message = "A sessão é obrigatória.")
     private SessionInputDTO session;
+    @NotNull(message = "A lista de ingressos é obrigatória.")
+    @NotEmpty(message = "A lista de ingressos não pode está vazia.")
     private List<TicketInputDTO> tickets;
 
     public ReservationInputDTO() {

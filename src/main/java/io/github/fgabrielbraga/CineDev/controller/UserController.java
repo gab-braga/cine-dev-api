@@ -4,6 +4,7 @@ import io.github.fgabrielbraga.CineDev.dto.input.PasswordInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.input.UserInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.UserOutputDTO;
 import io.github.fgabrielbraga.CineDev.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,8 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody UserInputDTO user) {
+    public ResponseEntity<?> create(
+            @Valid @RequestBody UserInputDTO user) {
         user.setUuid(null);
         UserOutputDTO userSaved = userService.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(userSaved);
@@ -82,7 +84,7 @@ public class UserController {
     @PutMapping("/{uuid}/password")
     public ResponseEntity<?> updatePassword(
             @PathVariable UUID uuid,
-            @RequestBody PasswordInputDTO passwordDTO) {
+            @Valid @RequestBody PasswordInputDTO passwordDTO) {
         Optional<UserOutputDTO> userOptional = userService.findById(uuid);
         return userOptional
                 .map(userFound -> {

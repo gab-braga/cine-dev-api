@@ -1,9 +1,14 @@
 package io.github.fgabrielbraga.CineDev.dto.input;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class PasswordInputDTO {
 
+    @NotBlank(message = "A senha atual é obrigatória.")
     private String currentPassword;
+    @NotBlank(message = "A nova senha é obrigatória.")
     private String newPassword;
+    @NotBlank(message = "A senha de confirmação é obrigatória.")
     private String confirmPassword;
 
     public PasswordInputDTO() {

@@ -5,6 +5,7 @@ import io.github.fgabrielbraga.CineDev.dto.output.RoomOutputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.SessionOutputDTO;
 import io.github.fgabrielbraga.CineDev.service.RoomService;
 import io.github.fgabrielbraga.CineDev.service.SessionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +53,8 @@ public class RoomController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody RoomInputDTO room) {
+    public ResponseEntity<?> create(
+            @Valid @RequestBody RoomInputDTO room) {
         RoomOutputDTO roomSaved = roomService.save(room);
         return ResponseEntity.status(HttpStatus.CREATED).body(roomSaved);
     }
