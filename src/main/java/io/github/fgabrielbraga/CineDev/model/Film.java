@@ -27,6 +27,11 @@ public class Film {
     @Column(nullable = false, name = "published_in")
     private LocalDate publishedIn;
 
+    @PrePersist
+    protected void onCreate() {
+        this.uuid = null;
+    }
+
     public Film() {
     }
 

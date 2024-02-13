@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -26,25 +25,14 @@ public class MapController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/rooms/{uuid}")
     public ResponseEntity<?> findByRoomId(@PathVariable UUID uuid) {
-        Optional<?> roomOpt = roomService.findById(uuid);
-        return roomOpt.map((room) -> {
-            Optional<MapOutputDTO> mapOpt = mapService.findByRoomId(uuid);
-            return mapOpt
-                    .map(ResponseEntity::ok)
-                    .orElseGet(() -> ResponseEntity.notFound().build());
-        }).orElseGet(() -> ResponseEntity.badRequest().build());
-
+        MapOutputDTO map = mapService.findByRoomId(uuid);
+        return ResponseEntity.ok(map);
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
     @GetMapping("/sessions/{uuid}")
     public ResponseEntity<?> findBySessionId(@PathVariable UUID uuid) {
-        Optional<?> sessionOpt = sessionService.findById(uuid);
-        return sessionOpt.map((session) -> {
-            Optional<MapOutputDTO> mapOpt = mapService.findBySessionId(uuid);
-            return mapOpt
-                    .map(ResponseEntity::ok)
-                    .orElseGet(() -> ResponseEntity.notFound().build());
-        }).orElseGet(() -> ResponseEntity.badRequest().build());
+        MapOutputDTO map = mapService.findBySessionId(uuid);
+        return ResponseEntity.ok(map);
     }
 }

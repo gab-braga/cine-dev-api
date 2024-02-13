@@ -1,6 +1,7 @@
 package io.github.fgabrielbraga.CineDev.service;
 
 import io.github.fgabrielbraga.CineDev.dto.output.MapOutputDTO;
+import io.github.fgabrielbraga.CineDev.exceptions.ResourceNotFoundException;
 import io.github.fgabrielbraga.CineDev.model.Map;
 import io.github.fgabrielbraga.CineDev.repository.MapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +16,19 @@ public class MapService {
     @Autowired
     private MapRepository mapRepository;
 
-    public Optional<MapOutputDTO> findByRoomId(UUID uuid) {
+    public MapOutputDTO findByRoomId(UUID uuid) {
         Optional<Map> mapOpt = mapRepository.findByRoomId(uuid);
         return mapOpt.map(map -> {
             return MapOutputDTO.ofMap(map);
-        });
+        }).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, mapa não encontrado. Tente novamente."));
     }
 
-    public Optional<MapOutputDTO> findBySessionId(UUID uuid) {
+    public MapOutputDTO findBySessionId(UUID uuid) {
         Optional<Map> mapOpt = mapRepository.findBySessionId(uuid);
         return mapOpt.map(map -> {
             return MapOutputDTO.ofMap(map);
-        });
+        }).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, mapa não encontrado. Tente novamente."));
     }
 }

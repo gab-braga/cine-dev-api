@@ -25,10 +25,8 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
     @GetMapping("/{uuid}")
     public ResponseEntity<?> findById(@PathVariable UUID uuid) {
-        Optional<UserOutputDTO> userOptional = userService.findById(uuid);
-        return userOptional
-                .map(userFound -> ResponseEntity.ok(userFound))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        UserOutputDTO userFound = userService.findById(uuid);
+        return ResponseEntity.ok(userFound);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -37,7 +35,8 @@ public class UserController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String cpf) {
-        List<UserOutputDTO> users = userService.findTop1000ByNameAndEmailAndCpf(name, email, cpf);
+        List<UserOutputDTO> users = userService
+                .findTop1000ByNameAndEmailAndCpf(name, email, cpf);
         return ResponseEntity.ok(users);
     }
 
@@ -45,7 +44,6 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> create(
             @Valid @RequestBody UserInputDTO user) {
-        user.setUuid(null);
         UserOutputDTO userSaved = userService.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(userSaved);
     }
@@ -55,14 +53,9 @@ public class UserController {
     public ResponseEntity<?> update(
             @PathVariable UUID uuid,
             @RequestBody UserInputDTO user) {
-        Optional<UserOutputDTO> userOptional = userService.findById(uuid);
-        return userOptional
-                .map(userFound -> {
-                    user.setUuid(uuid);
-                    UserOutputDTO userUpdated = userService.update(user);
-                    return ResponseEntity.ok(userUpdated);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        user.setUuid(uuid);
+        UserOutputDTO userUpdated = userService.update(user);
+        return ResponseEntity.ok(userUpdated);
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
@@ -70,14 +63,9 @@ public class UserController {
     public ResponseEntity<?> updateProfile(
             @PathVariable UUID uuid,
             @RequestBody UserInputDTO user) {
-        Optional<UserOutputDTO> userOptional = userService.findById(uuid);
-        return userOptional
-                .map(userFound -> {
-                    user.setUuid(uuid);
-                    UserOutputDTO userUpdated = userService.updateProfile(user);
-                    return ResponseEntity.ok(userUpdated);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        user.setUuid(uuid);
+        UserOutputDTO userUpdated = userService.updateProfile(user);
+        return ResponseEntity.ok(userUpdated);
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
@@ -85,19 +73,8 @@ public class UserController {
     public ResponseEntity<?> updatePassword(
             @PathVariable UUID uuid,
             @Valid @RequestBody PasswordInputDTO passwordDTO) {
-        Optional<UserOutputDTO> userOptional = userService.findById(uuid);
-        return userOptional
-                .map(userFound -> {
-                    String currentPassword = passwordDTO.getCurrentPassword();
-                    String newPassword = passwordDTO.getNewPassword();
-                    String confirmPassword = passwordDTO.getConfirmPassword();
-                    if(newPassword.equals(confirmPassword)) {
-                        UserOutputDTO userUpdated = userService.updatePassword(uuid, currentPassword, newPassword);
-                        return ResponseEntity.ok(userUpdated);
-                    } else
-                        return ResponseEntity.badRequest().build();
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        UserOutputDTO userUpdated = userService.updatePassword(uuid, passwordDTO);
+        return ResponseEntity.ok(userUpdated);
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
@@ -105,37 +82,22 @@ public class UserController {
     public ResponseEntity<?> updateProfilePicture(
             @PathVariable UUID uuid,
             @RequestBody UserInputDTO user) {
-        Optional<UserOutputDTO> userOptional = userService.findById(uuid);
-        return userOptional
-                .map(userFound -> {
-                    user.setUuid(uuid);
-                    UserOutputDTO userUpdated = userService.updateProfilePicture(user);
-                    return ResponseEntity.ok(userUpdated);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        user.setUuid(uuid);
+        UserOutputDTO userUpdated = userService.updateProfilePicture(user);
+        return ResponseEntity.ok(userUpdated);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{uuid}/disable")
     public ResponseEntity<?> disable(@PathVariable UUID uuid) {
-        Optional<UserOutputDTO> userOptional = userService.findById(uuid);
-        return userOptional
-                .map(userFound -> {
-                    userService.disable(uuid);
-                    return ResponseEntity.ok().build();
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        userService.disable(uuid);
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{uuid}/enable")
     public ResponseEntity<?> enable(@PathVariable UUID uuid) {
-        Optional<UserOutputDTO> userOptional = userService.findById(uuid);
-        return userOptional
-                .map(userFound -> {
-                    userService.enable(uuid);
-                    return ResponseEntity.ok().build();
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        userService.enable(uuid);
+        return ResponseEntity.ok().build();
     }
 }

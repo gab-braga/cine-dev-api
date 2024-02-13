@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -22,19 +21,17 @@ public class PublicController {
     @Autowired
     private FilmService filmService;
 
+    @GetMapping("/sessions/{uuid}")
+    public ResponseEntity<?> findSessionById(@PathVariable UUID uuid) {
+        SessionOutputDTO session = sessionService.findById(uuid);
+        return ResponseEntity.ok(session);
+    }
+
     @GetMapping("/sessions")
     public ResponseEntity<?> findTop1000SessionsRecentByDate(
             @RequestParam(required = false) LocalDate date) {
         List<SessionOutputDTO> sessions = sessionService.findTop1000RecentByDate(date);
         return ResponseEntity.ok(sessions);
-    }
-
-    @GetMapping("/sessions/{uuid}")
-    public ResponseEntity<?> findSessionById(@PathVariable UUID uuid) {
-        Optional<SessionOutputDTO> sessionOpt = sessionService.findById(uuid);
-        return sessionOpt.map(session -> {
-            return ResponseEntity.ok(session);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/sessions/week")
@@ -57,21 +54,19 @@ public class PublicController {
 
     @GetMapping("/films/{uuid}")
     public ResponseEntity<?> findFilmById(@PathVariable UUID uuid) {
-        Optional<FilmOutputDTO> filmOpt = filmService.findById(uuid);
-        return filmOpt.map(film -> {
-            return ResponseEntity.ok(film);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/films/genres")
-    public ResponseEntity<?> findTop1000FilmsByGenres(@RequestParam String genres) {
-        List<FilmOutputDTO> films = filmService.findTop1000ByGenres(genres);
-        return ResponseEntity.ok(films);
+        FilmOutputDTO film = filmService.findById(uuid);
+        return ResponseEntity.ok(film);
     }
 
     @GetMapping("/films")
     public ResponseEntity<?> findTop1000Films() {
         List<FilmOutputDTO> films = filmService.findTop1000();
+        return ResponseEntity.ok(films);
+    }
+
+    @GetMapping("/films/genres")
+    public ResponseEntity<?> findTop1000FilmsByGenres(@RequestParam String genres) {
+        List<FilmOutputDTO> films = filmService.findTop1000ByGenres(genres);
         return ResponseEntity.ok(films);
     }
 }

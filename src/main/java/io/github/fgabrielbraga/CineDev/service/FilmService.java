@@ -2,6 +2,7 @@ package io.github.fgabrielbraga.CineDev.service;
 
 import io.github.fgabrielbraga.CineDev.dto.input.FilmInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.FilmOutputDTO;
+import io.github.fgabrielbraga.CineDev.exceptions.ResourceNotFoundException;
 import io.github.fgabrielbraga.CineDev.model.Film;
 import io.github.fgabrielbraga.CineDev.repository.FilmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,10 @@ public class FilmService {
     @Autowired
     private FilmRepository filmRepository;
 
-    public Optional<FilmOutputDTO> findById(UUID uuid) {
+    public FilmOutputDTO findById(UUID uuid) {
         Optional<Film> filmOpt = filmRepository.findById(uuid);
-        return filmOpt.map(FilmOutputDTO::ofFilm);
+        return filmOpt.map(FilmOutputDTO::ofFilm).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, filme não encontrado. Tente novamente."));
     }
 
     public List<FilmOutputDTO> findTop1000() {
@@ -44,7 +46,8 @@ public class FilmService {
     }
 
     public FilmOutputDTO update(FilmInputDTO filmDTO) {
-        Optional<Film> filmOpt = filmRepository.findById(filmDTO.getUuid());
+        Optional<Film> filmOpt = filmRepository
+                .findById(filmDTO.getUuid());
         return filmOpt.map(filmFound -> {
             filmFound.setTitle(filmDTO.getTitle());
             filmFound.setResume(filmDTO.getResume());
@@ -54,10 +57,14 @@ public class FilmService {
             filmFound.setCoverImage(filmDTO.getCoverImage());
             Film filmSaved = filmRepository.save(filmFound);
             return FilmOutputDTO.ofFilm(filmSaved);
-        }).orElseThrow();
+        }).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, filme não encontrado. Tente novamente."));
     }
 
     public void deleteById(UUID uuid) {
+        Optional<Film> filmOpt = filmRepository.findById(uuid);
+        filmOpt.orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, filme não encontrado. Tente novamente."));
         filmRepository.deleteById(uuid);
     }
 }

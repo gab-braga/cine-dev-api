@@ -23,6 +23,11 @@ public class Ticket {
     @JoinColumn(name = "reservation_uuid")
     private Reservation reservation;
 
+    @PrePersist
+    protected void onCreate() {
+        this.uuid = null;
+    }
+
     public Ticket() {
     }
 

@@ -3,6 +3,9 @@ package io.github.fgabrielbraga.CineDev.service;
 import io.github.fgabrielbraga.CineDev.dto.input.PasswordInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.input.UserInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.UserOutputDTO;
+import io.github.fgabrielbraga.CineDev.exceptions.InvalidParameterException;
+import io.github.fgabrielbraga.CineDev.exceptions.ResourceNotFoundException;
+import io.github.fgabrielbraga.CineDev.exceptions.ResourceUnavailableException;
 import io.github.fgabrielbraga.CineDev.model.User;
 import io.github.fgabrielbraga.CineDev.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +26,16 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public Optional<UserOutputDTO> findById(UUID uuid) {
+    public UserOutputDTO findById(UUID uuid) {
         Optional<User> userOpt = userRepository.findById(uuid);
-        return userOpt.map(UserOutputDTO::ofUser);
+        return userOpt.map(UserOutputDTO::ofUser).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, usuário não encontrado. Tente novamente."));
     }
 
-    public Optional<UserOutputDTO> findByEmail(String email) {
+    public UserOutputDTO findByEmail(String email) {
         Optional<User> userOpt = userRepository.findByEmail(email);
-        return userOpt.map(UserOutputDTO::ofUser);
+        return userOpt.map(UserOutputDTO::ofUser).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, usuário não encontrado. Tente novamente."));
     }
 
     public List<UserOutputDTO> findAll() {
@@ -38,8 +43,10 @@ public class UserService {
         return users.stream().map(UserOutputDTO::ofUser).toList();
     }
 
-    public List<UserOutputDTO> findTop1000ByNameAndEmailAndCpf(String name, String email, String cpf) {
-        List<User> users = userRepository.findTop1000ByNameAndEmailAndCpf(name, email, cpf);
+    public List<UserOutputDTO> findTop1000ByNameAndEmailAndCpf(
+            String name, String email, String cpf) {
+        List<User> users = userRepository
+                .findTop1000ByNameAndEmailAndCpf(name, email, cpf);
         return users.stream().map(UserOutputDTO::ofUser).toList();
     }
 
@@ -61,7 +68,8 @@ public class UserService {
             userFound.setPhoneNumber(userDTO.getPhoneNumber());
             User userSaved = userRepository.save(userFound);
             return UserOutputDTO.ofUser(userSaved);
-        }).orElseThrow();
+        }).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, usuário não encontrado. Tente novamente."));
     }
 
     public UserOutputDTO updateProfile(UserInputDTO userDTO) {
@@ -73,20 +81,8 @@ public class UserService {
             userFound.setPhoneNumber(userDTO.getPhoneNumber());
             User userSaved = userRepository.save(userFound);
             return UserOutputDTO.ofUser(userSaved);
-        }).orElseThrow();
-    }
-
-    public UserOutputDTO updatePassword(UUID uuid, String currentPassword, String newPassword) {
-        Optional<User> userOpt = userRepository.findById(uuid);
-        return userOpt.map(userFound -> {
-            if(passwordEncoder.matches(currentPassword, userFound.getPassword())) {
-                String passwordEncoded = passwordEncoder.encode(newPassword);
-                userFound.setPassword(passwordEncoded);
-                User userSaved = userRepository.save(userFound);
-                return UserOutputDTO.ofUser(userSaved);
-            }
-            throw new RuntimeException("Incorrect password");
-        }).orElseThrow();
+        }).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, usuário não encontrado. Tente novamente."));
     }
 
     public UserOutputDTO updateProfilePicture(UserInputDTO userDTO) {
@@ -95,10 +91,32 @@ public class UserService {
             userFound.setProfilePicture(userDTO.getProfilePicture());
             User userSaved = userRepository.save(userFound);
             return UserOutputDTO.ofUser(userSaved);
-        }).orElseThrow();
+        }).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, usuário não encontrado. Tente novamente."));
+    }
+
+    public UserOutputDTO updatePassword(UUID uuid, PasswordInputDTO passwordDTO) {
+        Optional<User> userOpt = userRepository.findById(uuid);
+        return userOpt.map(userFound -> {
+            if(passwordDTO.getNewPassword().equals(passwordDTO.getConfirmPassword())) {
+                if(passwordEncoder.matches(
+                        passwordDTO.getCurrentPassword(),userFound.getPassword())) {
+                    String passwordEncoded = passwordEncoder.encode(passwordDTO.getNewPassword());
+                    userFound.setPassword(passwordEncoded);
+                    User userSaved = userRepository.save(userFound);
+                    return UserOutputDTO.ofUser(userSaved);
+                }
+                throw new InvalidParameterException("Desculpe, a senha inserida está incorreta. Por favor, tente novamente.");
+            }
+            throw new InvalidParameterException("As senhas fornecidas não conferem. Certifique-se de digitá-las corretamente e tente novamente.");
+        }).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, usuário não encontrado. Tente novamente."));
     }
 
     public void deleteById(UUID uuid) {
+        Optional<User> userOpt = userRepository.findById(uuid);
+        userOpt.orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, usuário não encontrado. Tente novamente."));
         userRepository.deleteById(uuid);
     }
 

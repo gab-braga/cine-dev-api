@@ -13,8 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/reservations")
@@ -38,14 +36,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<?> create(
             @Valid @RequestBody ReservationInputDTO reservation) {
-        UUID userId = reservation.getUser().getUuid();
-        UUID sessionId = reservation.getSession().getUuid();
-        Optional<?> userOpt = userService.findById(userId);
-        Optional<?> sessionOpt = sessionService.findById(sessionId);
-        if(userOpt.isPresent() && sessionOpt.isPresent()) {
-            ReservationOutputDTO reservationSaved = reservationService.save(reservation);
-            return ResponseEntity.status(HttpStatus.CREATED).body(reservationSaved);
-        }
-        return ResponseEntity.badRequest().build();
+        ReservationOutputDTO reservationSaved = reservationService.save(reservation);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reservationSaved);
     }
 }

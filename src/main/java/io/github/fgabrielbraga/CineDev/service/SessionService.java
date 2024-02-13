@@ -2,10 +2,14 @@ package io.github.fgabrielbraga.CineDev.service;
 
 import io.github.fgabrielbraga.CineDev.dto.input.SessionInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.SessionOutputDTO;
+import io.github.fgabrielbraga.CineDev.exceptions.ResourceNotFoundException;
+import io.github.fgabrielbraga.CineDev.exceptions.ResourceUnavailableException;
 import io.github.fgabrielbraga.CineDev.model.Film;
+import io.github.fgabrielbraga.CineDev.model.Reservation;
 import io.github.fgabrielbraga.CineDev.model.Room;
 import io.github.fgabrielbraga.CineDev.model.Session;
 import io.github.fgabrielbraga.CineDev.repository.FilmRepository;
+import io.github.fgabrielbraga.CineDev.repository.ReservationRepository;
 import io.github.fgabrielbraga.CineDev.repository.RoomRepository;
 import io.github.fgabrielbraga.CineDev.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +30,13 @@ public class SessionService {
     private FilmRepository filmRepository;
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private ReservationRepository reservationRepository;
 
-    public Optional<SessionOutputDTO> findById(UUID uuid) {
+    public SessionOutputDTO findById(UUID uuid) {
         Optional<Session> sessionOpt = sessionRepository.findById(uuid);
-        return sessionOpt.map(SessionOutputDTO::ofSession);
+        return sessionOpt.map(SessionOutputDTO::ofSession).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, sessão não encontrada. Tente novamente."));
     }
 
     public List<SessionOutputDTO> findAll() {
@@ -67,15 +74,13 @@ public class SessionService {
         return sessions.stream().map(SessionOutputDTO::ofSession).toList();
     }
 
-    public SessionOutputDTO save(SessionInputDTO sessionInputDTO) {
-        Session session = SessionInputDTO.parseSession(sessionInputDTO);
-        Session sessionSaved = sessionRepository.save(session);
-        return SessionOutputDTO.ofSession(sessionSaved);
-    }
-
-    public SessionOutputDTO save(UUID filmId, UUID roomId, SessionInputDTO sessionDTO) {
-        Film film = filmRepository.findById(filmId).orElseThrow();
-        Room room = roomRepository.findById(roomId).orElseThrow();
+    public SessionOutputDTO save(SessionInputDTO sessionDTO) {
+        Film film = filmRepository
+                .findById(sessionDTO.getFilm().getUuid()).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, filme não encontrado. Tente novamente."));
+        Room room = roomRepository
+                .findById(sessionDTO.getRoom().getUuid()).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, sala não encontrada. Tente novamente."));
         Session session = SessionInputDTO.parseSession(sessionDTO);
         session.setFilm(film);
         session.setRoom(room);
@@ -84,20 +89,30 @@ public class SessionService {
         return SessionOutputDTO.ofSession(sessionSaved);
     }
 
-    public SessionOutputDTO update(UUID filmId, UUID roomId, SessionInputDTO sessionDTO) {
-        Film film = filmRepository.findById(filmId).orElseThrow();
-        Room room = roomRepository.findById(roomId).orElseThrow();
+    public SessionOutputDTO update(SessionInputDTO sessionDTO) {
         Optional<Session> sessionOpt = sessionRepository.findById(sessionDTO.getUuid());
         return sessionOpt.map(sessionFound -> {
-            sessionFound.setFilm(film);
-            sessionFound.setRoom(room);
-            sessionFound.setDate(sessionDTO.getDate());
-            sessionFound.setHour(sessionDTO.getHour());
-            sessionFound.setTicketPrice(sessionDTO.getTicketPrice());
-            sessionFound.setNumberFreeSeats(room.getCapacity());
-            Session sessionSaved = sessionRepository.save(sessionFound);
-            return SessionOutputDTO.ofSession(sessionSaved);
-        }).orElseThrow();
+            Film film = filmRepository
+                    .findById(sessionDTO.getFilm().getUuid()).orElseThrow(() ->
+                            new ResourceNotFoundException("Desculpe, filme não encontrado. Tente novamente."));
+            Room room = roomRepository
+                    .findById(sessionDTO.getRoom().getUuid()).orElseThrow(() ->
+                            new ResourceNotFoundException("Desculpe, sala não encontrada. Tente novamente."));
+            List<Reservation> reservations = this.reservationRepository
+                    .findTop1000BySessionId(sessionFound.getUuid());
+            if(reservations.isEmpty()) {
+                sessionFound.setFilm(film);
+                sessionFound.setRoom(room);
+                sessionFound.setDate(sessionDTO.getDate());
+                sessionFound.setHour(sessionDTO.getHour());
+                sessionFound.setTicketPrice(sessionDTO.getTicketPrice());
+                sessionFound.setNumberFreeSeats(room.getCapacity());
+                Session sessionSaved = sessionRepository.save(sessionFound);
+                return SessionOutputDTO.ofSession(sessionSaved);
+            }
+            throw new ResourceUnavailableException("Desculpe, esta sessão tem reservas. Tente novamente.");
+        }).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, sessão não encontrada. Tente novamente."));
     }
 
     public void deleteById(UUID uuid) {

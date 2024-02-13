@@ -2,6 +2,8 @@ package io.github.fgabrielbraga.CineDev.service;
 
 import io.github.fgabrielbraga.CineDev.dto.input.ReservationInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.ReservationOutputDTO;
+import io.github.fgabrielbraga.CineDev.exceptions.ResourceNotFoundException;
+import io.github.fgabrielbraga.CineDev.exceptions.ResourceUnavailableException;
 import io.github.fgabrielbraga.CineDev.model.Reservation;
 import io.github.fgabrielbraga.CineDev.model.Session;
 import io.github.fgabrielbraga.CineDev.model.Ticket;
@@ -29,9 +31,10 @@ public class ReservationService {
     @Autowired
     private TicketRepository ticketRepository;
 
-    public Optional<ReservationOutputDTO> findById(UUID uuid) {
+    public ReservationOutputDTO findById(UUID uuid) {
         Optional<Reservation> reservationOpt = reservationRepository.findById(uuid);
-        return reservationOpt.map(ReservationOutputDTO::ofReservation);
+        return reservationOpt.map(ReservationOutputDTO::ofReservation).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, reserva não encontrada. Tente novamente."));
     }
 
     public List<ReservationOutputDTO> findTop1000() {
@@ -48,9 +51,11 @@ public class ReservationService {
         Reservation reservation = ReservationInputDTO
                 .parseReservation(reservationInputDTO);
         User user = userRepository
-                .findById(reservation.getUser().getUuid()).orElseThrow();
+                .findById(reservation.getUser().getUuid()).orElseThrow(() ->
+                        new ResourceNotFoundException("Desculpe, usuário não encontrado. Tente novamente."));
         Session session = sessionRepository
-                .findById(reservation.getSession().getUuid()).orElseThrow();
+                .findById(reservation.getSession().getUuid()).orElseThrow(() ->
+                        new ResourceNotFoundException("Desculpe, sessão não encontrada. Tente novamente."));
         reservation.setUser(user);
         reservation.setSession(session);
         if(session.getOpen()) {
@@ -68,10 +73,10 @@ public class ReservationService {
                     Reservation reservationSaved = reservationRepository.save(reservation);
                     return ReservationOutputDTO.ofReservation(reservationSaved);
                 }
-                throw new RuntimeException("Ticket reserved.");
+                throw new ResourceUnavailableException("Desculpe, ingressos indisponíveis. Tente novamente.");
             }
-            throw new RuntimeException("Tickets not found.");
+            throw new ResourceNotFoundException("Desculpe, ingressos não encontrados. Tente novamente.");
         }
-        throw new RuntimeException("Session is closed.");
+        throw new ResourceUnavailableException("Desculpe, sessão indisponível. Tente novamente.");
     }
 }

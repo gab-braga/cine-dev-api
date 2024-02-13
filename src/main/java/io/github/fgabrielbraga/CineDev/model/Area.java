@@ -27,6 +27,11 @@ public class Area {
     @JoinColumn(name = "map_uuid", nullable = false)
     private Map map;
 
+    @PrePersist
+    protected void onCreate() {
+        this.uuid = null;
+    }
+
     public Area() {
     }
 

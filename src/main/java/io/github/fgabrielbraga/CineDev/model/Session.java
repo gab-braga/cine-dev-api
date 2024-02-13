@@ -38,6 +38,7 @@ public class Session {
 
     @PrePersist
     protected void onCreate() {
+        this.uuid = null;
         this.open = false;
     }
 

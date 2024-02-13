@@ -3,8 +3,12 @@ package io.github.fgabrielbraga.CineDev.service;
 import io.github.fgabrielbraga.CineDev.dto.input.RoomInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.RoomOutputDTO;
 import io.github.fgabrielbraga.CineDev.enums.AreaType;
+import io.github.fgabrielbraga.CineDev.exceptions.ResourceNotFoundException;
+import io.github.fgabrielbraga.CineDev.exceptions.ResourceUnavailableException;
 import io.github.fgabrielbraga.CineDev.model.Room;
+import io.github.fgabrielbraga.CineDev.model.Session;
 import io.github.fgabrielbraga.CineDev.repository.RoomRepository;
+import io.github.fgabrielbraga.CineDev.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +21,19 @@ public class RoomService {
 
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private SessionRepository sessionRepository;
 
-    public Optional<RoomOutputDTO> findById(UUID uuid) {
+    public RoomOutputDTO findById(UUID uuid) {
         Optional<Room> roomOpt = roomRepository.findById(uuid);
-        return roomOpt.map(RoomOutputDTO::ofRoom);
+        return roomOpt.map(RoomOutputDTO::ofRoom).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, sala não encontrada. Tente novamente."));
     }
 
-    public Optional<RoomOutputDTO> findBySessionId(UUID uuid) {
+    public RoomOutputDTO findBySessionId(UUID uuid) {
         Optional<Room> roomOpt = roomRepository.findBySessionId(uuid);
-        return roomOpt.map(RoomOutputDTO::ofRoom);
+        return roomOpt.map(RoomOutputDTO::ofRoom).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, sala não encontrada. Tente novamente."));
     }
 
     public List<RoomOutputDTO> findTop1000() {
@@ -41,9 +49,6 @@ public class RoomService {
     }
 
     public RoomOutputDTO save(RoomInputDTO roomDTO) {
-        roomDTO.setUuid(null);
-        roomDTO.getMap().setUuid(null);
-        roomDTO.getMap().getAreas().stream().forEach(area -> area.setUuid(null));
         Room room = RoomInputDTO.parseRoom(roomDTO);
         room.setCapacity((short) room.getMap().getAreas().stream().filter(area -> {
             return area.getAreaType() == AreaType.SEAT;
@@ -62,27 +67,36 @@ public class RoomService {
             roomFound.setProjectionType(roomDTO.getProjectionType());
             Room roomSaved = roomRepository.save(roomFound);
             return RoomOutputDTO.ofRoom(roomSaved);
-        }).orElseThrow();
+        }).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, sala não encontrada. Tente novamente."));
     }
 
     public RoomOutputDTO updateSeatMap(RoomInputDTO roomDTO) {
         Optional<Room> roomOpt = roomRepository.findById(roomDTO.getUuid());
         return roomOpt.map(roomFound -> {
-            Room roomEdited = RoomInputDTO.parseRoom((roomDTO));
-            roomEdited.setCapacity((short) roomEdited.getMap().getAreas().stream().filter(area -> {
-                return area.getAreaType() == AreaType.SEAT;
-            }).count());
-            roomFound.setMap(roomEdited.getMap());
-            roomFound.setCapacity(roomEdited.getCapacity());
-            roomFound.getMap().getAreas().stream().forEach(area -> {
-                area.setMap(roomFound.getMap());
-            });
-            Room roomSaved = roomRepository.save(roomFound);
-            return RoomOutputDTO.ofRoom(roomSaved);
-        }).orElseThrow();
+            List<Session> sessions = sessionRepository.findTop1000ByRoomId(roomFound.getUuid());
+            if(sessions.isEmpty()) {
+                Room roomEdited = RoomInputDTO.parseRoom((roomDTO));
+                roomEdited.setCapacity((short) roomEdited.getMap().getAreas().stream().filter(area -> {
+                    return area.getAreaType() == AreaType.SEAT;
+                }).count());
+                roomFound.setMap(roomEdited.getMap());
+                roomFound.setCapacity(roomEdited.getCapacity());
+                roomFound.getMap().getAreas().stream().forEach(area -> {
+                    area.setMap(roomFound.getMap());
+                });
+                Room roomSaved = roomRepository.save(roomFound);
+                return RoomOutputDTO.ofRoom(roomSaved);
+            }
+            throw new ResourceUnavailableException("Desculpe, esta sala tem sessões abertas. Tente novamente.");
+        }).orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, sala não encontrada. Tente novamente."));
     }
 
     public void deleteById(UUID uuid) {
+        Optional<Room> roomOpt = roomRepository.findById(uuid);
+        roomOpt.orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, sala não encontrada. Tente novamente."));
         roomRepository.deleteById(uuid);
     }
 }
