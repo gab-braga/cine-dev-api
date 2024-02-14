@@ -35,15 +35,4 @@ public class AuthController {
         UserOutputDTO userSaved = userService.save(userInputDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(userSaved);
     }
-
-//    @PostMapping("/create-admin-default")
-//    public void createAdminDefault() {
-//        UserInputDTO admin = new UserInputDTO();
-//        admin.setName("Admin Default");
-//        admin.setEmail("admin@email.com");
-//        admin.setPassword("123456");
-//        admin.setCpf("12345678900");
-//        admin.setRole(Role.ADMIN);
-//        this.userService.save(admin);
-//    }
 }
