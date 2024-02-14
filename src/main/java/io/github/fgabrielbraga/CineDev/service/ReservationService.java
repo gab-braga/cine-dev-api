@@ -2,6 +2,7 @@ package io.github.fgabrielbraga.CineDev.service;
 
 import io.github.fgabrielbraga.CineDev.dto.input.ReservationInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.ReservationOutputDTO;
+import io.github.fgabrielbraga.CineDev.enums.StatusReservation;
 import io.github.fgabrielbraga.CineDev.exceptions.ResourceNotFoundException;
 import io.github.fgabrielbraga.CineDev.exceptions.ResourceUnavailableException;
 import io.github.fgabrielbraga.CineDev.model.*;
@@ -81,6 +82,16 @@ public class ReservationService {
             throw new ResourceNotFoundException("Desculpe, ingressos não encontrados. Tente novamente.");
         }
         throw new ResourceUnavailableException("Desculpe, sessão indisponível. Tente novamente.");
+    }
+    public void cancel(UUID uuid) {
+        Optional<Reservation> reservationOpt = reservationRepository.findById(uuid);
+        Reservation reservation = reservationOpt.orElseThrow(() ->
+                new ResourceNotFoundException("Desculpe, reserva não encontrada. Tente novamente."));
+        reservation.setStatus(StatusReservation.CANCELED);
+        reservationRepository.save(reservation);
+        List<Ticket> tickets = ticketRepository.findByReservationId(reservation.getUuid());
+        tickets.forEach(ticket -> ticket.setReservation(null));
+        ticketRepository.saveAll(tickets);
     }
 
     private void resetIdentifier(Reservation reservation) {

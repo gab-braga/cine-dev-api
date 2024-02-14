@@ -15,14 +15,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByEmail(String email);
 
-    @Modifying
-    @Query(value = "UPDATE users u SET u.active = 0 WHERE u.uuid = ?", nativeQuery = true)
-    void disableUserById(UUID uuid);
-
-    @Modifying
-    @Query(value = "UPDATE users u SET u.active = 1 WHERE u.uuid = ?", nativeQuery = true)
-    void enableUserById(UUID uuid);
-
     @Query(value = "SELECT u.* FROM users u " +
             "WHERE u.name LIKE CONCAT('%', IFNULL(?, ''), '%') " +
             "AND u.email LIKE CONCAT(IFNULL(?, ''), '%') " +
@@ -30,4 +22,12 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             "ORDER BY u.name " +
             "LIMIT 1000", nativeQuery = true)
     List<User> findTop1000ByNameAndEmailAndCpf(String name, String email, String cpf);
+
+    @Modifying
+    @Query(value = "UPDATE users u SET u.active = 0 WHERE u.uuid = ?", nativeQuery = true)
+    void disableUserById(UUID uuid);
+
+    @Modifying
+    @Query(value = "UPDATE users u SET u.active = 1 WHERE u.uuid = ?", nativeQuery = true)
+    void enableUserById(UUID uuid);
 }

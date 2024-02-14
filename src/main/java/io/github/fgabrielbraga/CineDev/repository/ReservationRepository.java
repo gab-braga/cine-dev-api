@@ -2,6 +2,7 @@ package io.github.fgabrielbraga.CineDev.repository;
 
 import io.github.fgabrielbraga.CineDev.model.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +25,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, UUID> 
 
     @Query(value = "SELECT * FROM reservations " +
             "WHERE user_uuid = ? " +
-            "ORDER BY reserved_at " +
+            "ORDER BY reserved_at DESC " +
             "LIMIT 1000", nativeQuery = true)
     List<Reservation> findTop1000ByUserId(UUID uuid);
 }

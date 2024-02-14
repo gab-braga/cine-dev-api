@@ -19,4 +19,9 @@ public class TicketService {
         List<Ticket> tickets = ticketRepository.findBySessionId(uuid);
         return tickets.stream().map(TicketOutputDTO::ofTicket).toList();
     }
+
+    public List<TicketOutputDTO> findByReservationId(UUID uuid) {
+        List<Ticket> tickets = ticketRepository.findByReservationId(uuid);
+        return tickets.stream().map(TicketOutputDTO::ofTicket).toList();
+    }
 }

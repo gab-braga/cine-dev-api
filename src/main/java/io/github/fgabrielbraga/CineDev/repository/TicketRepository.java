@@ -16,6 +16,10 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID> {
     List<Ticket> findBySessionId(UUID uuid);
 
     @Query(value = "SELECT * FROM tickets " +
+            "WHERE reservation_uuid = ?", nativeQuery = true)
+    List<Ticket> findByReservationId(UUID uuid);
+
+    @Query(value = "SELECT * FROM tickets " +
             "WHERE uuid IN ?", nativeQuery = true)
     List<Ticket> findByIdIn(List<UUID> uuids);
 }

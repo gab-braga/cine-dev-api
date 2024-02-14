@@ -48,4 +48,11 @@ public class ReservationController {
         ReservationOutputDTO reservationSaved = reservationService.save(reservation);
         return ResponseEntity.status(HttpStatus.CREATED).body(reservationSaved);
     }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
+    @PutMapping("/{uuid}/cancel")
+    public ResponseEntity<?> cancel(@PathVariable UUID uuid) {
+        reservationService.cancel(uuid);
+        return ResponseEntity.ok().build();
+    }
 }

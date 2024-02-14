@@ -23,6 +23,7 @@ public class ReservationOutputDTO {
             ReservationOutputDTO reservationOutputDTO = new ReservationOutputDTO();
             reservationOutputDTO.setUuid(reservation.getUuid());
             reservationOutputDTO.setReservedAt(reservation.getReservedAt());
+            reservationOutputDTO.setStatus(reservation.getStatus());
             reservationOutputDTO.setUser(UserOutputDTO.ofUser(reservation.getUser()));
             reservationOutputDTO.setSession(SessionOutputDTO.ofSession(reservation.getSession()));
             return reservationOutputDTO;
