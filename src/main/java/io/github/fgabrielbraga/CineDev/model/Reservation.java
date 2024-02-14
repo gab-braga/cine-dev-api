@@ -33,7 +33,6 @@ public class Reservation {
 
     @PrePersist
     protected void onCreate() {
-        this.uuid = null;
         this.reservedAt = LocalDateTime.now();
         this.status = StatusReservation.PENDING;
     }

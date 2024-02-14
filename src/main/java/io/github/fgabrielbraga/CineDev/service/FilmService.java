@@ -41,6 +41,7 @@ public class FilmService {
 
     public FilmOutputDTO save(FilmInputDTO filmDTO) {
         Film film = FilmInputDTO.parseFilm(filmDTO);
+        resetIdentifier(film);
         Film filmSaved = filmRepository.save(film);
         return FilmOutputDTO.ofFilm(filmSaved);
     }
@@ -66,5 +67,9 @@ public class FilmService {
         filmOpt.orElseThrow(() ->
                 new ResourceNotFoundException("Desculpe, filme não encontrado. Tente novamente."));
         filmRepository.deleteById(uuid);
+    }
+
+    private void resetIdentifier(Film film) {
+        film.setUuid(null);
     }
 }

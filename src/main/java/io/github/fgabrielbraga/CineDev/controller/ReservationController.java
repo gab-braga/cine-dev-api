@@ -28,14 +28,14 @@ public class ReservationController {
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
-    @GetMapping
+    @GetMapping("/sessions/{uuid}")
     public ResponseEntity<?> findTop1000BySessionId(@PathVariable UUID uuid) {
         List<ReservationOutputDTO> reservations = reservationService.findTop1000BySessionId(uuid);
         return ResponseEntity.ok(reservations);
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
-    @GetMapping
+    @GetMapping("/users/{uuid}")
     public ResponseEntity<?> findTop1000ByUserId(@PathVariable UUID uuid) {
         List<ReservationOutputDTO> reservations = reservationService.findTop1000ByUserId(uuid);
         return ResponseEntity.ok(reservations);

@@ -85,6 +85,7 @@ public class SessionService {
         session.setFilm(film);
         session.setRoom(room);
         session.setNumberFreeSeats(room.getCapacity());
+        resetIdentifier(session);
         Session sessionSaved = sessionRepository.save(session);
         return SessionOutputDTO.ofSession(sessionSaved);
     }
@@ -127,5 +128,10 @@ public class SessionService {
     @Transactional
     public void open(UUID uuid) {
         sessionRepository.openSessionById(uuid);
+    }
+
+    private void resetIdentifier(Session session) {
+        session.setUuid(null);
+        session.getTickets().forEach(ticket -> ticket.setUuid(null));
     }
 }

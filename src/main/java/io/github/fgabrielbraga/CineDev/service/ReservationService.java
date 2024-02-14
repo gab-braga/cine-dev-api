@@ -4,10 +4,7 @@ import io.github.fgabrielbraga.CineDev.dto.input.ReservationInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.ReservationOutputDTO;
 import io.github.fgabrielbraga.CineDev.exceptions.ResourceNotFoundException;
 import io.github.fgabrielbraga.CineDev.exceptions.ResourceUnavailableException;
-import io.github.fgabrielbraga.CineDev.model.Reservation;
-import io.github.fgabrielbraga.CineDev.model.Session;
-import io.github.fgabrielbraga.CineDev.model.Ticket;
-import io.github.fgabrielbraga.CineDev.model.User;
+import io.github.fgabrielbraga.CineDev.model.*;
 import io.github.fgabrielbraga.CineDev.repository.ReservationRepository;
 import io.github.fgabrielbraga.CineDev.repository.SessionRepository;
 import io.github.fgabrielbraga.CineDev.repository.TicketRepository;
@@ -75,6 +72,7 @@ public class ReservationService {
                 if(reservedTickets.isEmpty()) {
                     reservation.setTickets(ticketsFound);
                     ticketsFound.forEach(ticket -> ticket.setReservation(reservation));
+                    resetIdentifier(reservation);
                     Reservation reservationSaved = reservationRepository.save(reservation);
                     return ReservationOutputDTO.ofReservation(reservationSaved);
                 }
@@ -83,5 +81,9 @@ public class ReservationService {
             throw new ResourceNotFoundException("Desculpe, ingressos não encontrados. Tente novamente.");
         }
         throw new ResourceUnavailableException("Desculpe, sessão indisponível. Tente novamente.");
+    }
+
+    private void resetIdentifier(Reservation reservation) {
+        reservation.setUuid(null);
     }
 }

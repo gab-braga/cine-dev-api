@@ -56,6 +56,7 @@ public class RoomService {
         room.getMap().getAreas().stream().forEach(area -> {
             area.setMap(room.getMap());
         });
+        resetIdentifier(room);
         Room roomSaved = roomRepository.save(room);
         return RoomOutputDTO.ofRoom(roomSaved);
     }
@@ -98,5 +99,11 @@ public class RoomService {
         roomOpt.orElseThrow(() ->
                 new ResourceNotFoundException("Desculpe, sala não encontrada. Tente novamente."));
         roomRepository.deleteById(uuid);
+    }
+
+    private void resetIdentifier(Room room) {
+        room.setUuid(null);
+        room.getMap().setUuid(null);
+        room.getMap().getAreas().forEach(area -> area.setUuid(null));
     }
 }

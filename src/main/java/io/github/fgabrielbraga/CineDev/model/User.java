@@ -40,7 +40,6 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
-        this.uuid = null;
         this.active = true;
         this.confirmed = false;
         this.createdAt = LocalDateTime.now();

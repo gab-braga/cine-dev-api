@@ -5,7 +5,6 @@ import io.github.fgabrielbraga.CineDev.dto.input.UserInputDTO;
 import io.github.fgabrielbraga.CineDev.dto.output.UserOutputDTO;
 import io.github.fgabrielbraga.CineDev.exceptions.InvalidParameterException;
 import io.github.fgabrielbraga.CineDev.exceptions.ResourceNotFoundException;
-import io.github.fgabrielbraga.CineDev.exceptions.ResourceUnavailableException;
 import io.github.fgabrielbraga.CineDev.model.User;
 import io.github.fgabrielbraga.CineDev.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +53,7 @@ public class UserService {
         User user = UserInputDTO.parseUser(userDTO);
         String passwordEncoded = passwordEncoder.encode(user.getPassword());
         user.setPassword(passwordEncoded);
+        resetIdentifier(user);
         User userSaved = userRepository.save(user);
         return UserOutputDTO.ofUser(userSaved);
     }
@@ -128,5 +128,9 @@ public class UserService {
     @Transactional
     public void enable(UUID uuid) {
         userRepository.enableUserById(uuid);
+    }
+
+    private void resetIdentifier(User user) {
+        user.setUuid(null);
     }
 }

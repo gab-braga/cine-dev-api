@@ -22,11 +22,6 @@ public class Map {
     @OneToMany(mappedBy = "map", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     List<Area> areas = new ArrayList<>();
 
-    @PrePersist
-    protected void onCreate() {
-        this.uuid = null;
-    }
-
     public Map() {
     }
 
