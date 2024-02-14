@@ -13,6 +13,7 @@ public class RoomInputDTO {
 
     private UUID uuid;
     @NotNull(message = "Por favor, forneça um número para a sala.")
+    @Min(value = 0, message = "O formato do número da sala é inválido. Certifique-se de que está correto.")
     private Short number;
     @Min(value = 0, message = "O formato da capacidade é inválido. Certifique-se de que está correto.")
     private Short capacity;

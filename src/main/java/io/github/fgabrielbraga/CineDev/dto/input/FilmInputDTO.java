@@ -1,6 +1,7 @@
 package io.github.fgabrielbraga.CineDev.dto.input;
 
 import io.github.fgabrielbraga.CineDev.model.Film;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -21,6 +22,7 @@ public class FilmInputDTO {
     @Size(max = 255, message = "O número de caracteres da lista de gêneros excede o limite.")
     private String genres;
     @NotNull(message = "Por favor, forneça uma duração para o filme.")
+    @Min(value = 0, message = "O formato da duração é inválido. Certifique-se de que está correto.")
     private Float duration;
     @NotBlank(message = "Por favor, forneça uma imagem de capa para o filme.")
     private String coverImage;
