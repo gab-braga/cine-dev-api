@@ -12,19 +12,19 @@ import java.util.UUID;
 public class FilmInputDTO {
 
     private UUID uuid;
-    @NotBlank(message = "O título do filme é obrigatório.")
+    @NotBlank(message = "Por favor, forneça um título para o filme.")
     @Size(max = 120, message = "O número de caracteres do título excede o limite.")
     private String title;
-    @NotBlank(message = "A sinopse do filme é obrigatória.")
+    @NotBlank(message = "Por favor, forneça uma sinopse para o filme.")
     private String resume;
-    @NotBlank(message = "Os gêneros do filme são obrigatórios.")
-    @Size(max = 255, message = "O número de caracteres dos gêneros excede o limite.")
+    @NotBlank(message = "Por favor, forneça uma lista de gêneros para o filme")
+    @Size(max = 255, message = "O número de caracteres da lista de gêneros excede o limite.")
     private String genres;
-    @NotNull(message = "A duração do filme é obrigatória.")
+    @NotNull(message = "Por favor, forneça uma duração para o filme.")
     private Float duration;
-    @NotBlank(message = "A imagem de capa do filme é obrigatória.")
+    @NotBlank(message = "Por favor, forneça uma imagem de capa para o filme.")
     private String coverImage;
-    @NotNull(message = "A data de lançamento do filme é obrigatória.")
+    @NotNull(message = "Por favor, forneça uma data de lançamento para o filme.")
     private LocalDate publishedIn;
 
     public FilmInputDTO() {

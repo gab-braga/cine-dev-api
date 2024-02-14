@@ -4,6 +4,7 @@ import io.github.fgabrielbraga.CineDev.model.User;
 import io.github.fgabrielbraga.CineDev.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -14,24 +15,26 @@ import java.util.UUID;
 public class UserInputDTO {
 
     private UUID uuid;
-    @NotBlank(message = "O nome do usuário é obrigatório.")
+    @NotBlank(message = "Por favor, forneça um nome para o usuário.")
     @Size(max = 120, message = "O número de caracteres do nome excede o limite.")
     private String name;
-    @Email(message = "O e-mail do usuário está inválido.")
-    @NotBlank(message = "O e-mail do usuário é obrigatório.")
+    @NotBlank(message = "Por favor, forneça um endereço de e-mail para o usuário.")
+    @Email(message = "O formato do endereço de e-mail é inválido. Certifique-se de que está correto.")
     @Size(max = 150, message = "O número de caracteres do e-mail excede o limite.")
     private String email;
-    @NotBlank(message = "A senha do usuário é obrigatória.")
+    @NotBlank(message = "Por favor, forneça uma senha para o usuário.")
+    @Size(max = 30, message = "O número de caracteres da senha excede o limite.")
     private String password;
-    @CPF(message = "O CPF do usuário está inválido.")
-    @NotBlank(message = "O CPF do usuário é obrigatório.")
+    @NotBlank(message = "Por favor, forneça um CPF para o usuário.")
+    @CPF(message = "O formato do CPF é inválido. Certifique-se de que está correto.")
     private String cpf;
     @Size(max = 16, message = "O número de caracteres do telefone excede o limite.")
     private String phoneNumber;
+    @NotNull(message = "Por favor, forneça uma role para o usuário.")
+    private Role role = Role.CLIENT;
     private String profilePicture;
     private Boolean active;
     private Boolean confirmed;
-    private Role role = Role.CLIENT;
     private LocalDateTime createdAt;
 
     public UserInputDTO() {
@@ -46,10 +49,10 @@ public class UserInputDTO {
             user.setPassword(dto.getPassword());
             user.setCpf(dto.getCpf());
             user.setPhoneNumber(dto.getPhoneNumber());
+            user.setRole(dto.getRole());
             user.setProfilePicture(dto.getProfilePicture());
             user.setActive(dto.getActive());
             user.setConfirmed(dto.getConfirmed());
-            user.setRole(dto.getRole());
             user.setCreatedAt(dto.getCreatedAt());
             return user;
         }).orElse(null);
@@ -103,6 +106,14 @@ public class UserInputDTO {
         this.phoneNumber = phoneNumber;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public String getProfilePicture() {
         return profilePicture;
     }
@@ -125,14 +136,6 @@ public class UserInputDTO {
 
     public void setConfirmed(Boolean confirmed) {
         this.confirmed = confirmed;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     public LocalDateTime getCreatedAt() {

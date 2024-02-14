@@ -6,10 +6,10 @@ import jakarta.validation.constraints.Size;
 
 public class CredentialsInputDTO {
 
-    @Email(message = "O e-mail está inválido.")
-    @NotBlank(message = "O e-mail é obrigatório.")
+    @NotBlank(message = "Por favor, forneça um endereço de e-mail.")
+    @Email(message = "O formato do e-mail é inválido. Certifique-se de que está correto.")
     private String email;
-    @NotBlank(message = "A senha é obrigatória.")
+    @NotBlank(message = "Por favor, forneça uma senha.")
     private String password;
 
     public CredentialsInputDTO() {}

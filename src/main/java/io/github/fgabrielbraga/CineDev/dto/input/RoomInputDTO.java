@@ -1,6 +1,7 @@
 package io.github.fgabrielbraga.CineDev.dto.input;
 
 import io.github.fgabrielbraga.CineDev.model.Room;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,13 +12,14 @@ import java.util.UUID;
 public class RoomInputDTO {
 
     private UUID uuid;
-    @NotNull(message = "O número da sala é obrigatório.")
+    @NotNull(message = "Por favor, forneça um número para a sala.")
     private Short number;
+    @Min(value = 0, message = "O formato da capacidade é inválido. Certifique-se de que está correto.")
     private Short capacity;
-    @NotBlank(message = "A projeção da sala é obrigatória.")
+    @NotBlank(message = "Por favor, forneça uma projeção para a sala.")
     @Size(max = 50, message = "O número de caracteres da projeção excede o limite.")
     private String projectionType;
-    @NotNull(message = "O mapa de assentos da sala é obrigatório.")
+    @NotNull(message = "Por favor, forneça um mapa de assentos para a sala.")
     private MapInputDTO map;
 
     public RoomInputDTO() {

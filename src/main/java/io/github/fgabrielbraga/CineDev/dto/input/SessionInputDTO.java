@@ -1,6 +1,7 @@
 package io.github.fgabrielbraga.CineDev.dto.input;
 
 import io.github.fgabrielbraga.CineDev.model.Session;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,17 +14,18 @@ import java.util.UUID;
 public class SessionInputDTO {
 
     private UUID uuid;
-    @NotNull(message = "A data da sessão é obrigatória.")
+    @NotNull(message = "Por favor, forneça uma data para a sessão.")
     private LocalDate date;
-    @NotNull(message = "O horário da sessão é obrigatório.")
+    @NotNull(message = "Por favor, forneça um horário para a sessão.")
     private LocalTime hour;
-    private Boolean open;
-    @NotNull(message = "O preço do ingresso da sessão é obrigatório.")
+    @NotNull(message = "Por favor, forneça um preço para o ingresso da sessão.")
+    @Min(value = 0, message = "O formato do preço é inválido. Certifique-se de que está correto.")
     private Float ticketPrice;
+    private Boolean open;
     private Short numberFreeSeats;
-    @NotNull(message = "O filme da sessão é obrigatório.")
+    @NotNull(message = "Por favor, forneça um filme para a sessão.")
     private FilmInputDTO film;
-    @NotNull(message = "A sala da sessão é obrigatória.")
+    @NotNull(message = "Por favor, forneça uma sala para a sessão.")
     private RoomInputDTO room;
 
     public static Session parseSession(SessionInputDTO sessionInputDTO) {
@@ -68,20 +70,20 @@ public class SessionInputDTO {
         this.hour = hour;
     }
 
-    public Boolean getOpen() {
-        return open;
-    }
-
-    public void setOpen(Boolean open) {
-        this.open = open;
-    }
-
     public Float getTicketPrice() {
         return ticketPrice;
     }
 
     public void setTicketPrice(Float ticketPrice) {
         this.ticketPrice = ticketPrice;
+    }
+
+    public Boolean getOpen() {
+        return open;
+    }
+
+    public void setOpen(Boolean open) {
+        this.open = open;
     }
 
     public Short getNumberFreeSeats() {

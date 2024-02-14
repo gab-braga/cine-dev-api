@@ -4,11 +4,11 @@ import jakarta.validation.constraints.NotBlank;
 
 public class PasswordInputDTO {
 
-    @NotBlank(message = "A senha atual é obrigatória.")
+    @NotBlank(message = "Por favor, forneça a senha atual.")
     private String currentPassword;
-    @NotBlank(message = "A nova senha é obrigatória.")
+    @NotBlank(message = "Por favor, forneça a nova senha.")
     private String newPassword;
-    @NotBlank(message = "A senha de confirmação é obrigatória.")
+    @NotBlank(message = "Por favor, forneça a confirmação da nova senha.")
     private String confirmPassword;
 
     public PasswordInputDTO() {

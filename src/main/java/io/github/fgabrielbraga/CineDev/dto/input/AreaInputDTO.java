@@ -2,6 +2,8 @@ package io.github.fgabrielbraga.CineDev.dto.input;
 
 import io.github.fgabrielbraga.CineDev.enums.AreaType;
 import io.github.fgabrielbraga.CineDev.model.Area;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,9 +12,15 @@ import java.util.UUID;
 public class AreaInputDTO {
 
     private UUID uuid;
+    @NotNull(message = "Por favor, forneça um número para a área do mapa.")
     private Short number;
+    @NotNull(message = "Por favor, forneça um índice x para a área do mapa.")
+    @Min(value = 0, message = "O formato do índice é inválido. Certifique-se de que está correto.")
     private Short indexInX;
+    @NotNull(message = "Por favor, forneça um índice y para a área do mapa.")
+    @Min(value = 0, message = "O formato do índice é inválido. Certifique-se de que está correto.")
     private Short indexInY;
+    @NotNull(message = "Por favor, forneça um tipo para a área do mapa.")
     private AreaType areaType;
 
     public AreaInputDTO() {

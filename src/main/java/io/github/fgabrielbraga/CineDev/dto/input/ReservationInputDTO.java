@@ -15,12 +15,12 @@ public class ReservationInputDTO {
     private UUID uuid;
     private LocalDateTime reservedAt;
     private StatusReservation status;
-    @NotNull(message = "O usuário é obrigatório.")
+    @NotNull(message = "Por favor, forneça um usuário para a reserva.")
     private UserInputDTO user;
-    @NotNull(message = "A sessão é obrigatória.")
+    @NotNull(message = "Por favor, forneça uma sessão para a reserva.")
     private SessionInputDTO session;
-    @NotNull(message = "A lista de ingressos é obrigatória.")
-    @NotEmpty(message = "A lista de ingressos não pode está vazia.")
+    @NotNull(message = "Por favor, forneça uma lista de ingressos para a reserva.")
+    @NotEmpty(message = "Por favor, preencha a lista de ingressos.")
     private List<TicketInputDTO> tickets;
 
     public ReservationInputDTO() {

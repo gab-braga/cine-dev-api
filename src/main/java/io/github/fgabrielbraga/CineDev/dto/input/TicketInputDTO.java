@@ -1,6 +1,7 @@
 package io.github.fgabrielbraga.CineDev.dto.input;
 
 import io.github.fgabrielbraga.CineDev.model.Ticket;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +10,9 @@ import java.util.UUID;
 public class TicketInputDTO {
 
     private UUID uuid;
+    @NotNull(message = "Por favor, forneça uma área para o ingresso.")
     private AreaInputDTO area;
+    @NotNull(message = "Por favor, forneça uma sessão para o ingresso.")
     private SessionInputDTO session;
     private ReservationInputDTO reservation;
 
