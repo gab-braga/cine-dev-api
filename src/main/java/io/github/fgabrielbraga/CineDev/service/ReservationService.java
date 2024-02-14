@@ -47,6 +47,11 @@ public class ReservationService {
         return reservations.stream().map(ReservationOutputDTO::ofReservation).toList();
     }
 
+    public List<ReservationOutputDTO> findTop1000ByUserId(UUID uuid) {
+        List<Reservation> reservations = reservationRepository.findTop1000ByUserId(uuid);
+        return reservations.stream().map(ReservationOutputDTO::ofReservation).toList();
+    }
+
     public ReservationOutputDTO save(ReservationInputDTO reservationInputDTO) {
         Reservation reservation = ReservationInputDTO
                 .parseReservation(reservationInputDTO);

@@ -2,8 +2,6 @@ package io.github.fgabrielbraga.CineDev.controller;
 
 import io.github.fgabrielbraga.CineDev.dto.output.MapOutputDTO;
 import io.github.fgabrielbraga.CineDev.service.MapService;
-import io.github.fgabrielbraga.CineDev.service.RoomService;
-import io.github.fgabrielbraga.CineDev.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,10 +15,6 @@ public class MapController {
 
     @Autowired
     private MapService mapService;
-    @Autowired
-    private RoomService roomService;
-    @Autowired
-    private SessionService sessionService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/rooms/{uuid}")

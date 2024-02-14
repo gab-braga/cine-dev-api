@@ -21,4 +21,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, UUID> 
             "ORDER BY reserved_at " +
             "LIMIT 1000", nativeQuery = true)
     List<Reservation> findTop1000BySessionId(UUID uuid);
+
+    @Query(value = "SELECT * FROM reservations " +
+            "WHERE user_uuid = ? " +
+            "ORDER BY reserved_at " +
+            "LIMIT 1000", nativeQuery = true)
+    List<Reservation> findTop1000ByUserId(UUID uuid);
 }
