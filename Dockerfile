@@ -15,8 +15,10 @@ EXPOSE 3306
 
 CMD ["mysqld"]
 
+FROM openjdk:17-jdk-slim
+
 EXPOSE 8080
 
-COPY ./target/CineDev-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /target/CineDev-0.0.1-SNAPSHOT.jar app.jar
 
 ENTRYPOINT [ "java", "-jar", "app.jar" ]
