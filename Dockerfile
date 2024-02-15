@@ -1,19 +1,11 @@
 FROM ubuntu:latest AS build
 
 RUN apt-get update
-RUN apt-get update && apt-get install -y \
-    mysql-server \
-    openjdk-17-jdk \
-    maven
-
+RUN apt-get install openjdk-17-jdk -y
 COPY . .
-COPY ./sql/ /docker-entrypoint-initdb.d/
 
+RUN apt-get install maven -y
 RUN mvn clean install -DskipTests
-
-EXPOSE 3306
-
-CMD ["mysqld"]
 
 FROM openjdk:17-jdk-slim
 
