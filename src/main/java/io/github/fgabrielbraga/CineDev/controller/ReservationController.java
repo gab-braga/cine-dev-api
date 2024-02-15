@@ -28,6 +28,14 @@ public class ReservationController {
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
+    @PostMapping
+    public ResponseEntity<?> create(
+            @Valid @RequestBody ReservationInputDTO reservation) {
+        ReservationOutputDTO reservationSaved = reservationService.save(reservation);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reservationSaved);
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
     @GetMapping("/sessions/{uuid}")
     public ResponseEntity<?> findTop1000BySessionId(@PathVariable UUID uuid) {
         List<ReservationOutputDTO> reservations = reservationService.findTop1000BySessionId(uuid);
@@ -39,14 +47,6 @@ public class ReservationController {
     public ResponseEntity<?> findTop1000ByUserId(@PathVariable UUID uuid) {
         List<ReservationOutputDTO> reservations = reservationService.findTop1000ByUserId(uuid);
         return ResponseEntity.ok(reservations);
-    }
-
-    @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
-    @PostMapping
-    public ResponseEntity<?> create(
-            @Valid @RequestBody ReservationInputDTO reservation) {
-        ReservationOutputDTO reservationSaved = reservationService.save(reservation);
-        return ResponseEntity.status(HttpStatus.CREATED).body(reservationSaved);
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")

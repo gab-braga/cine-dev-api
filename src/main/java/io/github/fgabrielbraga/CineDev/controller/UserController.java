@@ -21,13 +21,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
-    @GetMapping("/{uuid}")
-    public ResponseEntity<?> findById(@PathVariable UUID uuid) {
-        UserOutputDTO userFound = userService.findById(uuid);
-        return ResponseEntity.ok(userFound);
-    }
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<?> findTop1000ByNameAndEmailAndCpf(
@@ -57,6 +50,27 @@ public class UserController {
         return ResponseEntity.ok(userUpdated);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{uuid}/disable")
+    public ResponseEntity<?> disable(@PathVariable UUID uuid) {
+        userService.disable(uuid);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{uuid}/enable")
+    public ResponseEntity<?> enable(@PathVariable UUID uuid) {
+        userService.enable(uuid);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
+    @GetMapping("/{uuid}")
+    public ResponseEntity<?> findById(@PathVariable UUID uuid) {
+        UserOutputDTO userFound = userService.findById(uuid);
+        return ResponseEntity.ok(userFound);
+    }
+
     @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
     @PutMapping("/{uuid}/profile")
     public ResponseEntity<?> updateProfile(
@@ -84,19 +98,5 @@ public class UserController {
         user.setUuid(uuid);
         UserOutputDTO userUpdated = userService.updateProfilePicture(user);
         return ResponseEntity.ok(userUpdated);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/{uuid}/disable")
-    public ResponseEntity<?> disable(@PathVariable UUID uuid) {
-        userService.disable(uuid);
-        return ResponseEntity.ok().build();
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/{uuid}/enable")
-    public ResponseEntity<?> enable(@PathVariable UUID uuid) {
-        userService.enable(uuid);
-        return ResponseEntity.ok().build();
     }
 }

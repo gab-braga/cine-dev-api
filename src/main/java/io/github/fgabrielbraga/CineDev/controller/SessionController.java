@@ -22,13 +22,6 @@ public class SessionController {
     private SessionService sessionService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{uuid}")
-    public ResponseEntity<?> findById(@PathVariable UUID uuid) {
-        SessionOutputDTO sessionFound = sessionService.findById(uuid);
-        return ResponseEntity.ok(sessionFound);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<?> findAll(
             @RequestParam(required = false) LocalDate date,
@@ -37,6 +30,13 @@ public class SessionController {
         List<SessionOutputDTO> sessions = sessionService
                 .findTop1000ByDateAndNumberAndTitle(date, number, title);
         return ResponseEntity.ok(sessions);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{uuid}")
+    public ResponseEntity<?> findById(@PathVariable UUID uuid) {
+        SessionOutputDTO sessionFound = sessionService.findById(uuid);
+        return ResponseEntity.ok(sessionFound);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

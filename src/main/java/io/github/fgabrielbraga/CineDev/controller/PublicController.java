@@ -21,17 +21,17 @@ public class PublicController {
     @Autowired
     private FilmService filmService;
 
-    @GetMapping("/sessions/{uuid}")
-    public ResponseEntity<?> findSessionById(@PathVariable UUID uuid) {
-        SessionOutputDTO session = sessionService.findById(uuid);
-        return ResponseEntity.ok(session);
-    }
-
     @GetMapping("/sessions")
     public ResponseEntity<?> findTop1000SessionsRecentByDate(
             @RequestParam(required = false) LocalDate date) {
         List<SessionOutputDTO> sessions = sessionService.findTop1000RecentByDate(date);
         return ResponseEntity.ok(sessions);
+    }
+
+    @GetMapping("/sessions/{uuid}")
+    public ResponseEntity<?> findSessionById(@PathVariable UUID uuid) {
+        SessionOutputDTO session = sessionService.findById(uuid);
+        return ResponseEntity.ok(session);
     }
 
     @GetMapping("/sessions/week")
@@ -52,16 +52,16 @@ public class PublicController {
         return ResponseEntity.ok(sessions);
     }
 
-    @GetMapping("/films/{uuid}")
-    public ResponseEntity<?> findFilmById(@PathVariable UUID uuid) {
-        FilmOutputDTO film = filmService.findById(uuid);
-        return ResponseEntity.ok(film);
-    }
-
     @GetMapping("/films")
     public ResponseEntity<?> findTop1000Films() {
         List<FilmOutputDTO> films = filmService.findTop1000();
         return ResponseEntity.ok(films);
+    }
+
+    @GetMapping("/films/{uuid}")
+    public ResponseEntity<?> findFilmById(@PathVariable UUID uuid) {
+        FilmOutputDTO film = filmService.findById(uuid);
+        return ResponseEntity.ok(film);
     }
 
     @GetMapping("/films/genres")

@@ -21,13 +21,6 @@ public class RoomController {
     private RoomService roomService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{uuid}")
-    public ResponseEntity<?> findById(@PathVariable UUID uuid) {
-        RoomOutputDTO roomFound = roomService.findById(uuid);
-        return ResponseEntity.ok(roomFound);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<?> findAll(
             @RequestParam(required = false) Short number) {
@@ -35,10 +28,10 @@ public class RoomController {
         return ResponseEntity.ok(rooms);
     }
 
-    @PreAuthorize("hasRole('CLIENT')")
-    @GetMapping("/sessions/{uuid}")
-    public ResponseEntity<?> findBySessionId(@PathVariable UUID uuid) {
-        RoomOutputDTO roomFound = roomService.findBySessionId(uuid);
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{uuid}")
+    public ResponseEntity<?> findById(@PathVariable UUID uuid) {
+        RoomOutputDTO roomFound = roomService.findById(uuid);
         return ResponseEntity.ok(roomFound);
     }
 
@@ -75,5 +68,12 @@ public class RoomController {
     public ResponseEntity<?> delete(@PathVariable UUID uuid) {
         roomService.deleteById(uuid);
         return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
+    @GetMapping("/sessions/{uuid}")
+    public ResponseEntity<?> findBySessionId(@PathVariable UUID uuid) {
+        RoomOutputDTO roomFound = roomService.findBySessionId(uuid);
+        return ResponseEntity.ok(roomFound);
     }
 }
