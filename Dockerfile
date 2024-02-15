@@ -1,16 +1,25 @@
-# Estágio para a configuração do MySQL
-FROM mysql:latest AS mysql_stage
-COPY ./sql/ /docker-entrypoint-initdb.d/
+FROM ubuntu:latest AS build
 
-# Estágio de construção da aplicação Java
-FROM maven:3.8-openjdk-17 AS build
-WORKDIR /app
+RUN apt-get update
+RUN apt-get install openjdk-17-jdk -y
+RUN apt-get install maven -y
 COPY . .
+
 RUN mvn clean install
 
-# Estágio final para a execução da aplicação Java
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-jdk-slim AS prod
+
+RUN apt-get update
+RUN apt-get install mysql-server -y
+
+EXPOSE 3306
+
+COPY --from=build /sql/ /docker-entrypoint-initdb.d/
+
+CMD ["mysqld"]
+
 EXPOSE 8080
 
-COPY --from=build /app/target/CineDev-0.0.1-SNAPSHOT.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+COPY --from=build /target/deploy_render-1.0.0.jar app.jar
+
+ENTRYPOINT [ "java", "-jar", "app.jar" ]
