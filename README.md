@@ -1,9 +1,10 @@
 # CineDev API
 
 ## Descrição
-CineDev API é uma solução robusta desenvolvida em Java com Spring Boot. Esta API RESTful
-foi criada para proporcionar uma experiência de gerenciamento eficiente tanto para clientes
-quanto para administradores, garantindo um ambiente seguro e intuitivo.
+A API CineDev, desenvolvida em Java com Spring Boot, é uma solução online projetada para simplificar o
+processo de reserva de sessões de filmes em salas de cinema. Esta API RESTful foi criada para proporcionar
+uma experiência de gerenciamento eficiente tanto para clientes quanto para administradores, garantindo um
+ambiente seguro e intuitivo.
 
 ## Funcionalidades Principais
 ### Autenticação em Dois Níveis:
