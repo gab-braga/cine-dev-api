@@ -47,7 +47,7 @@ diferentes partes do sistema.
 * GET `/public/films/{uuid}`,
 * GET `/public/films/genres`,
 
-### Usuário
+### Usuários
 * GET `/users` (ADMIN),
 * POST `/users` (ADMIN),
 * PUT `/users/{uuid}` (ADMIN),
@@ -80,7 +80,7 @@ diferentes partes do sistema.
 
 ### Sessões
 * GET `/sessions` (ADMIN),
-* GET `/sessions/{uuid} (ADMIN)`,
+* GET `/sessions/{uuid}` (ADMIN),
 * POST `/sessions` (ADMIN),
 * PUT `/sessions/{uuid}` (ADMIN),
 * POST `/sessions/{uuid}/close` (ADMIN),
@@ -92,9 +92,9 @@ diferentes partes do sistema.
 
 ### Reservas
 * GET `/reservations` (ADMIN),
-* GET `/reservations/sessions/{uuid}` (ADMIN, CLIENT),
-* GET `/reservations/users/{uuid} (ADMIN, CLIENT)`,
 * POST `/reservations` (ADMIN, CLIENT),
+* GET `/reservations/sessions/{uuid}` (ADMIN, CLIENT),
+* GET `/reservations/users/{uuid}` (ADMIN, CLIENT),
 * PUT `/reservations/{uuid}/cancel` (ADMIN, CLIENT),
 
 ## Contribuição
