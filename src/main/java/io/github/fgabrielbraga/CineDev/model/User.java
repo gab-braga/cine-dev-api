@@ -2,7 +2,6 @@ package io.github.fgabrielbraga.CineDev.model;
 
 import io.github.fgabrielbraga.CineDev.enums.Role;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
